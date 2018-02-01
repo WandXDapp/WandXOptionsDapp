@@ -2018,6 +2018,7 @@ span.calendar-holder:nth-child(2) {
     display: inline-block;
   font-size: 14px;
   font-family: Helvetica;
+  color: #454545;
 }
 .option-tabcontent .needHelp{
   cursor: pointer;
@@ -2309,4 +2310,7 @@ input[type=range]::-ms-thumb {
 }
 .pagination a:hover:not(.active) {
   background-color: #ddd;
+}
+.table-option-holder p{
+  font-size: 12px;
 }
