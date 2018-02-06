@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>WandX</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel=stylesheet type=text/css href="fonts/stylesheet.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <section>
+      <div class="header">
+          <img src="images/wandxlogo.png" alt="">
+          <div class="userName">
+              <div class="dropdown">
+                  <img class="dropbtn" onclick="myFunction() " src="images/user.jpg" alt="">
+                  <div id="myDropdown" class="dropdown-content">
+                      <a href="#">Profile</a>
+                      <a href="faq.html">FAQ</a>
+                      <a href="#">Logout</a>
+                  </div>
+              </div>
+              <p>User Name</p>
+          </div>
+          <div class="faq-tabs">
+              <button class="tablinks active">
+                  <a href="#tab1">Options</a>
+              </button>
+          </div>
+      </div>
+  </section>
+  <section class="place-holder">
+    <div class="all-trade">
+      <div class="market-place-holder">
+          <h5>Market Place</h5>
+          <div class="volume">
+            <p>BT/QT &#916; %2</p>
+            <p>VOL</p>
+          </div>
+      </div>
+      <div class="price-chart">
+        <h5>Price Chart</h5>
+        <div class="volume">
+          <p>BT/QT &#916; %2</p>
+          <p>VOL</p>
+        </div>
+      </div>
+      <div class="trade-history">
+       <h5>Trade History</h5>
+        <div class="volume">
+          <div class="top-heading">
+            <div class="trade-heading">
+              <h6>Amount ZRX</h6>
+            </div>
+            <div class="trade-heading">
+              <h6>PRICE</h6>
+            </div>
+            <div class="trade-heading">
+              <h6>TIME</h6>
+            </div>
+          </div>
+           <div class="trade-table">
+             <div class="trade-hist">
+               <div class="trade-list">
+                 <p>1.43857</p>
+                 <p>1.43857</p>
+                 <p>1.43857</p>
+                 <p>1.57</p>
+                 <p>1.43857</p>
+                 <p>1.4387</p>
+                 <p>1.3857</p>
+                 <p>1.4857</p>
+                 <p>1.437</p>
+                 <p>1.43857</p>
+                 <p>1.4857</p>
+                 <p>1.43857</p>
+                 <p>.43857</p>
+                 <p>1.43857</p>
+                 <p>1.43857</p>
+                 <p>1.43857</p>
+               </div>
+             </div>
+             <div class="trade-hist">
+               <div class="trade-list">
+                  <p>1.43857</p>
+                  <p>1.43857</p>
+                  <p>1.43857</p>
+                  <p>1.4357</p>
+                  <p>1.47</p>
+                  <p>1.857</p>
+                  <p>1.57</p>
+                  <p>1.457</p>
+                  <p>1.43857</p>
+                  <p>1.43857</p>
+                  <p>1.43857</p>
+                  <p>1.43857</p>
+                  <p>1.43857</p>
+                  <p>1.43857</p>
+                  <p>1.43857</p>
+                  <p>1.43857</p>
+               </div>
+             </div>
+             <div class="trade-hist">
+               <div class="trade-list">
+                 <p>1.43857</p>
+                 <p>1.43857</p>
+                 <p>1.43857</p>
+                 <p>1.43857</p>
+                 <p>1.43857</p>
+                 <p>1.43857</p>
+                 <p>1.43857</p>
+                 <p>1.43857</p>
+                 <p>1.43857</p>
+                 <p>1.43857</p>
+                 <p>1.43857</p>
+                 <p>1.43857</p>
+                 <p>1.43857</p>
+                 <p>1.43857</p>
+                 <p>1.43857</p>
+                 <p>1.43857</p>
+               </div>
+             </div>
+           </div>
+        </div>
+      </div>
+    </div>
+  </section>
+    <!-- <div class="footer btm-footer">
+        <div class="footer-links">
+            <div class="footer-col">
+                <p class="footer-title">
+                    About Us
+                </p>
+                <p><a href="how-to-use-wandx.html" target="_blank">How to use wandx</a></p>
+                <p><a href="https://www.gitbook.com/book/wandxdapp/wandx-whitepaper/details" target="_blank">White Paper</a></p>
+            </div>
+            <div class="footer-col">
+                <p class="footer-title">
+                    Legal
+                </p>
+                <p><a href="https://www.gitbook.com/book/wandxdapp/terms-of-use/details" target="_blank">Terms of Use</a></p>
+                <p><a href="https://www.gitbook.com/book/wandxdapp/wandx-privacy-policy/details" target="_blank">Privacy Policy</a></p>
+            </div>
+            <div class="footer-col">
+                <p class="footer-title">
+                    Trading
+                </p>
+                <p><a href="">API Documentation</a></p>
+                <p id="myBtn1">Fees</p>
+                <div id="myModal1" class="modal">
+                    <div class="modal-content modal-content1">
+                        <div class="innerContent">
+                            <p>Trading Fee</span>
+                            </p>
+                            <table cellspacing=0>
+                                <tr cellspacing=0>
+                                    <th cellspacing=0 class="col3">
+                                        <p>EXCHANGE FEES</p>
+                                    </th>
+                                    <th cellspacing=0 class="col2">
+                                        <p class="pad">0.001</p>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th cellspacing=0 class="col2">
+                                        <p>GAS FEE</p>
+                                    </th>
+                                    <th cellspacing=0 class="col4">
+                                        <p class="pad">Depends on Ehtereum Blockchain Price</p>
+                                    </th>
+                                </tr>
+                            </table>
+                            <div class="executeBtn close1">
+                                <button>OK</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-col">
+                <p class="footer-title">
+                    Contact Us
+                </p>
+                <p>Support：support@wandx.co</p>
+                <p>Business：business@wandx.co</p>
+            </div>
+            <div class="social-icons">
+                <a href="https://www.facebook.com/wandx.co/" target="_blank"><img src="images/social-facebook.svg"> </a>
+                <a href="https://twitter.com/WandXDapp" target="_blank"><img src="images/social-twitter.svg"> </a>
+                <a href="https://github.com/WandXDapp" target="_blank"><img src="images/social-github.svg"> </a>
+                <a href="https://medium.com/wandx" target="_blank"><img src="images/social-medium.svg"> </a>
+                <a href="https://t.me/wandxbeta" target="_blank"><img src="images/social-telegram.svg"> </a>
+                <a href="https://www.instagram.com/wandx.co/" target="_blank"><img src="images/social-instagram.svg"> </a>
+            </div>
+        </div>
+    </div> -->
+    <!-- TradingView Widget BEGIN -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="js/increment.js"></script>
+    <script>
+        var modalnew = document.getElementById('myModal1');
+        var btnnew = document.getElementById("myBtn1");
+        var spanclose = document.getElementsByClassName("close1")[0];
+        btnnew.onclick = function() {
+            modalnew.style.display = "block";
+        }
+        spanclose.onclick = function() {
+            modalnew.style.display = "none";
+        }
+        window.onclick = function(event) {
+            if (event.target == modalnew) {
+                modalnew.style.display = "none";
+
+            }
+        }
+        function openTab(evt, optionName) {
+          var i, tabcontent, tablinks;
+          tabcontent = document.getElementsByClassName("option-tabcontent");
+          for (i = 0; i < tabcontent.length; i++) {
+              tabcontent[i].style.display = "none";
+          }
+          tablinks = document.getElementsByClassName("option-tablinks");
+          for (i = 0; i < tablinks.length; i++) {
+              tablinks[i].className = tablinks[i].className.replace(" active", "");
+          }
+          document.getElementById(optionName).style.display = "block";
+          evt.currentTarget.className += " active";
+      }
+      document.getElementById("defaultOpen").click();
+      function nospeacialchar(){
+         var tokenname=/[^a-zA-Z0-9]/;
+         var data= document.getElementById("name").value;
+         console.log(data.length);
+         if((data.match(tokenname)) || (data === "") || (data.length>40))
+         {
+           token_err = "* Only alphabets and numbers are allowed";
+         }
+         else{
+           token_err = "";
+         }
+         document.getElementById("err_msg").innerHTML = token_err;
+       }
+       function nospeacialcharquote(){
+          var tokenname=/[^a-zA-Z0-9]/;
+          var data= document.getElementById("quote").value;
+          if((data.match(tokenname)) || (data === "") || (data.length>40))
+          {
+            quote_err = "* Only alphabets and numbers are allowed";
+          }
+          else{
+            quote_err = "";
+          }
+          document.getElementById("quote_msg").innerHTML = quote_err;
+        }
+        function noNegativenum(){
+          var decnname=/[^+]/;
+          var total_supplyVal= document.getElementById("allow").value*1;
+          if((total_supplyVal<0) || (!document.getElementById("allow").value.match(decnname))){
+            allow_err = "*Total supply should be greater than 0";
+          }
+          else{
+            allow_err = "";
+          }
+          document.getElementById("allow_msg").innerHTML = allow_err;
+        }
+        function updateTextInput(val) {
+          document.getElementById('allow').value=val;
+        }
+        function noNegasstes(){
+          var decnname=/[^+]/;
+          var total_supplyVal= document.getElementById("assets").value*1;
+          if((total_supplyVal<0) || (!document.getElementById("assets").value.match(decnname))){
+            asset_err = "*Total Assets should be greater than 0";
+          }
+          else{
+            asset_err = "";
+          }
+          document.getElementById("asset_msg").innerHTML = asset_err;
+        }
+        function noNegpremium(){
+          var decnname=/[^+]/;
+          var total_supplyVal= document.getElementById("premium").value*1;
+          if((total_supplyVal<0) || (!document.getElementById("premium").value.match(decnname))){
+            premium_err = "*Total Assets should be greater than 0";
+          }
+          else{
+            premium_err = "";
+          }
+          document.getElementById("premium_msg").innerHTML = premium_err;
+        }
+        var helpmodal = document.getElementById('myHelpModal');
+        var helpModalBtn = document.getElementById("helpBtn");
+        var spanClose = document.getElementsByClassName("close")[0];
+        helpModalBtn.onclick = function() {
+            helpmodal.style.display = "block";
+        }
+        spanClose.onclick = function() {
+            helpmodal.style.display = "none";
+        }
+        window.onclick = function(event) {
+            if (event.target == helpmodal) {
+                helpmodal.style.display = "none";
+            }
+        }
+        var secondModalBtn = document.getElementById("secondhelpBtn");
+        var secondmodal = document.getElementById('secondHelpModal');
+        var secondClose = document.getElementsByClassName("closeBtn")[0];
+        secondModalBtn.onclick = function() {
+            secondmodal.style.display = "block";
+        }
+        secondClose.onclick = function() {
+            secondmodal.style.display = "none";
+        }
+        $( ".confirm-btn" ).click(function() {
+          $( ".create-second-holder" ).css("display", "block");
+          $( ".create-first-holder" ).css("display", "none");
+        });
+        $( ".second-confirm-btn").click(function() {
+          $( ".create-third-holder" ).css("display", "block");
+          $( ".create-second-holder" ).css("display", "none");
+        });
+  </script>
+</body>
+
+</html>

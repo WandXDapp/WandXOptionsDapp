@@ -2018,7 +2018,6 @@ span.calendar-holder:nth-child(2) {
     display: inline-block;
   font-size: 14px;
   font-family: Helvetica;
-  color: #454545;
 }
 .option-tabcontent .needHelp{
   cursor: pointer;
@@ -2313,4 +2312,86 @@ input[type=range]::-ms-thumb {
 }
 .table-option-holder p{
   font-size: 12px;
+}
+
+/*Market-Place css STARTS*/
+
+.btm-footer{
+  position: absolute;
+}
+.place-holder{
+  padding: 15px;
+}
+.all-trade{
+  display: table;
+  width: 100%;
+}
+.market-place-holder{
+   display: table-cell;
+   width: 25%;
+   padding-right: 15px;
+}
+.price-chart{
+  display: table-cell;
+  width: 50%;
+  padding-right: 15px;
+}
+.trade-history{
+  display: table-cell;
+  width: 25%;
+}
+.volume{
+  border: 1px solid gray;
+  border-radius : 3px;
+  box-shadow: 5px 5px 5px 5px lightgrey;
+}
+.all-trade h5{
+  line-height: 18px;
+  /*color: #454545;*/
+  color: #4A90E2;
+  font-family: Helvetica-Bold;
+  font-size: 18px;
+  margin: 0 0 12px 0;
+}
+.volume p{
+  font-size: 14px;
+  color: #454545;
+  line-height: 16px;
+  font-family: Helvetica;
+  margin: 0 0 12px 0;
+}
+.trade-table{
+  display: table;
+  width: 95%;
+  padding: 10px;
+}
+.trade-table .trade-hist{
+  display: table-cell;
+  width: 33.3%;
+}
+.trade-hist .trade-heading{
+  padding: 7px 7px 7px 0;
+}
+.trade-heading h6{
+  font-size: 14px;
+  font-family: Helvetica-Bold;
+  line-height: 16px;
+  margin: 0;
+  text-align: left;
+  color: #fff;
+}
+.history-heading{
+  display: table-cell;
+  width: 100%;
+}
+.volume .top-heading{
+    display: table;
+    width: 94%;
+    background-color: #4A90E2;
+    padding: 10px;
+    border-bottom: 1px solid #454545;
+}
+.top-heading .trade-heading{
+    display: table-cell;
+    width: 30%;
 }
