@@ -2480,9 +2480,7 @@ input[type=range]:focus::-ms-fill-upper {
   width: 100%;
 }
 .market-place-holder{
-   display: table-cell;
-   width: 25%;
-   padding-right: 15px;
+   padding: 10px;
 }
 .price-chart{
   display: table-cell;
