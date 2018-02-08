@@ -1916,6 +1916,63 @@ span.calendar-holder:nth-child(2) {
   /*Token Details Page CSS End*/
 
 /*Create-option Page CSS Start*/
+.optional-navbar{
+  display : none;
+}
+.optional-navbar {
+    display: none;
+    position: relative;
+    float: right;
+    padding: 9px 10px;
+    margin-top: 8px;
+    margin-right: 15px;
+    margin-bottom: 8px;
+    background-color: transparent;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+.optional-navbar .icon-bar {
+    display: block;
+    width: 22px;
+    height: 2px;
+    border-radius: 1px;
+    margin-top: 4px;
+    background-color: gray;
+}
+.option-holder.smallholder{
+  width: 8%;
+}
+.menu-bar .navbar-toggle{
+  display: block;
+}
+.menu-bar .navbar-toggle .icon-bar{
+      background-color: gray;
+}
+.option-holder .navbar-brand{
+  padding: 20px 15px 0px;
+}
+.menu-holder{
+  display: inline-flex;
+  width: 100%;
+  cursor: pointer;
+}
+
+.imgholder{
+  margin-left: 37px !important;
+  width: 24px;
+}
+.menu-holder img{
+    width: 18px;
+    display: inline-block;
+    margin-left: 20px;
+    padding: 22px 0px 22px 0px;
+}
+.menu-holder .anim {
+    display: inline-block;
+    width: 80%;
+}
+
 .create-option-holder{
   padding: 0px 20px 0px 0px;
 }
@@ -1928,6 +1985,9 @@ span.calendar-holder:nth-child(2) {
   width: 20%;
   vertical-align: top;
   box-shadow: 11px 1px 5px -4px lightgrey;
+  -webkit-transition: width 1s;
+  -moz-transition: width 1s;
+  transition: width 1s;
 }
 .option-form-holder{
   display: table-cell;
@@ -1940,8 +2000,14 @@ span.calendar-holder:nth-child(2) {
     background: none;
     border: none;
     display: block;
-    padding: 15px 15px 15px 0;
+    padding: 18px 15px 15px 0;
+    margin: 0 auto;
 }
+.menu-img-holder {
+    display: inline-block;
+        z-index: 2;
+}
+
 .option-holder button a{
   text-decoration: none;
     color: #333333;
@@ -1950,10 +2016,13 @@ span.calendar-holder:nth-child(2) {
     /*border: 1px solid #ccc;*/
     /*background-color: #f1f1f1;*/
 }
+/*.cust-footer{
+  display: none;
+}*/
 .option-tab button {
     display: block;
     background-color: inherit;
-    color: black;
+    color: #4a90e2;
     padding: 22px 16px 22px 20px;
     width: 100%;
     border: none;
@@ -1964,24 +2033,51 @@ span.calendar-holder:nth-child(2) {
     font-size: 15px;
     font-weight: 400;
     font-family: Helvetica;
+    z-index: 3;
 }
 .option-tab button:hover {
   color:#4a90e2;
   /*box-shadow: 5px 5px 5px 5px lightgrey;
   font-size: 18px;*/
 }
-.option-tab button.active {
+/*.menu-holder:active .option-tablinks{
   font-family: Helvetica-Bold;
   /*border-bottom: 2px solid #4a90e2;*/
-  color: #4a90e2;
+  /*color: #4a90e2;*/
+  /*background-color: #e6e4e4;
+  box-shadow: 5px 5px 5px 5px lightgrey;*/
+  /*font-size: 20px;*/
+/*}*/
+/*.menu-holder{
   background-color: #e6e4e4;
   box-shadow: 5px 5px 5px 5px lightgrey;
+}*/
+.anim.active{
+  /*background-color: #4A90E2;*/
+  box-shadow: 5px 5px 5px 5px lightgrey;
+}
+.anim.active button{
+  color: #fff;
+  font-family: Helvetica-Bold;
   font-size: 20px;
+}
+.anim.active .menu-img-holder img{
+  width: 22px;
 }
 .option-tabcontent {
     padding: 32px;
     width: 70%;
 }
+/*.menu-bar{
+  width: 20%;
+  height: 50px;
+    display: inline-block;
+}*/
+.menu-bar .navbar-brand{
+      padding: 15px 0px 15px 15px;
+      color: #4a90e2;
+}
+
 .option-tablinks{
   display: none;
 }
@@ -2113,8 +2209,8 @@ span.calendar-holder:nth-child(2) {
     position: absolute;
     right: 50%;
     width: 0;
-    height: 2px;
-    background-color: #4a90e2;
+    height: 70px;
+    background-color: #6ba0de;
     bottom: 0;
     transition: all .7s ease-in-out;
 }
@@ -2123,16 +2219,24 @@ span.calendar-holder:nth-child(2) {
     width: 0;
     position: absolute;
     left: 50%;
-    background-color: #4a90e2;
-    height: 2px;
+    background-color: #6ba0de;
+    height: 70px;
     bottom: 0;
     transition: all .7s ease-in-out;
 }
-.anim:hover:before {
+/*.anim:hover:before {
+    right: 0;
+    width: 51%;
+}*/
+.anim.active:before {
     right: 0;
     width: 51%;
 }
-.anim:hover:after {
+/*.anim:hover:after {
+    left: 0;
+    width: 51%;
+}*/
+.anim.active:after {
     left: 0;
     width: 51%;
 }

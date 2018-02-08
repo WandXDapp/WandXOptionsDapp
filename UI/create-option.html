@@ -5,6 +5,8 @@
     <title>WandX</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel=stylesheet type=text/css href="fonts/stylesheet.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -33,13 +35,43 @@
     <div class="tabcontent">
         <div id="tab1" class="tab active">
           <section class="create-option-holder">
+
               <div class="option-panel-holder">
+
                  <div class="option-holder">
-                   <div class="option-tab">
-                    <button class="option-tablinks anim" onclick="openTab(event, 'active-option')" id="defaultOpen">Active Options</button>
-                    <button class="option-tablinks anim" onclick="openTab(event, 'create-option')" >Create Option</button>
-                    <button class="option-tablinks anim" onclick="openTab(event, 'expired-option')">Expired Options</button>
-                    <button class="option-tablinks anim" onclick="openTab(event, 'stats')">Stats</button>
+                   <div class="menu-bar">
+                     <a href="#" class="navbar-brand">MENU</a>
+                     <button type="button" class="navbar-toggle">
+                         <span class="icon-bar"></span>
+                         <span class="icon-bar"></span>
+                         <span class="icon-bar"></span>
+                     </button>
+                   </div>
+                   <div class="option-tab ">
+                    <div class="menu-holder anim" onclick="openTab(event, 'active-option')" id="defaultOpen">
+                       <div class="menu-img-holder">
+                          <img src="./images/active-option.png"/>
+                       </div>
+                       <button class="option-tablinks  " >Active Options</button>
+                    </div>
+                    <div class="menu-holder anim" onclick="openTab(event, 'create-option')">
+                       <div class="menu-img-holder">
+                         <img src="./images/create-option.png"/>
+                       </div>
+                       <button class="option-tablinks "  >Create Option</button>
+                    </div>
+                    <div class="menu-holder anim" onclick="openTab(event, 'expired-option')">
+                      <div class="menu-img-holder">
+                         <img src="./images/expired-option.png"/>
+                      </div>
+                       <button class="option-tablinks " >Expired Options</button>
+                    </div>
+                    <div class="menu-holder anim" onclick="openTab(event, 'stats')">
+                      <div class="menu-img-holder">
+                        <img src="./images/stats1.png"/>
+                      </div>
+                        <button class="option-tablinks " >Stats</button>
+                    </div>
                   </div>
                  </div>
                  <div class="option-form-holder">
@@ -213,52 +245,63 @@
                     </form>
                   </div>
                   <div id="expired-option" class="option-tabcontent">
-                    <form>
-                        <div class="basic-ip-holder">
-                          <label class="form-label">Token name</label>
-                          <input  required=""  onfocusout="nospeacialchar();" id="name" name="name" class="form-input-holder" type="text" placeholder="Token name" >
-                          <p id="err_msg" class="cmn_err"></p>
-                        </div>
-                        <div class="basic-ip-holder">
-                          <label class="form-label">Token symbol</label>
-                          <input  onfocusout="nospeacialcharsymbol();" id="symbol" required=""  class="form-input-holder" type="text" placeholder="Token symbol" >
-                          <p id="err_symbol" class="cmn_err"></p>
-                        </div>
-                        <div class="basic-ip-holder">
-                          <label class="form-label">Decimals</label>
-                          <input  id="dec" onfocusout="decimalnum();"  class="form-input-holder" type="number" placeholder="Decimals" >
-                          <p id="dec_msg" class="cmn_err"></p>
-                        </div>
-                        <div class="basic-ip-holder align-btn">
-                          <a href="#"  class="confirm-btn" >Submit
-                            <i class="right-arrow"></i>
-                          </a>
-                       </div>
-                    </form>
+                    <div class="create-first-holder">
+                      <form>
+                          <div class="basic-ip-holder">
+                            <label class="form-label">Token name</label>
+                            <input  required=""  onfocusout="nospeacialchar();" id="name" name="name" class="form-input-holder" type="text" placeholder="Token name" >
+                            <p id="err_msg" class="cmn_err"></p>
+                          </div>
+                          <div class="basic-ip-holder">
+                            <label class="form-label">Token symbol</label>
+                            <input  onfocusout="nospeacialcharsymbol();" id="symbol" required=""  class="form-input-holder" type="text" placeholder="Token symbol" >
+                            <p id="err_symbol" class="cmn_err"></p>
+                          </div>
+                          <div class="basic-ip-holder">
+                            <label class="form-label">Decimals</label>
+                            <input  id="dec" onfocusout="decimalnum();"  class="form-input-holder" type="number" placeholder="Decimals" >
+                            <p id="dec_msg" class="cmn_err"></p>
+                          </div>
+                          <div class="basic-ip-holder">
+                            <label class="form-label">Decimals</label>
+                            <input  id="dec" onfocusout="decimalnum();"  class="form-input-holder" type="number" placeholder="Decimals" >
+                            <p id="dec_msg" class="cmn_err"></p>
+                          </div>
+                          <div class="basic-ip-holder align-btn">
+                            <a href="#"  class="confirm-btn" >Submit
+                              <i class="right-arrow"></i>
+                            </a>
+                         </div>
+                      </form>
+                    </div>
+
                   </div>
                   <div id="stats" class="option-tabcontent">
-                    <form>
-                        <div class="basic-ip-holder">
-                          <label class="form-label">Token name</label>
-                          <input  required=""  onfocusout="nospeacialchar();" id="name" name="name" class="form-input-holder" type="text" placeholder="Token name" >
-                          <p id="err_msg" class="cmn_err"></p>
-                        </div>
-                        <div class="basic-ip-holder">
-                          <label class="form-label">Token symbol</label>
-                          <input  onfocusout="nospeacialcharsymbol();" id="symbol" required=""  class="form-input-holder" type="text" placeholder="Token symbol" >
-                          <p id="err_symbol" class="cmn_err"></p>
-                        </div>
-                        <div class="basic-ip-holder">
-                          <label class="form-label">Decimals</label>
-                          <input  id="dec" onfocusout="decimalnum();"  class="form-input-holder" type="number" placeholder="Decimals" >
-                          <p id="dec_msg" class="cmn_err"></p>
-                        </div>
-                        <div class="basic-ip-holder">
-                          <label class="form-label">Total supply</label>
-                          <input onfocusout="noNegativenum();" min="0" id="supply" name="supply" class="form-input-holder" type="number" placeholder="Total supply" >
-                          <p id="neg_msg" class="cmn_err"></p>
-                        </div>
-                    </form>
+                    <div class="create-first-holder">
+                      <form>
+                          <div class="basic-ip-holder">
+                            <label class="form-label">Token name</label>
+                            <input  required=""  onfocusout="nospeacialchar();" id="name" name="name" class="form-input-holder" type="text" placeholder="Token name" >
+                            <p id="err_msg" class="cmn_err"></p>
+                          </div>
+                          <div class="basic-ip-holder">
+                            <label class="form-label">Token symbol</label>
+                            <input  onfocusout="nospeacialcharsymbol();" id="symbol" required=""  class="form-input-holder" type="text" placeholder="Token symbol" >
+                            <p id="err_symbol" class="cmn_err"></p>
+                          </div>
+                          <div class="basic-ip-holder">
+                            <label class="form-label">Decimals</label>
+                            <input  id="dec" onfocusout="decimalnum();"  class="form-input-holder" type="number" placeholder="Decimals" >
+                            <p id="dec_msg" class="cmn_err"></p>
+                          </div>
+                          <div class="basic-ip-holder">
+                            <label class="form-label">Total supply</label>
+                            <input onfocusout="noNegativenum();" min="0" id="supply" name="supply" class="form-input-holder" type="number" placeholder="Total supply" >
+                            <p id="neg_msg" class="cmn_err"></p>
+                          </div>
+                      </form>
+                    </div>
+
                   </div>
                  </div>
 
@@ -284,7 +327,7 @@
           </div>
         </div>
     </div>
-    <div class="footer">
+    <div class="footer cust-footer">
         <div class="footer-links">
             <div class="footer-col">
                 <p class="footer-title">
@@ -355,6 +398,7 @@
     </div>
     <!-- TradingView Widget BEGIN -->
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/increment.js"></script>
     <script>
         var modalnew = document.getElementById('myModal1');
@@ -378,7 +422,7 @@
           for (i = 0; i < tabcontent.length; i++) {
               tabcontent[i].style.display = "none";
           }
-          tablinks = document.getElementsByClassName("option-tablinks");
+          tablinks = document.getElementsByClassName("menu-holder");
           for (i = 0; i < tablinks.length; i++) {
               tablinks[i].className = tablinks[i].className.replace(" active", "");
           }
@@ -478,6 +522,21 @@
           $( ".create-third-holder" ).css("display", "block");
           $( ".create-second-holder" ).css("display", "none");
         });
+        $(".navbar-toggle").on('click', function(){
+        	$(".option-holder").toggleClass('smallholder');
+          $(".navbar-toggle").animate({
+             float : "none",
+             marginRight : "48px"
+          })
+          $(".navbar-brand").toggle({
+
+          })
+          $(".option-tablinks").toggle({
+             fontSize : "0",
+          });
+          $(".menu-img-holder img").toggleClass('imgholder');
+        });
+
   </script>
 </body>
 
