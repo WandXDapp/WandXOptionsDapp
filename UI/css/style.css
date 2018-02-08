@@ -2453,7 +2453,7 @@ input[type=range]:focus::-ms-fill-upper {
 .pagination a {
     color: black;
     float: left;
-    padding: 8px 16px;
+    padding: 5px 12px;
     text-decoration: none;
 }
 .pagination a.active {
@@ -2466,7 +2466,23 @@ input[type=range]:focus::-ms-fill-upper {
 .table-option-holder p{
   font-size: 12px;
 }
-
+.table-option-holder table{
+  border-radius: 4px;
+}
+.table-option-holder table th{
+  font-family: Helvetica-Bold;
+  color: #fff;
+  background-color: #4CAF50;
+}
+.table-option-holder table tr{
+  color: #454545;
+}
+.table-option-holder table .t-link{
+  color: #454545;
+}
+.table-option-holder table .t-link:hover{
+  color: #4a90e2;
+}
 /*Market-Place css STARTS*/
 
 .btm-footer{
@@ -2480,12 +2496,12 @@ input[type=range]:focus::-ms-fill-upper {
   width: 100%;
 }
 .market-place-holder{
-   padding: 10px;
+   /*padding: 10px;*/
 }
 .price-chart{
-  display: table-cell;
+  /*display: table-cell;
   width: 50%;
-  padding-right: 15px;
+  padding-right: 15px;*/
 }
 .trade-history{
   display: table-cell;
@@ -2537,7 +2553,7 @@ input[type=range]:focus::-ms-fill-upper {
 }
 .volume .top-heading{
     display: table;
-    width: 94%;
+    width: 100%;
     background-color: #4A90E2;
     padding: 10px;
     border-bottom: 1px solid #454545;
