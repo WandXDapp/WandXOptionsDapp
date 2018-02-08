@@ -1438,7 +1438,7 @@ body {
 .form-input-holder {
     padding: 6px 7px;
     height: 32px;
-    width: 50%;
+    /*width: 50%;*/
     font-size: 14px;
     line-height: 1.5;
     color: rgba(0, 0, 0, 0.7);
@@ -1486,6 +1486,7 @@ body {
 
 .confirm-btn:hover {
     background-color: #4A90E2;
+    color: #fff;
 }
 
 /*FAQ Page CSS Start*/
@@ -2086,13 +2087,14 @@ span.calendar-holder:nth-child(2) {
 }
 .option-tabcontent .form-label{
     display: inline-block;
-    width: 30%;
+    /*width: 30%;*/
     font-size: 13px;
     font-weight: 400;
     margin-bottom: 0px;
+    text-align: left
 }
 .option-tabcontent .cmn_err{
-  left: 30.6%;
+  left: 0;
 }
 .option-tabcontent .time-holder .form-input-holder{
   width: 44%;
@@ -2105,7 +2107,7 @@ span.calendar-holder:nth-child(2) {
     color: red;
     border: 2px solid red;
     border-radius: 50%;
-    padding: 0px 5px;
+    padding: 0px 8px;
     display: inline-block;
     vertical-align: middle;
     margin-right: 8px;
@@ -2117,17 +2119,22 @@ span.calendar-holder:nth-child(2) {
 }
 .option-tabcontent .needHelp{
   cursor: pointer;
+  padding-top: 7px;
+  margin: 0;
 }
 .option-modal{
    display: none; /* Hidden by default */
    position: fixed;
    z-index: 1;
-   right: 27px;
-   top: 36%;
+   right: 160px;
+     top: 34%;
    width: 52%;
    height: 100%;
    overflow: auto;
    background-color: transparent;
+}
+.cust-form{
+  margin-bottom: 30px;
 }
 .option-modal .modal-content {
    background-color: #fefefe;
@@ -2160,6 +2167,9 @@ span.calendar-holder:nth-child(2) {
   font-family: Helvetica;
   color: #454545;
 }
+#secondhelpBtn{
+  top:36% !important;
+}
 .create-first-holder{
     box-shadow: 5px 5px 5px 5px lightgrey;
     padding: 20px;
@@ -2180,7 +2190,8 @@ span.calendar-holder:nth-child(2) {
 .create-third-holder h3{
   font-size: 20px;
   font-family: Helvetica-Bold;
-  color: #454545;
+  color: #6ba0de;
+  margin: 0 0 20px 0;
 }
 .address-details p{
   margin: 0;
@@ -2224,18 +2235,12 @@ span.calendar-holder:nth-child(2) {
     bottom: 0;
     transition: all .7s ease-in-out;
 }
-/*.anim:hover:before {
-    right: 0;
-    width: 51%;
-}*/
+
 .anim.active:before {
     right: 0;
     width: 51%;
 }
-/*.anim:hover:after {
-    left: 0;
-    width: 51%;
-}*/
+
 .anim.active:after {
     left: 0;
     width: 51%;
@@ -2249,11 +2254,12 @@ span.calendar-holder:nth-child(2) {
 .create-third-holder .align-btn{
   text-align: left;
 }
-.range-slider{
+/*.range-slider{
     display: block;
     margin: 0 auto;
     width: 263px;
     margin-top: 12px;
+    border-radius: 50%;
 }
 input[type=range]::-webkit-slider-runnable-track {
   width: 100%;
@@ -2263,8 +2269,8 @@ input[type=range]::-webkit-slider-runnable-track {
   background: #4A90E2;
   border-radius: 1.3px;
   border: 0.2px solid #0f0f0f;
-}
-input[type=range]:focus::-webkit-slider-runnable-track {
+}*/
+/*input[type=range]:focus::-webkit-slider-runnable-track {
   background: #4A90E2;
 }
 
@@ -2276,8 +2282,8 @@ height: 4px;
   background: #4A90E2;
   border-radius: 1.3px;
   border: 0.2px solid #010101;
-}
-
+}*/
+/*
 input[type=range]::-ms-track {
   width: 100%;
   height: 4px;
@@ -2286,8 +2292,8 @@ input[type=range]::-ms-track {
   border-color: transparent;
   border-width: 16px 0;
   color: transparent;
-}
-input[type=range]::-ms-fill-lower {
+}*/
+/*input[type=range]::-ms-fill-lower {
   background: #4A90E2;
   border: 0.2px solid #010101;
   border-radius: 2.6px;
@@ -2295,8 +2301,8 @@ input[type=range]::-ms-fill-lower {
 }
 input[type=range]:focus::-ms-fill-lower {
   background: #4A90E2;
-}
-input[type=range]::-ms-fill-upper {
+}*/
+/*input[type=range]::-ms-fill-upper {
   background: #4A90E2;
   border: 0.2px solid #010101;
   border-radius: 2.6px;
@@ -2304,10 +2310,54 @@ input[type=range]::-ms-fill-upper {
 }
 input[type=range]:focus::-ms-fill-upper {
   background: #4A90E2;
+}*/
+/*.range-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    background: #4CAF50;
+    cursor: pointer;
+}*/
+.slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 15px;
+    border-radius: 5px;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
 }
 
-input[type=range]::-webkit-slider-thumb {
+.slider:hover {
+    opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    background: #4CAF50;
+    cursor: pointer;
+    border-radius: 50%;
+}
+.slider:hover::-webkit-slider-thumb{
+  background-color: #4a90e2;
+}
+
+.slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    background: #4CAF50;
+    cursor: pointer;
+}
+/*input[type=range]::-webkit-slider-thumb {
+
   -webkit-appearance: none;
+    appearance: none;
   border: 1px solid #000000;
   height: 36px;
   width: 16px;
@@ -2315,34 +2365,35 @@ input[type=range]::-webkit-slider-thumb {
   background: #ffffff;
   cursor: pointer;
   margin-top: -8px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
-  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d; /* Add cool effects to your sliders! */
-}
+  /*box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d; /* Add cool effects to your sliders! */
+/*}*/
 /* All the same stuff for Firefox */
-input[type=range]::-moz-range-thumb {
+/*input[type=range]::-moz-range-thumb {
+
   box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
   border: 1px solid #000000;
   height: 36px;
   width: 16px;
-  border-radius: 3px;
+   border-radius: 50%;
   background: #ffffff;
   cursor: pointer;
-}
+}*/
 
 /* All the same stuff for IE */
-input[type=range]::-ms-thumb {
+/*input[type=range]::-ms-thumb {
+
   box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
   border: 1px solid #000000;
   height: 36px;
   width: 16px;
-  border-radius: 3px;
+  border-radius: 50%;
   background: #ffffff;
   cursor: pointer;
-}
+}*/
 .create-first-holder .serach-holder{
     width: 51%;
     display: inline-flex;
     float: none;
-    /*margin-right: 60px;*/
 }
 .create-first-holder .search-bar input{
   border: 1px solid #ddd;
@@ -2370,9 +2421,7 @@ input[type=range]::-ms-thumb {
   font-family: Helvetica;
 }
 .block-num{
-  display: inline-block;
-  font-family: Helvetica;
-  color: #454545;
+  padding: 7px;
 }
 .block-num span{
     margin-right: 12px;
@@ -2498,4 +2547,7 @@ input[type=range]::-ms-thumb {
 .top-heading .trade-heading{
     display: table-cell;
     width: 30%;
+}
+.search-option-holder{
+  margin-bottom: 20px;
 }

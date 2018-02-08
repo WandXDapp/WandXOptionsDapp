@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker.min.css" />
     <link rel=stylesheet type=text/css href="fonts/stylesheet.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -76,13 +77,16 @@
                  </div>
                  <div class="option-form-holder">
                    <div id="create-option" class="option-tabcontent">
-                     <form>
+                     <form class="form-horizontal">
+
                        <div class="create-first-holder">
-                         <div class="basic-ip-holder">
-                             <label class="form-label">Base Token</label>
-                             <input  list="alltokens" required=""  onfocusout="nospeacialchar();" id="name" name="name" class="form-input-holder" type="text" placeholder="Base Token" >
-                             <p id="err_msg" class="cmn_err"></p>
-                         </div>
+                          <div class="form-group">
+                            <label class="control-label col-sm-3 form-label">Base Token</label>
+                            <div class="col-sm-6">
+                              <input  class="form-control" list="alltokens" required=""  onfocusout="nospeacialchar();"  id="name" name="name" type="text" placeholder="Base Token">
+                              <p id="err_msg" class="cmn_err"></p>
+                            </div>
+                          </div>
                          <datalist  id="alltokens" class="auto-sugg">
                             <option value="ETH">
                             <option value="WINGS">
@@ -105,26 +109,34 @@
                             <option value="BNTY">
                             <option value="IND">
                           </datalist>
-                         <div class="basic-ip-holder">
-                           <label class="form-label">Quote Token</label>
-                           <input  list="alltokens" id="quote" onfocusout="nospeacialcharquote();" required=""  class="form-input-holder" type="text" placeholder="ETH" >
-                           <p id="quote_msg" class="cmn_err"></p>
-                         </div>
-                         <div class="basic-ip-holder">
-                           <div class="basic-ip-holder time-holder">
-                             <label class="form-label">Expiry Date</label>
-                             <span class="calendar-holder">
-                               <input class="form-input-holder time-ip" type="text" placeholder="Expiry Date" >
-                               <img src="images/calendar.png" alt="calendar" height="24" width="24">
-                             </span>
-                             <p id="helpBtn" class="needHelp"><span class="help">!</span>help</p>
+                          <div class="form-group">
+                            <label class="control-label col-sm-3 form-label">Quote Token</label>
+                            <div class="col-sm-6">
+                              <input  class="form-control"  list="alltokens" required=""  onfocusout="nospeacialcharquote();"  id="quote"  type="text" placeholder="ETH">
+                              <p id="quote_msg" class="cmn_err"></p>
+                            </div>
+                          </div>
+                         <div class="form-group cust-form">
+                           <label class="control-label col-sm-3 form-label">Expiry Date</label>
+                           <div class="col-sm-6">
+                             <div class="input-group date">
+                                 <input type="text" class="form-control" id="js-date">
+                                 <div class="input-group-addon">
+                                     <span class="glyphicon glyphicon-th"></span>
+                                 </div>
+                             </div>
+                           </div>
+                           <div class="col-sm-3">
+                               <p id="helpBtn" class="needHelp"><span class="help">!</span>help</p>
                            </div>
                          </div>
-                         <div class="basic-ip-holder">
-                           <label class="form-label">Allowance</label>
-                           <input onfocusout="noNegativenum();" min="0" id="allow" name="allow" class="form-input-holder wheelable" type="number" value="">
-                           <input class="range-slider" type="range" name="rangeInput" min="0" max="100000" onchange="updateTextInput(this.value);">
-                           <p id="allow_msg" class="cmn_err"></p>
+                         <div class="form-group">
+                           <label class="control-label col-sm-3 form-label">Allowance</label>
+                           <div class="col-sm-6">
+                             <input  onfocusout="noNegativenum();" min="0" id="allow" name="allow" class="form-control form-input-holder wheelable"   type="number" value="">
+                             <input class="slider" type="range" name="rangeInput" min="0" max="100000" onchange="updateTextInput(this.value);">
+                             <p id="allow_msg" class="cmn_err"></p>
+                           </div>
                          </div>
                          <div class="basic-ip-holder align-btn">
                            <a href="#"  class="confirm-btn" >Submit
@@ -133,24 +145,43 @@
                          </div>
                        </div>
                        <div class="create-second-holder">
-                         <div class="basic-ip-holder">
-                           <label class="form-label">Assets Offered</label>
-                           <input onfocusout="noNegasstes();" min="0" id="assets" name="assets" class="form-input-holder" type="number" placeholder="Assets Offered" >
-                           <p id="asset_msg" class="cmn_err"></p>
+                         <div class="form-group">
+                           <label class="control-label col-sm-3 form-label">Assets Offered</label>
+                           <div class="col-sm-6">
+                             <input  class="form-control form-input-holder"  onfocusout="noNegasstes();" min="0" id="assets" name="assets" type="number" placeholder="Assets Offered">
+                               <p id="asset_msg" class="cmn_err"></p>
+                           </div>
                          </div>
-                         <div class="basic-ip-holder">
-                           <label class="form-label">Premium</label>
-                           <input onfocusout="noNegpremium();" min="0" id="premium" name="premium" class="form-input-holder" type="number" placeholder="Premium" >
-                           <p id="premium_msg" class="cmn_err"></p>
+
+                         <div class="form-group">
+                           <label class="control-label col-sm-3 form-label">Premium</label>
+                           <div class="col-sm-6">
+                             <input  class="form-control form-input-holder"  onfocusout="noNegpremium();" min="0" id="premium" name="premium" type="number" placeholder="Premium">
+                               <p id="asset_msg" class="cmn_err"></p>
+                           </div>
                          </div>
-                         <div class="basic-ip-holder time-holder">
+                         <div class="form-group cust-form">
+                           <label class="control-label col-sm-3 form-label">Expiry Date</label>
+                           <div class="col-sm-6">
+                             <div class="input-group date">
+                                 <input type="text" class="form-control" id="sjs-date">
+                                 <div class="input-group-addon">
+                                     <span class="glyphicon glyphicon-th"></span>
+                                 </div>
+                             </div>
+                           </div>
+                           <div class="col-sm-3">
+                               <p id="secondhelpBtn" class="needHelp"><span class="help">!</span>help</p>
+                           </div>
+                         </div>
+                         <!-- <div class="basic-ip-holder time-holder">
                            <label class="form-label">Expiry Date</label>
                            <span class="calendar-holder">
                              <input class="form-input-holder time-ip" type="text" placeholder="Expiry Date" >
                              <img src="images/calendar.png" alt="calendar" height="24" width="24">
                            </span>
                            <p id="secondhelpBtn" class="needHelp"><span class="help">!</span>help</p>
-                         </div>
+                         </div> -->
                          <div class="basic-ip-holder align-btn">
                            <a href="#"  class="confirm-btn second-confirm-btn" >Submit
                              <i class="right-arrow"></i>
@@ -191,17 +222,25 @@
                   <div id="active-option" class="option-tabcontent">
                     <form>
                       <div class="create-first-holder">
-                        <div>
-                          <section class="serach-holder">
-                            <div class="search-bar">
-                              <input  list="searchtokens" type="text" class="form-control" placeholder="Search token..." name="search">
-                              <span><button type="submit">Go!</button></span>
-                            </div>
-                          </section>
-                          <div class="block-num">
-                            <span>425</span>
-                            <p>By Block No</p>
-                          </div>
+                        <div class="search-option-holder">
+                          <div class="row">
+                             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                                 <div class="input-group">
+                                    <input  list="searchtokens" type="text" class="form-control" placeholder="Search" id="txtSearch"/>
+                                    <div class="input-group-btn">
+                                         <button class="btn btn-primary" type="submit">
+                                         <span class="glyphicon glyphicon-search"></span>
+                                         </button>
+                                    </div>
+                                 </div>
+                             </div>
+                              <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                                 <div class="block-num">
+                                     <span>425</span>
+                                     <p>By Block No</p>
+                                 </div>
+                             </div>
+                           </div>
                           <datalist  id="searchtokens" class="auto-sugg">
                              <option value="ETH">
                              <option value="WINGS">
@@ -232,73 +271,89 @@
                            <a href="market-place.html"  class="" >WAND/ETH</a>
                        </div>
                          <div class="pagination">
-                          <a href="#">&laquo;</a>
-                          <a class="active" href="#">1</a>
-                          <a  href="#">2</a>
-                          <a href="#">3</a>
-                          <a href="#">4</a>
-                          <a href="#">5</a>
-                          <a href="#">6</a>
-                          <a href="#">&raquo;</a>
+                            <a href="#">&laquo;</a>
+                            <a class="active" href="#">1</a>
+                            <a  href="#">2</a>
+                            <a href="#">3</a>
+                            <a href="#">4</a>
+                            <a href="#">5</a>
+                            <a href="#">&raquo;</a>
                         </div>
                       </div>
                     </form>
                   </div>
                   <div id="expired-option" class="option-tabcontent">
                     <div class="create-first-holder">
-                      <form>
-                          <div class="basic-ip-holder">
-                            <label class="form-label">Token name</label>
-                            <input  required=""  onfocusout="nospeacialchar();" id="name" name="name" class="form-input-holder" type="text" placeholder="Token name" >
-                            <p id="err_msg" class="cmn_err"></p>
+                      <form class="form-horizontal">
+
+                        <div class="form-group">
+                          <label class="control-label col-sm-3 form-label">Assets Offered</label>
+                          <div class="col-sm-6">
+                            <input  class="form-control form-input-holder"  onfocusout="noNegasstes();" min="0" id="assets" name="assets" type="number" placeholder="Assets Offered">
+                              <p id="asset_msg" class="cmn_err"></p>
                           </div>
-                          <div class="basic-ip-holder">
-                            <label class="form-label">Token symbol</label>
-                            <input  onfocusout="nospeacialcharsymbol();" id="symbol" required=""  class="form-input-holder" type="text" placeholder="Token symbol" >
-                            <p id="err_symbol" class="cmn_err"></p>
+                        </div>
+
+                        <div class="form-group">
+                          <label class="control-label col-sm-3 form-label">Premium</label>
+                          <div class="col-sm-6">
+                            <input  class="form-control form-input-holder"  onfocusout="noNegpremium();" min="0" id="premium" name="premium" type="number" placeholder="Premium">
+                              <p id="asset_msg" class="cmn_err"></p>
                           </div>
-                          <div class="basic-ip-holder">
-                            <label class="form-label">Decimals</label>
-                            <input  id="dec" onfocusout="decimalnum();"  class="form-input-holder" type="number" placeholder="Decimals" >
-                            <p id="dec_msg" class="cmn_err"></p>
+                        </div>
+                        <div class="form-group">
+                          <label class="control-label col-sm-3 form-label">Assets Offered</label>
+                          <div class="col-sm-6">
+                            <input  class="form-control form-input-holder"  onfocusout="noNegasstes();" min="0" id="assets" name="assets" type="number" placeholder="Assets Offered">
+                              <p id="asset_msg" class="cmn_err"></p>
                           </div>
-                          <div class="basic-ip-holder">
-                            <label class="form-label">Decimals</label>
-                            <input  id="dec" onfocusout="decimalnum();"  class="form-input-holder" type="number" placeholder="Decimals" >
-                            <p id="dec_msg" class="cmn_err"></p>
+                        </div>
+
+                        <div class="form-group">
+                          <label class="control-label col-sm-3 form-label">Premium</label>
+                          <div class="col-sm-6">
+                            <input  class="form-control form-input-holder"  onfocusout="noNegpremium();" min="0" id="premium" name="premium" type="number" placeholder="Premium">
+                              <p id="asset_msg" class="cmn_err"></p>
                           </div>
-                          <div class="basic-ip-holder align-btn">
-                            <a href="#"  class="confirm-btn" >Submit
-                              <i class="right-arrow"></i>
-                            </a>
-                         </div>
+                        </div>
                       </form>
                     </div>
 
                   </div>
                   <div id="stats" class="option-tabcontent">
                     <div class="create-first-holder">
-                      <form>
-                          <div class="basic-ip-holder">
-                            <label class="form-label">Token name</label>
-                            <input  required=""  onfocusout="nospeacialchar();" id="name" name="name" class="form-input-holder" type="text" placeholder="Token name" >
-                            <p id="err_msg" class="cmn_err"></p>
+                      <form class="form-horizontal">
+
+                        <div class="form-group">
+                          <label class="control-label col-sm-3 form-label">Assets Offered</label>
+                          <div class="col-sm-6">
+                            <input  class="form-control form-input-holder"  onfocusout="noNegasstes();" min="0" id="assets" name="assets" type="number" placeholder="Assets Offered">
+                              <p id="asset_msg" class="cmn_err"></p>
                           </div>
-                          <div class="basic-ip-holder">
-                            <label class="form-label">Token symbol</label>
-                            <input  onfocusout="nospeacialcharsymbol();" id="symbol" required=""  class="form-input-holder" type="text" placeholder="Token symbol" >
-                            <p id="err_symbol" class="cmn_err"></p>
+                        </div>
+
+                        <div class="form-group">
+                          <label class="control-label col-sm-3 form-label">Premium</label>
+                          <div class="col-sm-6">
+                            <input  class="form-control form-input-holder"  onfocusout="noNegpremium();" min="0" id="premium" name="premium" type="number" placeholder="Premium">
+                              <p id="asset_msg" class="cmn_err"></p>
                           </div>
-                          <div class="basic-ip-holder">
-                            <label class="form-label">Decimals</label>
-                            <input  id="dec" onfocusout="decimalnum();"  class="form-input-holder" type="number" placeholder="Decimals" >
-                            <p id="dec_msg" class="cmn_err"></p>
+                        </div>
+                        <div class="form-group">
+                          <label class="control-label col-sm-3 form-label">Assets Offered</label>
+                          <div class="col-sm-6">
+                            <input  class="form-control form-input-holder"  onfocusout="noNegasstes();" min="0" id="assets" name="assets" type="number" placeholder="Assets Offered">
+                              <p id="asset_msg" class="cmn_err"></p>
                           </div>
-                          <div class="basic-ip-holder">
-                            <label class="form-label">Total supply</label>
-                            <input onfocusout="noNegativenum();" min="0" id="supply" name="supply" class="form-input-holder" type="number" placeholder="Total supply" >
-                            <p id="neg_msg" class="cmn_err"></p>
+                        </div>
+
+                        <div class="form-group">
+                          <label class="control-label col-sm-3 form-label">Premium</label>
+                          <div class="col-sm-6">
+                            <input  class="form-control form-input-holder"  onfocusout="noNegpremium();" min="0" id="premium" name="premium" type="number" placeholder="Premium">
+                              <p id="asset_msg" class="cmn_err"></p>
                           </div>
+                        </div>
                       </form>
                     </div>
 
@@ -399,6 +454,7 @@
     <!-- TradingView Widget BEGIN -->
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
     <script type="text/javascript" src="js/increment.js"></script>
     <script>
         var modalnew = document.getElementById('myModal1');
@@ -535,6 +591,10 @@
              fontSize : "0",
           });
           $(".menu-img-holder img").toggleClass('imgholder');
+        });
+        $(document).ready(function() {
+            $('#js-date').datepicker();
+            $('#sjs-date').datepicker();
         });
 
   </script>
