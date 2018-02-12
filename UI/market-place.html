@@ -42,14 +42,73 @@
                <p>VOL</p>
              </div>
          </div>
+         <div class="buy-exce">
+           <ul class="nav nav-pills">
+              <li class="active"><a data-toggle="pill" href="#home">Home</a></li>
+              <li><a data-toggle="pill" href="#menu1">Menu 1</a></li>
+          </ul>
+          <div class="tab-content">
+            <div id="home" class="tab-pane fade in active">
+              <form class="buy-form">
+                  <div class="form-group">
+                    <label>Amount</label>
+                    <input type="number" class="form-control" id="amount" placeholder="0" name="amount">
+                  </div>
+                  <div class="form-group">
+                    <label>Premium</label>
+                    <input type="number" class="form-control" id="premium" placeholder="premium" name="premium">
+                  </div>
+                  <label>FEE</label>
+                  <p>0 ZRX</p>
+                  <p>$ o USD</p>
+                  <p>sjgvs</p>
+                  <div class="order-btn">
+                  <button type="submit" class="btn">Place Order</button>
+                </div>
+              </form>
+            </div>
+            <div id="menu1" class="tab-pane fade">
+              <form class="buy-form">
+                  <div class="form-group">
+                    <label>Amount</label>
+                    <input type="number" class="form-control" id="amount" placeholder="0" name="amount">
+                  </div>
+                  <div class="form-group">
+                    <label>Premium</label>
+                    <input type="number" class="form-control" id="premium" placeholder="premium" name="premium">
+                  </div>
+                  <label>FEE</label>
+                  <p>0 ZRX</p>
+                  <p>$ o USD</p>
+                  <p>sjgvs</p>
+                  <div class="order-btn">
+                  <button type="submit" class="btn">Place Order</button>
+                </div>
+              </form>
+            </div>
+         </div>
        </div>
+     </div>
        <div class="col-md-5">
          <div class="price-chart">
            <h5>Price Chart</h5>
-           <div class="volume">
-             <p>BT/QT &#916; %2</p>
-             <p>VOL</p>
-           </div>
+              <div class="chart-holder">
+                <ul class="nav nav-pills">
+
+                   <li><a data-toggle="pill" href="#depth">DEPTH</a></li>
+                    <li class="active"><a data-toggle="pill" href="#candles">CANDLES</a></li>
+               </ul>
+               <div class="tab-content">
+
+                 <div id="depth" class="tab-pane fade">
+                   <h3>DEPTH</h3>
+                 </div>
+                 <div id="candles" class="tab-pane fade in active">
+                   <h3>CANDLES</h3>
+                 </div>
+              </div>
+
+              </div>
          </div>
        </div>
        <div class="col-md-4">
@@ -135,8 +194,8 @@
     </div>
   </section>
     <!-- TradingView Widget BEGIN -->
-     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/increment.js"></script>
     <script>
         var modalnew = document.getElementById('myModal1');

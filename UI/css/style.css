@@ -2495,17 +2495,44 @@ input[type=range]:focus::-ms-fill-upper {
   display: table;
   width: 100%;
 }
-.market-place-holder{
-   /*padding: 10px;*/
+.market-place-holder h5{
+   font-family: Helvetica-Bold;
+   color: #4A90E2;
+   font-size: 18px;
 }
-.price-chart{
-  /*display: table-cell;
-  width: 50%;
-  padding-right: 15px;*/
+.price-chart h5{
+  font-family: Helvetica-Bold;
+  font-size: 18px;
+  color: #4A90E2;
 }
-.trade-history{
-  display: table-cell;
-  width: 25%;
+.trade-history h5{
+  font-family: Helvetica-Bold;
+  color: #4A90E2;
+  font-size: 18px;
+}
+.chart-holder .nav-pills>li{
+  float: right;
+  margin-bottom: -2px;
+}
+.chart-holder .nav-pills>li>a{
+  color: #4CAF50;
+}
+.chart-holder .nav-pills{
+  margin-top: -40px;
+  border-bottom: 2px solid #4CAF50;
+}
+.chart-holder .nav-pills>li.active>a{
+  /*border: 2px solid #4CAF50;
+  border-bottom-color:   transparent;
+  color: #4A90E2;*/
+  border: 2px solid transparent;
+    border-bottom-color: transparent;
+    background-color: #4A90E2;
+    color: #fff;
+    font-family: Helvetica-Bold;
+}
+.market-place-holder .volume{
+  padding: 10px;
 }
 .volume{
   border: 1px solid gray;
@@ -2554,7 +2581,7 @@ input[type=range]:focus::-ms-fill-upper {
 .volume .top-heading{
     display: table;
     width: 100%;
-    background-color: #4A90E2;
+  background-color: #4CAF50;
     padding: 10px;
     border-bottom: 1px solid #454545;
 }
@@ -2564,4 +2591,40 @@ input[type=range]:focus::-ms-fill-upper {
 }
 .search-option-holder{
   margin-bottom: 20px;
+}
+.buy-exce{
+    padding: 0px 0px 10px 0px;
+    border: 1px solid gray;
+    margin-top: 16px;
+    border-radius: 3px;
+}
+.buy-exce .nav-pills li{
+    width: 50%;
+    text-align: center;
+    margin: 0;
+    border-radius: 0;
+}
+.buy-exce .nav-pills li a{
+  border-radius: 0;
+}
+.buy-exce .tab-content{
+  padding:12px;
+}
+.order-btn{
+  text-align: center;
+}
+.buy-form label{
+  color: #4A90E2;
+  font-family: Helvetica-Bold;
+}
+.buy-form p{
+  color: #454545;
+  font-family: Helvetica;
+}
+.order-btn .btn , .order-btn .btn:focus{
+    color: #fff;
+    background-color: #4CAF50;
+    text-decoration: none;
+    outline: none;
+    border: 0;
 }
