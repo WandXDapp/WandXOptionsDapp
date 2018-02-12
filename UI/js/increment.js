@@ -1,64 +1,131 @@
-// WITHOUT Plugin
-var EventUtil = {
-    addHandler: function(element, type, handler){
-        if (element.addEventListener){
-            element.addEventListener(type, handler, false);
-        } else if (element.attachEvent){
-            element.attachEvent("on" + type, handler);
-        } else {
-            element["on" + type] = handler;
-        }
-    },
-	removeHandler: function(element, type, handler){
-        if (element.removeEventListener){
-            element.removeEventListener(type, handler, false);
-        } else if (element.detachEvent){
-            element.detachEvent("on" + type, handler);
-        } else {
-            element["on" + type] = null;
-        }
-    },
-	getEvent: function(event) {
-        return event ? event : window.event;
-    },
 
-	getTarget: function(event) {
-		return event.target || event.srcElement;
-	},
-	getWheelDelta: function(event) {
-        if (event.wheelDelta){
-            return event.wheelDelta;
-        } else {
-            return -event.detail * 40;
-        }
-    },
-	preventDefault: function(event) {
-        if (event.preventDefault){
-            event.preventDefault();
-        } else {
-            event.returnValue = false;
-        }
-    }
-};
-function onWheel(event) {
-	event = EventUtil.getEvent(event);
-	var curElem = EventUtil.getTarget(event);
-	var curVal = parseInt(curElem.value);
-	var delta = EventUtil.getWheelDelta(event);
-	if (delta > 0) {
-		curElem.value = curVal + 1;
-	} else{
-		curElem.value = curVal - 1;
-	}
-	EventUtil.preventDefault(event);
+var chartData = [];
+
+function generateChartData() {
+var firstDate = new Date();
+firstDate.setHours( 0, 0, 0, 0 );
+firstDate.setDate( firstDate.getDate() - 2000 );
+
+for ( var i = 0; i < 2000; i++ ) {
+  var newDate = new Date( firstDate );
+
+  newDate.setDate( newDate.getDate() + i );
+
+  var open = Math.round( Math.random() * ( 30 ) + 100 );
+  var close = open + Math.round( Math.random() * ( 15 ) - Math.random() * 10 );
+
+  var low;
+  if ( open < close ) {
+    low = open - Math.round( Math.random() * 5 );
+  } else {
+    low = close - Math.round( Math.random() * 5 );
+  }
+
+  var high;
+  if ( open < close ) {
+    high = close + Math.round( Math.random() * 5 );
+  } else {
+    high = open + Math.round( Math.random() * 5 );
+  }
+
+  var volume = Math.round( Math.random() * ( 1000 + i ) ) + 100 + i;
+
+
+  chartData[ i ] = ( {
+    "date": newDate,
+    "open": open,
+    "close": close,
+    "high": high,
+    "low": low,
+    "volume": volume
+  } );
 }
-$(function() {
-	$(".wheelable").hover(function(){
-		EventUtil.addHandler(document,'mousewheel',onWheel);
-		EventUtil.addHandler(document,'DOMMouseScroll',onWheel);
-	},
-	function(){
-		EventUtil.removeHandler(document,'mousewheel',onWheel);
-		EventUtil.removeHandler(document,'DOMMouseScroll',onWheel);
-	});
-});
+}
+
+generateChartData();
+
+var chart = AmCharts.makeChart( "chartdiv", {
+"type": "stock",
+"theme": "light",
+"dataSets": [ {
+  "fieldMappings": [ {
+    "fromField": "open",
+    "toField": "open"
+  }, {
+    "fromField": "close",
+    "toField": "close"
+  }, {
+    "fromField": "high",
+    "toField": "high"
+  }, {
+    "fromField": "low",
+    "toField": "low"
+  }, {
+    "fromField": "volume",
+    "toField": "volume"
+  }, {
+    "fromField": "value",
+    "toField": "value"
+  } ],
+  "color": "#7f8da9",
+  "dataProvider": chartData,
+  "categoryField": "date"
+} ],
+"balloon": {
+  "horizontalPadding": 13
+},
+"panels": [ {
+  "title": "Value",
+  "stockGraphs": [ {
+    "id": "g1",
+    "type": "candlestick",
+    "openField": "open",
+    "closeField": "close",
+    "highField": "high",
+    "lowField": "low",
+    "valueField": "close",
+    "lineColor": "#7f8da9",
+    "fillColors": "#7f8da9",
+    "negativeLineColor": "#db4c3c",
+    "negativeFillColors": "#db4c3c",
+    "fillAlphas": 1,
+    "balloonText": "open:<b>[[open]]</b><br>close:<b>[[close]]</b><br>low:<b>[[low]]</b><br>high:<b>[[high]]</b>",
+    "useDataSetColors": false
+  } ]
+} ],
+"scrollBarSettings": {
+  "graphType": "line",
+  "usePeriod": "WW"
+},
+"panelsSettings": {
+  "panEventsEnabled": true
+},
+"cursorSettings": {
+  "valueBalloonsEnabled": true,
+  "valueLineBalloonEnabled": true,
+  "valueLineEnabled": true
+},
+"periodSelector": {
+  "position": "bottom",
+  "periods": [ {
+    "period": "DD",
+    "count": 10,
+    "label": "10 days"
+  }, {
+    "period": "MM",
+    "selected": true,
+    "count": 1,
+    "label": "1 month"
+  }, {
+    "period": "YYYY",
+    "count": 1,
+    "label": "1 year"
+  }, {
+    "period": "YTD",
+    "label": "YTD"
+  }, {
+    "period": "MAX",
+    "label": "MAX"
+  } ]
+}
+} );

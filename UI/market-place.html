@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel=stylesheet type=text/css href="fonts/stylesheet.css">
+    <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -101,10 +102,11 @@
                <div class="tab-content">
 
                  <div id="depth" class="tab-pane fade">
-                   <h3>DEPTH</h3>
+                  <h3>DEPTH</h3>
                  </div>
                  <div id="candles" class="tab-pane fade in active">
-                   <h3>CANDLES</h3>
+                    <div id="chartdiv"></div>
+
                  </div>
               </div>
 
@@ -196,7 +198,13 @@
     <!-- TradingView Widget BEGIN -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+    <script src="https://www.amcharts.com/lib/3/serial.js"></script>
+    <script src="https://www.amcharts.com/lib/3/amstock.js"></script>
+    <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
+    <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
     <script type="text/javascript" src="js/increment.js"></script>
+
     <script>
         var modalnew = document.getElementById('myModal1');
         var btnnew = document.getElementById("myBtn1");
@@ -320,6 +328,7 @@
           $( ".create-second-holder" ).css("display", "none");
         });
   </script>
+
 </body>
 
 </html>
