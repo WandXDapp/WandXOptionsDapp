@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel=stylesheet type=text/css href="fonts/stylesheet.css">
     <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -35,7 +36,7 @@
   <section class="place-holder">
 
     <div class="row">
-       <div class="col-md-3">
+       <div class="col-md-3 col-lg-3 col-sm-3 col-xs-3">
          <div class="market-place-holder">
              <h5>Market Place</h5>
              <div class="volume">
@@ -90,30 +91,57 @@
          </div>
        </div>
      </div>
-       <div class="col-md-5">
+       <div class="col-md-6 col-lg-6 col-sm-6 col-xs-6">
          <div class="price-chart">
            <h5>Price Chart</h5>
               <div class="chart-holder">
                 <ul class="nav nav-pills">
-
                    <li><a data-toggle="pill" href="#depth">DEPTH</a></li>
                     <li class="active"><a data-toggle="pill" href="#candles">CANDLES</a></li>
-               </ul>
+                </ul>
                <div class="tab-content">
-
                  <div id="depth" class="tab-pane fade">
-                  <h3>DEPTH</h3>
+                   <div id="secondchartdiv"></div>
                  </div>
                  <div id="candles" class="tab-pane fade in active">
                     <div id="chartdiv"></div>
-
                  </div>
               </div>
-
               </div>
          </div>
+         <div class="order-book">
+           <div class="order-heading">
+             <h4>BT/QT ORDER BOOK</h4>
+           </div>
+           <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>AMOUNT ZRX</th>
+                  <th>PRICE</th>
+                  <th>SUM IN USD</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>0.0159800</td>
+                  <td>10.0000000	</td>
+                  <td>$8394.20</td>
+                </tr>
+                <tr>
+                  <td>5.0000000</td>
+                  <td>10.0000001</td>
+                  <td>$41971.00</td>
+                </tr>
+                <tr>
+                  <td>100.0000000	</td>
+                  <td>625.7822278	</td>
+                  <td>$839420.00</td>
+                </tr>
+              </tbody>
+          </table>
+         </div>
        </div>
-       <div class="col-md-4">
+       <div class="col-md-3 col-lg-3 col-sm-3 col-xs-3">
          <div class="trade-history">
           <h5>Trade History</h5>
            <div class="volume">
