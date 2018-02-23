@@ -1,0 +1,88 @@
+<div class="main-content" >
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="header">
+                        <h4 class="title">Step 1</h4>
+                    </div>
+                    <div class="content">
+                        <form>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Base Token</label>
+                                        <select class="form-control" id="tokenname" name="tokenname"><option *ngFor="let cell of tableData1.tokenData">{{ cell }}</option></select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Quote Token</label>
+                                        <select class="form-control" id="tokenname" name="tokenname"><option *ngFor="let cell of tableData2.tokenData">{{ cell }}</option></select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Expiry Date</label>
+                                        <input type="date" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Alloance</label>
+                                        <input type="number" class="form-control" placeholder="Last Name" min="10" max="10000" (keypress) = "take_special_char($event)" value="10">
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-info btn-fill pull-right" style="background-image: -webkit-gradient(linear,left top,left bottom,from(#382673),to(#682382)); border-color:#682382;">Submit</button>
+                            <div class="clearfix"></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="header">
+                        <h4 class="title">Step 2</h4>
+                    </div>
+                    <div class="content">
+                        <form>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Assets Offered</label>
+                                        <select class="form-control" id="tokenname" name="tokenname"><option *ngFor="let cell of tableData1.tokenData">{{ cell }}</option></select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Premium</label>
+                                        <select class="form-control" id="tokenname" name="tokenname"><option *ngFor="let cell of tableData2.tokenData">{{ cell }}</option></select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Expiry Date</label>
+                                        <input type="date" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-info btn-fill pull-right" disabled="disabled" style="background-image: -webkit-gradient(linear,left top,left bottom,from(#382673),to(#682382)); border-color:#682382;">Submit</button>
+                            <div class="clearfix"></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
