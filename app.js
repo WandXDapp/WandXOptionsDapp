@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const passport = require('passport');
 const mongoose = require('mongoose');
-const config=require('./config/database');
+const config=require('./src/config/database');
 
 //call connect function so mangoose connect to database
 mongoose.connect(config.database);
@@ -22,7 +22,7 @@ mongoose.connection.on('error',(err)=>{
 const app = express();
 
 //users routes files
-const users=require('./routes/users');
+const users=require('./src/routes/users');
 
 //port number
 const port = 3000;
@@ -40,7 +40,7 @@ app.use(bodyParser.json());
 app.use(passport.initialize());
 app.use(passport.session());
 
-require('./config/passport')(passport);
+require('./src/config/passport')(passport);
 
 //user route use
 app.use('/users',users);
