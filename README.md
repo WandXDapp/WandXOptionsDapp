@@ -10,9 +10,8 @@ What things you need to install the software and how to install them
 ```
 1. Node js
 2. Node Package Manager
-3. Angular 2 or 4 or 5
+3. Angular v2 or above
 4. Mongo DB to run the local database
-5. Code Editor and Command Prompt
 ```
 
 ### Installing
@@ -26,9 +25,7 @@ A step by step series on how to get the development env running
 3. Run the below commands in the Command Window by moving to the exact location where the project is inside the terminal.
 ```
 > npm install
-> npm package.json
-> npm nodemon install
-> nodemon
+> npm install -g nodemon
 ```
 
 > Setting Up the Angular Environment
