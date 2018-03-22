@@ -4,7 +4,7 @@ import * as Web3 from 'web3';
 declare let require: any;
 declare let window: any;
 
-let tokenAbi = require('../assets/json/DerivativeFactory_abi.json');
+let tokenAbi = require('../../assets/json/DerivativeFactory_abi.json');
 
 @Injectable()
 export class ContractsService {

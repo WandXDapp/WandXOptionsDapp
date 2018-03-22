@@ -3,7 +3,7 @@ import { LocationStrategy, PlatformLocation, Location } from '@angular/common';
 import { NgForm } from '@angular/forms';
 
 import { AuthService } from './services/auth.service';
-import { ContractsService } from "./contracts.service";
+import { ContractsService } from './services/contracts.service';
 
 @Component({
   selector: 'app-root',
