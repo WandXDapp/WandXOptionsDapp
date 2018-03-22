@@ -14,7 +14,30 @@ export class AppComponent implements OnInit {
   public balance: number;
 
   constructor(cs: ContractsService) {
-    cs.getUserBalance().then(balance => this.balance = balance);
+    
+    cs.initWeb3().then(function(result) {
+      cs.createNewOption(
+        '0x86fa049857e0209aa7d9e616f7eb3b3b78ecfdb0',
+        '0x86fa049857e0209aa7d9e616f7eb3b3b78ecfdb0',
+        18,
+        18,
+        20,
+        1521749577
+      ).then(function(result) {
+        console.log("createoption " + result)
+
+        // cs.issueOption(result, 10, 10, 10).then(function(result) {
+        //   console.log("issue" + result);
+        // }, function(err) {
+        //     console.log(err);
+        // }); 
+
+      }, function(err) {
+          console.log(err);
+      });        
+    }, function(err) {
+      console.log(err);
+    });
   }
 
     ngOnInit(){

@@ -1,79 +1,186 @@
 import { Injectable } from '@angular/core';
 import * as Web3 from 'web3';
+import * as derivativeFactory from 'wandx-options/build/contracts/DerivativeFactory.json';
+import * as option from 'wandx-options/build/contracts/Option.json';
+import * as wandxfaucet from 'wandx-options/build/contracts/WandXTokenFaucet.json';
+
+export const WEB3_INITIALIZED = 'WEB3_INITIALIZED';
 
 declare let require: any;
 declare let window: any;
 
-let tokenAbi = require('../assets/json/DerivativeFactory_abi.json');
+const networkMap = {
+	1: 'mainnet',
+	2: 'morden',
+	3: 'ropsten',
+	4: 'rinkeby',
+	15: 'localhost',
+	42: 'kovan',
+	4447: 'truffle',
+};
 
 @Injectable()
 export class ContractsService {
-  private _account: string = null;
-  private _web3: any;
- test_version: any;
+	
+	private _account: string = null;
+	private _web3: any;
+	private _web3Status: string = null;
+	private _test_version: any;
+	private _test_version_name: string;
+	private _useNetwork: string = '15';
+	private _useNetworkNumber: number = 15;
+	
+	constructor() { }
 
-  private _tokenContract: any;
-  private _tokenContractAddress: string = '0x9fb1b0e43c0a632dea3eeaf4ef624895cf28ae1c';
+	public async initWeb3(): Promise<any> {
+		return new Promise((resolve, reject) => {
+			var web3 = window.web3;
+			var response = null;
 
-  constructor() {
-    if (typeof window.web3 !== 'undefined') {
-      // Use Mist/MetaMask's provider
+			// Checking if Web3 has been injected by the browser (Mist/MetaMask)
+			if (typeof web3 !== 'undefined' && web3.currentProvider && web3.currentProvider.isMetaMask) {
+				console.log("Mist/MetaMask's detected!");
 
-      this._web3 = new Web3(window.web3.currentProvider);
-      this._web3.eth.net.getId((err, version) => {
-        // console.log(version);
-        this.test_version = version;
-        if (this.test_version !== 3) {
-          alert('Please connect to the Ropsten network');
-        }
-      });
-    } else {
-      console.warn(
-        'Please use a dapp browser like mist or MetaMask plugin for chrome'
-      );
-    }
+				if (!web3.eth.defaultAccount) {
+					response = "Please unlock MetaMask!";
+					console.log(response);
+					this._web3Status = response;
+					reject(response);
+				}
+			
+				web3 = new Web3(web3.currentProvider);
+				this._web3 = web3;
+				
+				web3.eth.net.getId((err, version) => {
+					this._test_version = version;
+					this._test_version_name = networkMap[this._test_version];
+					if (this._test_version !== this._useNetworkNumber) {
+						response = 'Please connect to the Ropsten network';
+						console.log(response);
+						this._web3Status = response;
+						reject(response);
+					}
+					else {
+						response = "success";
+						console.log("Connected to " + this._test_version_name);
+						this._web3Status = response;
+						resolve(response);
+					}
+				});
+			} else {
+				response = "No web3 instance injected";
+				console.log(response);
+				this._web3Status = response;
+				reject(response);
+			}
+		}) as Promise<any>;
+	}
+	
+	private async getAccount(): Promise<string> {		
+		if (this._account == null) {
+			this._account = await new Promise((resolve, reject) => {
+				this._web3.eth.getAccounts((err, accs) => {
+					if (err != null) {
+						alert('There was an error fetching your accounts.');
+						return;
+					}
+			
+					if (accs.length === 0) {
+						alert(
+							'Couldn\'t get any accounts! Make sure your Ethereum client is configured correctly.'
+						);
+						return;
+					}
+					resolve(accs[0]);
+				})
+			}) as string;
+			this._web3.eth.defaultAccount = this._account;
+		}
+		return Promise.resolve(this._account);
+	}
 
-    this._tokenContract = new this._web3.eth.Contract(tokenAbi, this._tokenContractAddress);
-    // console.log(this._tokenContract.methods);
-  }
+	private async getWandFromFaucet(): Promise<boolean> {		
+		
+		var faucet = new this._web3.eth.Contract(wandxfaucet.abi, wandxfaucet.networks[this._useNetwork].address);
+		
+		var getTokenObj = await new Promise((resolve, reject) => {
+			faucet.methods.getTokens("10000000000000000000000", this._web3.eth.defaultAccount).send({from: this._web3.eth.defaultAccount}, function(error, result){
+				console.log(error, result);
+				resolve(result);
+			});
+		}) as any;
 
-  private async getAccount(): Promise<string> {
-    if (this._account == null) {
-      this._account = await new Promise((resolve, reject) => {
-        this._web3.eth.getAccounts((err, accs) => {
-          if (err != null) {
-            alert('There was an error fetching your accounts.');
-            return;
-          }
+		var getTokenObj = await new Promise((resolve, reject) => {
+			faucet.methods.approve(derivativeFactory.networks[this._useNetwork].address, "10000000000000000000000").send({from: this._web3.eth.defaultAccount}, function(error, result){
+				console.log(error, result);
+				resolve(result);
+			});
+		}) as any;
+		return Promise.resolve(true);
+	}
 
-          if (accs.length === 0) {
-            alert(
-              'Couldn\'t get any accounts! Make sure your Ethereum client is configured correctly.'
-            );
-            return;
-          }
-          resolve(accs[0]);
-        })
-      }) as string;
+	
+	public async createNewOption(baseToken, quoteToken, baseTokenDecimal, quoteTokenDecimal, strikePrice, blockTimestamp): Promise<string> {
+		let account = await this.getAccount();
+		// let getWandFromFaucet = await this.getWandFromFaucet();
 
-      this._web3.eth.defaultAccount = this._account;
-    }
+		var optionAddress = await new Promise((resolve, reject) => {			
+			var derivativeFactoryObj = new this._web3.eth.Contract(derivativeFactory.abi, derivativeFactory.networks[this._useNetwork].address);
+			derivativeFactoryObj.methods.createNewOption(
+				baseToken,
+				quoteToken,
+				baseTokenDecimal,
+				quoteTokenDecimal,
+				strikePrice,
+				blockTimestamp)
+			.send({from: this._web3.eth.defaultAccount, gas: 50000}, function(error, result){
+				console.log("create txn hash", error, result);
+				if(error){
+					reject(error);
+				}
+			})
+			.on('OptionCreated', function(baseToken, quoteToken, blockTimestamp, optionAddress, creator){
+				console.log('Result of createNewOption', optionAddress);
+				resolve(optionAddress);
+			})
+		}) as string;
+		return Promise.resolve(optionAddress);
+		// return Promise.resolve("dfdf");
+	}
 
-    return Promise.resolve(this._account);
-  }
-
-  public async getUserBalance(): Promise<number> {
-    let account = await this.getAccount();
-    return new Promise((resolve, reject) => {
-      let _web3 = this._web3;
-      //console.log(this._tokenContract.methods.owner.call())
-     /* this._tokenContract.methods.owner(account, function (err, result) {
-        if (err != null) {
-          reject(err);
-        }
-
-        resolve(_web3.fromWei(result));
-      });*/
-    }) as Promise<number>;
-  }
+	// public async issueOption(optionAddress, assetsOffered, premium, expiry): Promise<any> {
+	// 	var response = await new Promise((resolve, reject) => {			
+	// 		var optionObj = new this._web3.eth.Contract(option.abi, optionAddress);
+	// 		optionObj.methods.issueOption(
+	// 			assetsOffered,
+	// 			premium,
+	// 			expiry
+	// 		).send({from: this._web3.eth.defaultAccount }, function(error, result){
+	// 			if (error){
+	// 				console.error('Error in issueOption', error);
+	// 				reject(null);
+	// 			}
+	// 			else{
+	// 				console.log('Result of issueOption', result);
+	// 				resolve(result);
+	// 			}
+	// 		});			
+	// 	}) as any;
+	// 	return Promise.resolve(response);
+	// }
+	
+	// public async getUserBalance(): Promise<number> {
+	// 	let account = await this.getAccount();
+	// 	console.log(account);
+	// 	return new Promise((resolve, reject) => {
+	// 		let _web3 = this._web3;
+	// 		//console.log(this._tokenContract.methods.owner.call())
+	// 		/* this._tokenContract.methods.owner(account, function (err, result) {
+	// 			if (err != null) {
+	// 				reject(err);
+	// 			}
+	// 			resolve(_web3.fromWei(result));
+	// 		});*/
+	// 	}) as Promise<number>;
+	// }
 }
