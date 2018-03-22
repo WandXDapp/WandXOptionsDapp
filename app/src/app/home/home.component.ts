@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { LocationStrategy, PlatformLocation, Location } from '@angular/common';
 import { LegendItem, ChartType } from '../lbd/lbd-chart/lbd-chart.component';
-
-
+import { NgForm } from '@angular/forms';
+import Web3 from 'web3';
 declare interface TokenData {
     tokenData: string[];
 }
@@ -13,10 +13,25 @@ declare interface TokenData {
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-
+    value1: any;
+    value2: any;
+    web3: any = [];
     public tableData1: TokenData;
     public tableData2: TokenData;
-  constructor() { }
+    onSectionDisplay: String = 'display';
+    base_token: any = '';
+    quote_token: any = '';
+    expiry_date_1: any = '';
+    alloance: any = '';
+    assets_offered: any = '';
+    premium: any = '';
+    expiry_date_2: any = '';
+//    abi_Derivative_Factory: any = json_Derivative_Factory.abi[0];
+  constructor() {
+    function Ctrl($scope) {
+      $scope.date = new Date();
+    }
+   }
 
   take_special_char(event){
       var l;
@@ -25,10 +40,50 @@ export class HomeComponent implements OnInit {
     }
 
   ngOnInit() {
+    this.tableData1 = {tokenData: ['ETH','WINGS','DNT','MTL', 'APPC','KNC','PFR','ICN','GUP','BAR','FDX','REQ','CRED','DRGN','POWR','FYN','DICE','VSL', 'BNTY', 'IND'], };
+    this.tableData2 = {tokenData: ['ETH', 'WINGS', 'DNT', 'MTL', 'APPC', 'KNC', 'PFR', 'ICN', 'GUP', 'BAR', 'FDX', 'REQ', 'CRED', 'DRGN', 'POWR', 'FYN', 'DICE', 'VSL', 'BNTY', 'IND'], };
 
-      this.tableData1 = {tokenData: ['ETH','WINGS','DNT','MTL','APPC','KNC','PFR','ICN','GUP','BAR','FDX','REQ','CRED','DRGN','POWR','FYN','DICE','VSL','BNTY','IND'],};
-      this.tableData2 = {tokenData: ['ETH','WINGS','DNT','MTL','APPC','KNC','PFR','ICN','GUP','BAR','FDX','REQ','CRED','DRGN','POWR','FYN','DICE','VSL','BNTY','IND'],};
+  }
 
-    }
+  getDisplay() {
+    return this.onSectionDisplay === 'display' ? 'none' : 'block';
+  }
 
+  displayBlock(){
+    this.onSectionDisplay = 'notDisplay';
+  }
+
+  onSubmit1(form: HTMLFormElement) {
+    this.value1 = form; 
+    // console.log(this.value1);
+    // console.log(form.value.base_token);
+    this.base_token = form.value.base_token;
+    this.quote_token = form.value.quote_token;
+    this.expiry_date_1 = form.value.expiry_date_1;
+    this.alloance = form.value.alloance;
+    console.log(this.base_token);
+    // console.log(this.alloance);
+
+  }
+
+  onSubmit2(form2: HTMLFormElement) {
+    this.value2 = form2;
+    // console.log(this.value2);
+    this.assets_offered = form2.value.assets_offered;
+    this.premium = form2.value.preimum;
+    this.expiry_date_2 = form2.value.expiry_date_2;
+    console.log(this.premium);
+  }
+
+  onSubmit3(form3: HTMLFormElement) {
+    console.log(form3);
+  }
+
+  connectMeta() {
+    let web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+    this.web3.isConnected();
+  }
+
+  onStepOne() {
+  }
 }

@@ -25,6 +25,9 @@ import { AuthGuard } from './guards/auth.guard';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { ContractsService } from './contracts.service';
+import Web3 from 'web3';
+// import { Web3Service } from '../services/meta.service';
 
 @NgModule({
   declarations: [
@@ -50,7 +53,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     AppRoutingModule,
     FlashMessagesModule.forRoot()
   ],
-  providers: [ValidateService, AuthService, AuthGuard],
+  providers: [ValidateService, AuthService, AuthGuard, ContractsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
