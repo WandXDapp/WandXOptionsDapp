@@ -76,4 +76,8 @@ export class ContractsService {
       });*/
     }) as Promise<number>;
   }
+
+  demoMethod() {
+    return 'hey!';
+  }
 }

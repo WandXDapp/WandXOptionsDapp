@@ -1,3 +1,4 @@
+import { ContractsService } from '../services/contracts.service';
 import { Component, OnInit } from '@angular/core';
 import { LocationStrategy, PlatformLocation, Location } from '@angular/common';
 import { LegendItem, ChartType } from '../lbd/lbd-chart/lbd-chart.component';
@@ -10,24 +11,27 @@ declare interface TokenData {
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.css'],
+  providers: [ContractsService]
 })
 export class HomeComponent implements OnInit {
-    value1: any;
-    value2: any;
-    web3: any = [];
-    public tableData1: TokenData;
-    public tableData2: TokenData;
-    onSectionDisplay: String = 'display';
-    base_token: any = '';
-    quote_token: any = '';
-    expiry_date_1: any = '';
-    alloance: any = '';
-    assets_offered: any = '';
-    premium: any = '';
-    expiry_date_2: any = '';
+  demo : string;
+  value1: any;
+  value2: any;
+  web3: any = [];
+  public tableData1: TokenData;
+  public tableData2: TokenData;
+  onSectionDisplay: String = 'display';
+  base_token: any = '';
+  quote_token: any = '';
+  expiry_date_1: any = '';
+  alloance: any = '';
+  assets_offered: any = '';
+  premium: any = '';
+  blockdata: any = '';
+  newdate: any;
 //    abi_Derivative_Factory: any = json_Derivative_Factory.abi[0];
-  constructor() {
+  constructor(private _contractsService: ContractsService) {
     function Ctrl($scope) {
       $scope.date = new Date();
     }
@@ -40,6 +44,9 @@ export class HomeComponent implements OnInit {
     }
 
   ngOnInit() {
+
+//    this.demo = this._contractsService.demoMethod();
+
     this.tableData1 = {tokenData: ['ETH','WINGS','DNT','MTL', 'APPC','KNC','PFR','ICN','GUP','BAR','FDX','REQ','CRED','DRGN','POWR','FYN','DICE','VSL', 'BNTY', 'IND'], };
     this.tableData2 = {tokenData: ['ETH', 'WINGS', 'DNT', 'MTL', 'APPC', 'KNC', 'PFR', 'ICN', 'GUP', 'BAR', 'FDX', 'REQ', 'CRED', 'DRGN', 'POWR', 'FYN', 'DICE', 'VSL', 'BNTY', 'IND'], };
 
@@ -54,8 +61,8 @@ export class HomeComponent implements OnInit {
   }
 
   onSubmit1(form: HTMLFormElement) {
-    this.value1 = form; 
-    // console.log(this.value1);
+    this.value1 = form;
+    console.log(this.value1);
     // console.log(form.value.base_token);
     this.base_token = form.value.base_token;
     this.quote_token = form.value.quote_token;
@@ -68,10 +75,10 @@ export class HomeComponent implements OnInit {
 
   onSubmit2(form2: HTMLFormElement) {
     this.value2 = form2;
-    // console.log(this.value2);
+    console.log(this.value2);
     this.assets_offered = form2.value.assets_offered;
-    this.premium = form2.value.preimum;
-    this.expiry_date_2 = form2.value.expiry_date_2;
+    this.premium = form2.value.premium;
+    this.blockdata = form2.value.blockdata;
     console.log(this.premium);
   }
 
@@ -85,5 +92,10 @@ export class HomeComponent implements OnInit {
   }
 
   onStepOne() {
+  }
+
+  minDate() {
+    this.newdate = Date();
+    return this.newdate;
   }
 }
