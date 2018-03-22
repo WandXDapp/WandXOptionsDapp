@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef } from '@angular/core';
 import { LocationStrategy, PlatformLocation, Location } from '@angular/common';
+import { NgForm } from '@angular/forms';
 
 import { AuthService } from './services/auth.service';
+import { ContractsService } from "./contracts.service";
 
 @Component({
   selector: 'app-root',
@@ -9,13 +11,16 @@ import { AuthService } from './services/auth.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
+  public balance: number;
 
-     constructor(public location: Location) {}
+  constructor(cs: ContractsService) {
+    cs.getUserBalance().then(balance => this.balance = balance);
+  }
 
     ngOnInit(){
     }
 
-    isMap(path){
+    /*isMap(path){
       var titlee = this.location.prepareExternalUrl(this.location.path());
       titlee = titlee.slice( 1 );
       if(path == titlee){
@@ -24,5 +29,11 @@ export class AppComponent implements OnInit {
       else {
         return true;
       }
+    }*/
+
+    suggestUserName() {
+      const suggestedName = 'Superuser';
     }
+
+  
 }
