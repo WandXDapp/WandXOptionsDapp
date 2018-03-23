@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import * as Web3 from 'web3';
-import * as derivativeFactory from 'wandx-options/build/contracts/DerivativeFactory.json';
-import * as option from 'wandx-options/build/contracts/Option.json';
-import * as wandxfaucet from 'wandx-options/build/contracts/WandXTokenFaucet.json';
+
+const derivativeFactory = require("wandx-options/build/contracts/DerivativeFactory.json");
+const option = require("wandx-options/build/contracts/Option.json");
+const wandxfaucet = require("wandx-options/build/contracts/WandXTokenFaucet.json");
 
 export const WEB3_INITIALIZED = 'WEB3_INITIALIZED';
 
@@ -27,8 +28,8 @@ export class ContractsService {
 	private _web3Status: string = null;
 	private _test_version: any;
 	private _test_version_name: string;
-	private _useNetwork: string = '15';
-	private _useNetworkNumber: number = 15;
+	private _useNetwork: string = '3';
+	private _useNetworkNumber: number = 3;
 	
 	constructor() { }
 
@@ -103,20 +104,20 @@ export class ContractsService {
 		
 		var faucet = new this._web3.eth.Contract(wandxfaucet.abi, wandxfaucet.networks[this._useNetwork].address);
 		
-		var getTokenObj = await new Promise((resolve, reject) => {
-			faucet.methods.getTokens("10000000000000000000000", this._web3.eth.defaultAccount).send({from: this._web3.eth.defaultAccount}, function(error, result){
-				console.log(error, result);
-				resolve(result);
-			});
-		}) as any;
+		// var getTokenObj = await new Promise((resolve, reject) => {
+		// 	faucet.methods.getTokens("10000000000000000000000", this._web3.eth.defaultAccount).send({from: this._web3.eth.defaultAccount}, function(error, result){
+		// 		console.log(error, result);
+		// 		resolve(result);
+		// 	});
+		// }) as any;
 
-		var getTokenObj = await new Promise((resolve, reject) => {
-			faucet.methods.approve(derivativeFactory.networks[this._useNetwork].address, "10000000000000000000000").send({from: this._web3.eth.defaultAccount}, function(error, result){
-				console.log(error, result);
-				resolve(result);
-			});
-		}) as any;
-		return Promise.resolve(true);
+		// var getTokenObj = await new Promise((resolve, reject) => {
+		// 	faucet.methods.approve(derivativeFactory.networks[this._useNetwork].address, "10000000000000000000000").send({from: this._web3.eth.defaultAccount}, function(error, result){
+		// 		console.log(error, result);
+		// 		resolve(result);
+		// 	});
+		// }) as any;
+		// return Promise.resolve(true);
 	}
 
 	
@@ -126,23 +127,35 @@ export class ContractsService {
 
 		var optionAddress = await new Promise((resolve, reject) => {			
 			var derivativeFactoryObj = new this._web3.eth.Contract(derivativeFactory.abi, derivativeFactory.networks[this._useNetwork].address);
+			//derivativeFactoryObj.options.from = this._web3.eth.defaultAccount; // default from address
+			// derivativeFactoryObj.options.gasPrice = '1000000000000'; // default gas price in wei
+			// derivativeFactoryObj.options.gas = 300000;
+			
 			derivativeFactoryObj.methods.createNewOption(
 				baseToken,
 				quoteToken,
 				baseTokenDecimal,
 				quoteTokenDecimal,
 				strikePrice,
-				blockTimestamp)
-			.send({from: this._web3.eth.defaultAccount, gas: 50000}, function(error, result){
-				console.log("create txn hash", error, result);
-				if(error){
-					reject(error);
-				}
-			})
-			.on('OptionCreated', function(baseToken, quoteToken, blockTimestamp, optionAddress, creator){
-				console.log('Result of createNewOption', optionAddress);
-				resolve(optionAddress);
-			})
+				blockTimestamp
+			).send({
+				from: this._web3.eth.defaultAccount,
+				gas: 300000
+			}).then(function(receipt){
+				console.log(receipt);
+			}).catch(function(error) {
+				console.log(error);
+			});
+			// }, function(error, result){
+			// 	console.log("create txn hash", result);
+			// 	if(error){
+			// 		reject(error);
+			// 	}
+			// })
+			// .on('OptionCreated', function(baseToken, quoteToken, blockTimestamp, optionAddress, creator){
+			// 	console.log('Result of createNewOption', optionAddress);
+			// 	resolve(optionAddress);
+			// });
 		}) as string;
 		return Promise.resolve(optionAddress);
 		// return Promise.resolve("dfdf");

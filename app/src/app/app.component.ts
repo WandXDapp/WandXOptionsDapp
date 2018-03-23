@@ -17,12 +17,12 @@ export class AppComponent implements OnInit {
     
     cs.initWeb3().then(function(result) {
       cs.createNewOption(
-        '0x86fa049857e0209aa7d9e616f7eb3b3b78ecfdb0',
-        '0x86fa049857e0209aa7d9e616f7eb3b3b78ecfdb0',
+        '0x65D8e109fB9F8e58162A8301FD15FEc27Cc64603',
+        '0xb747DC80634274C03447A188eB30496B2D422977',
         18,
         18,
-        20,
-        1521749577
+        1,
+        1522797631
       ).then(function(result) {
         console.log("createoption " + result)
 
@@ -34,7 +34,7 @@ export class AppComponent implements OnInit {
 
       }, function(err) {
           console.log(err);
-      });        
+      });
     }, function(err) {
       console.log(err);
     });
