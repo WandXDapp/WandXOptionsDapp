@@ -28,8 +28,8 @@ export class ContractsService {
 	private _web3Status: string = null;
 	private _test_version: any;
 	private _test_version_name: string;
-	private _useNetwork: string = '3';
-	private _useNetworkNumber: number = 3;
+	private _useNetwork: string = '15';
+	private _useNetworkNumber: number = 15;
 	
 	constructor() { }
 
@@ -111,13 +111,13 @@ export class ContractsService {
 		// 	});
 		// }) as any;
 
-		// var getTokenObj = await new Promise((resolve, reject) => {
-		// 	faucet.methods.approve(derivativeFactory.networks[this._useNetwork].address, "10000000000000000000000").send({from: this._web3.eth.defaultAccount}, function(error, result){
-		// 		console.log(error, result);
-		// 		resolve(result);
-		// 	});
-		// }) as any;
-		// return Promise.resolve(true);
+		var getTokenObj = await new Promise((resolve, reject) => {
+			faucet.methods.approve(derivativeFactory.networks[this._useNetwork].address, "10000000000000000000000").send({from: this._web3.eth.defaultAccount}, function(error, result){
+				console.log(error, result);
+				resolve(result);
+			});
+		}) as any;
+		return Promise.resolve(true);
 	}
 
 	
@@ -125,12 +125,46 @@ export class ContractsService {
 		let account = await this.getAccount();
 		// let getWandFromFaucet = await this.getWandFromFaucet();
 
+		// await new Promise((resolve, reject) => {
+		// 	let options = {
+		// 		from: this._web3.eth.defaultAccount,
+		// 		gas: 40000
+		// 	}
+		// 	var optionInst = new this._web3.eth.Contract(option.abi, option);
+		// 	console.log(optionInst);
+
+		// 	optionInst.deploy({
+		// 		data: option.deployedBytecode,
+		// 		arguments: [baseToken, quoteToken, baseTokenDecimal, quoteTokenDecimal, strikePrice, blockTimestamp, this._web3.eth.defaultAccount]
+		// 	}).send({
+		// 		from: this._web3.eth.defaultAccount,
+		// 		gas: 1500000,
+		// 		gasPrice: '30000000000000'
+		// 	}, function(error, transactionHash){ 
+		// 		console.log(transactionHash);
+		// 	 }).on('error', function(error){ 
+		// 		console.log(error);
+		// 	}).on('transactionHash', function(transactionHash){ 
+		// 		console.log(transactionHash);
+		// 	}).on('receipt', function(receipt){
+		// 	   console.log(receipt.contractAddress) // contains the new contract address
+		// 	}).on('confirmation', function(confirmationNumber, receipt){ 
+		// 		console.log(receipt);
+		// 	}).then(function(newContractInstance){
+		// 		console.log(newContractInstance.options.address) // instance with the new contract address
+		// 	});
+
 		var optionAddress = await new Promise((resolve, reject) => {			
 			var derivativeFactoryObj = new this._web3.eth.Contract(derivativeFactory.abi, derivativeFactory.networks[this._useNetwork].address);
 			//derivativeFactoryObj.options.from = this._web3.eth.defaultAccount; // default from address
 			// derivativeFactoryObj.options.gasPrice = '1000000000000'; // default gas price in wei
 			// derivativeFactoryObj.options.gas = 300000;
-			
+			console.log(`baseToken:${baseToken}\n
+						quoteToken:${quoteToken}\n
+						baseTokenDecimal:${baseTokenDecimal}\n
+						quoteTokenDecimal:${quoteTokenDecimal}\n
+						strikePrice:${strikePrice}\n
+						blocktimestamp:${blockTimestamp}\n`);
 			derivativeFactoryObj.methods.createNewOption(
 				baseToken,
 				quoteToken,
@@ -140,7 +174,7 @@ export class ContractsService {
 				blockTimestamp
 			).send({
 				from: this._web3.eth.defaultAccount,
-				gas: 300000
+				gas: 4000000
 			}).then(function(receipt){
 				console.log(receipt);
 			}).catch(function(error) {
@@ -157,7 +191,7 @@ export class ContractsService {
 			// 	resolve(optionAddress);
 			// });
 		}) as string;
-		return Promise.resolve(optionAddress);
+		return Promise.resolve("optionAddress");
 		// return Promise.resolve("dfdf");
 	}
 

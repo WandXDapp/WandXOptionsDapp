@@ -14,15 +14,20 @@ export class AppComponent implements OnInit {
   public balance: number;
 
   constructor(cs: ContractsService) {
+    // cs.initWeb3().then(function(result) {
+    //   cs.getWandFromFaucet().then(function(result) {
+    //     console.log("Tokens Successfully transferred from faucet" + result);
+    //   })
+    // })
     
     cs.initWeb3().then(function(result) {
       cs.createNewOption(
-        '0x65D8e109fB9F8e58162A8301FD15FEc27Cc64603',
-        '0xb747DC80634274C03447A188eB30496B2D422977',
+        '0xD8d9020237eDE2C0d89403900D7aFC57E5b3DA3b',
+        '0xE9bD8515a3D09Ac5b56dFBa6c4244A26cad81A7E',
         18,
         18,
         1,
-        1522797631
+        1526342400
       ).then(function(result) {
         console.log("createoption " + result)
 
@@ -38,7 +43,7 @@ export class AppComponent implements OnInit {
     }, function(err) {
       console.log(err);
     });
-  }
+   }
 
     ngOnInit(){
     }
