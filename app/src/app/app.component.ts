@@ -34,63 +34,62 @@ export class AppComponent implements OnInit {
 		let assetValue = assetsOffered * strikePrice * multiplyFactor;
 		
     	// init web3
-		cs.initWeb3().then(function(result) {
+		// cs.initWeb3().then(function(result) {
 
-			// get current allowance of contract
-			cs.getCurrentAllowance().then(function(currentAllowance){
+		// 	// get current allowance of contract
+		// 	cs.getCurrentAllowance().then(function(currentAllowance){
 
-				// if we dont have enough allowance then throw error
-				// in dev, get more from faucet in palce of error
-				cs.getContractFee().then(function(contractFee){
+		// 		// if we dont have enough allowance then throw error
+		// 		// in dev, get more from faucet in palce of error
+		// 		cs.getContractFee().then(function(contractFee){
 
-					if(currentAllowance < contractFee) {
-						console.log(currentAllowance, contractFee);
-						if(networkVersion == 1){
-							console.log("Not enough allowance")
-							return;
-						}
+		// 			if(currentAllowance < contractFee) {
+		// 				console.log(currentAllowance, contractFee);
+		// 				if(networkVersion == 1){
+		// 					console.log("Not enough allowance")
+		// 					return;
+		// 				}
 	
-						let tokenCount = '10000000000000000000000';
-						cs.faucetGetTokens(tokenCount).then(function(result){
-							if(result){
-								cs.faucetApprove(tokenCount).then(function(result){
+		// 				let tokenCount = '10000000000000000000000';
+		// 				cs.faucetGetTokens(tokenCount).then(function(result){
+		// 					if(result){
+		// 						cs.faucetApprove(tokenCount).then(function(result){
 	
-								})
-							}
-						})
-						
-						return;
-					}
+		// 						})
+		// 					}
+		// 				})
+		// 				return;
+		// 			}
 
-					// cs.createNewOption(
-					// 	baseToken,
-					// 	quoteToken,
-					// 	baseTokenDecimal,
-					// 	quoteTokenDecimal,
-					// 	strikePrice,
-					// 	blockTimestamp
-					// ).then(function(optionAddress) {
-					// 	cs.approveAssets(quoteToken, optionAddress, assetValue).then(function(result){
-					// 		if(!result){
-					// 			console.log("Unable to approce assets");
-					// 			return;
-					// 		}
-					// 		cs.issueOption(optionAddress, assetsOffered, premium, expiry).then(function(result) {
-					// 			console.log("issue" + result);
-					// 		}, function(err) {
-					// 			console.log(err);
-					// 		}); 
-					// 	});
-					// }, function(err) {
-					// 	console.log(err);
-					// });
+		// 			// cs.createNewOption(
+		// 			// 	baseToken,
+		// 			// 	quoteToken,
+		// 			// 	baseTokenDecimal,
+		// 			// 	quoteTokenDecimal,
+		// 			// 	strikePrice,
+		// 			// 	blockTimestamp
+		// 			// ).then(function(optionAddress) {
+		// 			// 	cs.approveAssets(quoteToken, optionAddress, assetValue).then(function(result){
+		// 			// 		if(!result){
+		// 			// 			console.log("Unable to approce assets");
+		// 			// 			return;
+		// 			// 		}
+		// 			// 		cs.issueOption(optionAddress, assetsOffered, premium, expiry).then(function(result) {
+		// 			// 			console.log("issue" + result);
+		// 			// 		}, function(err) {
+		// 			// 			console.log(err);
+		// 			// 		}); 
+		// 			// 	});
+		// 			// }, function(err) {
+		// 			// 	console.log(err);
+		// 			// });
 
-				});
-			});
+		// 		});
+		// 	});
 
-		}, function(err) {
-			console.log(err);
-		});
+		// }, function(err) {
+		// 	console.log(err);
+		// });
   	}
 
     ngOnInit(){

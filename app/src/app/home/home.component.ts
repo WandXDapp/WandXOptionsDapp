@@ -1,9 +1,13 @@
+// import { ContractsService } from './../services/contracts.service';
 import { ContractsService } from '../services/contracts.service';
 import { Component, OnInit } from '@angular/core';
 import { LocationStrategy, PlatformLocation, Location } from '@angular/common';
 import { LegendItem, ChartType } from '../lbd/lbd-chart/lbd-chart.component';
-import { NgForm } from '@angular/forms';
+import { NgForm} from '@angular/forms';
 import Web3 from 'web3';
+
+var BigNumber = require('bignumber.js');
+
 declare interface TokenData {
     tokenData: string[];
 }
@@ -33,12 +37,82 @@ export class HomeComponent implements OnInit {
   date: number;
   month: number;
   year:number;
+  validdate:any;
+  token:any;
+  eth:any;
+  contractsService:any;
+  public UserBalance: any;
+  public CurrentAllowance: any;
+  public ContractFee:any; 
+  public optionAddress:any;
+  baseTokenDecimal:any;
+  quoteTokenDecimal:any;
+  strikePrice:any;
+  blockTimestamp:any;
+  assetsOffered:any;
+  assetValue:any;
+  multiplyFactor:any;
 //    abi_Derivative_Factory: any = json_Derivative_Factory.abi[0];
-  constructor(private _contractsService: ContractsService) {
+  constructor( _contractsService: ContractsService) {
 
     // this.demo = demoMethod();
 
+
     this.newdate = new Date();
+    this.date = this.newdate.getDate();
+    this.date = this.date + 1;
+    this.month = this.newdate.getMonth();
+    this.month = this.month + 1;
+    this.year = this.newdate.getFullYear();
+
+    this.validdate = this.year + '-0' + this.month + '-' + this.date;
+    // console.log(this.validdate);
+
+    // this.token = _contractsService.getUserBalance();
+    this.contractsService = _contractsService;
+
+
+    this.base_token = this.contractsService.getBaseTokenAddress();
+    this.quote_token = this.contractsService.getQuoteTokenAddress();
+    this.baseTokenDecimal = 18;
+    this.quoteTokenDecimal = 18;
+    this.strikePrice = 1;
+    this.blockTimestamp = Date.now() + 86400000;
+
+    this.assetsOffered = 50;
+    this.premium = 10;
+    this.expiry_date_1 = 5000;
+
+    this.contractsService.initWeb3().then((result) => {
+
+      _contractsService.getUserBalance().then((balance: number) => {
+        // console.log(balance);
+        this.UserBalance = balance;
+
+
+      });
+
+      _contractsService.getCurrentAllowance().then((allowance:number) => {
+        // console.log(allowance);
+        this.CurrentAllowance = allowance;
+
+      });
+
+      _contractsService.getContractFee().then((contractFee: number) => {
+        // console.log(contractFee);
+        this.ContractFee = contractFee;
+      });
+// *************************** to get faucets******************** //
+
+      // let tokenCount = '10000000000000000000000';
+      // this.contractsService.faucetGetTokens(tokenCount).then((result) => {
+      //   if (result) {
+      //     this.contractsService.faucetApprove(tokenCount).then(function (result) {
+
+      //     })
+      //   }
+      // });
+    });
    }
 
   take_special_char(event){
@@ -49,6 +123,11 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
 
+    // while (this.contractsService.getweb3Status() != null){}
+
+
+
+
 //    this.demo = this._contractsService.demoMethod();
 
     this.tableData1 = {tokenData: ['ETH','WINGS','DNT','MTL', 'APPC','KNC','PFR','ICN','GUP','BAR','FDX','REQ','CRED','DRGN','POWR','FYN','DICE','VSL', 'BNTY', 'IND'], };
@@ -57,6 +136,10 @@ export class HomeComponent implements OnInit {
   }
 
   getDisplay() {
+    // var abc = await _contractsService.getAccput();
+    // _contractsService.getAccount().the(function (abc) {
+
+    // }))
     return this.onSectionDisplay === 'display' ? 'none' : 'block';
   }
 
@@ -72,6 +155,7 @@ export class HomeComponent implements OnInit {
     this.expiry_date_1 = form.value.expiry_date_1;
     this.alloance = form.value.alloance;
     // console.log(this.alloance);
+//    this.quote_token = this.contractsService.getQuoteTokenAddress();
 
   }
 
@@ -92,10 +176,74 @@ export class HomeComponent implements OnInit {
   }
 
   onStepOne() {
+    if (this.CurrentAllowance > this.ContractFee){
+
+      this.contractsService.createNewOption(
+        this.base_token,
+        this.quote_token,
+        this.baseTokenDecimal,
+        this.quoteTokenDecimal,
+        this.strikePrice,
+        this.blockTimestamp
+      ).then((optionAddress) => {
+        // console.log(allowance);
+        this.optionAddress = optionAddress;
+        console.log(this.optionAddress);
+      });
+
+      // optionCreate();
+    }else {
+
+      // popup
+      // this.CurrentAllowance <= this.UserBalance --> confirm on Ok
+      // faucetApprove()
+      // optionCreate();
+    }
+    // console.log(this.UserBalance);
+
+  }
+
+  onStepTwo() {
+    this.multiplyFactor = new BigNumber(10).pow(this.quoteTokenDecimal).toNumber();
+    this.assetValue = this.assetsOffered * this.strikePrice * this.multiplyFactor;
+    // console.log(this.optionAddress);
+    console.log(this.quote_token);
+    
+    this.contractsService.approveAssets(this.quote_token, this.optionAddress, this.assetValue).then(function (result) {
+        if(!result){
+          console.log(' Unable to approce assets ');
+          return;
+        }
+        console.log(this.optionAddress);
+        
+        this.contractsService.issueOption(this.optionAddress, this.assetsOffered, this.premium, this.expiry_date_1).then(function(result) {
+          console.log('issue' + result);
+        }, function(err) {
+          console.log(err);
+        });
+      });
   }
 
   minDate() {
     this.newdate = Date();
+  }
+
+
+  getBalance() {
+    this.contractsService.getUserBalance().then(function (balance: number) {
+      return balance;
+    });
+  }
+
+  getAllowance() {
+    this.contractsService.getCurrentAllowance().then(function (allowance: number) {
+      return allowance;
+    });
+  }
+
+  optionCreate() {
 
   }
+
+
 }

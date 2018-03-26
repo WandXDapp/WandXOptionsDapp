@@ -44,6 +44,8 @@ export class ContractsService {
 	constructor() { }
 
 	public async initWeb3(): Promise<string> {
+
+		this._web3Status = null;
 		
 		let initStatus = await new Promise((resolve, reject) => {
 			var web3 = window.web3;
@@ -124,6 +126,10 @@ export class ContractsService {
 			});
 		}) as number;
 		return Promise.resolve(fee);
+	}
+
+	public getweb3Status(){
+		return this._web3Status;
 	}
 
 	public async getCurrentAllowance(): Promise<number> {		
