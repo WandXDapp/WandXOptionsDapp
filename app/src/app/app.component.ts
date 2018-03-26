@@ -5,47 +5,88 @@ import { NgForm } from '@angular/forms';
 import { AuthService } from './services/auth.service';
 import { ContractsService } from "./contracts.service";
 
+var BigNumber = require('bignumber.js');
+
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+	selector: 'app-root',
+	templateUrl: './app.component.html',
+	styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  public balance: number;
-
-  constructor(cs: ContractsService) {
-    // cs.initWeb3().then(function(result) {
-    //   cs.getWandFromFaucet().then(function(result) {
-    //     console.log("Tokens Successfully transferred from faucet" + result);
-    //   })
-    // })
+	public balance: number;
+	
+	constructor(cs: ContractsService) {
     
-    cs.initWeb3().then(function(result) {
-      cs.createNewOption(
-        '0xD8d9020237eDE2C0d89403900D7aFC57E5b3DA3b',
-        '0xE9bD8515a3D09Ac5b56dFBa6c4244A26cad81A7E',
-        18,
-        18,
-        1,
-        1526342400
-      ).then(function(result) {
-        console.log("createoption " + result)
+		let networkVersion = cs.getNetworkVersion();
 
-        // cs.issueOption(result, 10, 10, 10).then(function(result) {
-        //   console.log("issue" + result);
-        // }, function(err) {
-        //     console.log(err);
-        // }); 
+		let baseToken = cs.getBaseTokenAddress();
+		let quoteToken = cs.getQuoteTokenAddress();
+		let baseTokenDecimal = 18;
+		let quoteTokenDecimal = 18;
+		let strikePrice = 1
+		let blockTimestamp = Date.now() + 86400000;
 
-      }, function(err) {
-          console.log(err);
-      });
-    }, function(err) {
-      console.log(err);
-    });
-   }
+		let assetsOffered = 50;
+		let premium = 10;
+		let expiry = 10;
+
+		let multiplyFactor = new BigNumber(10).pow(quoteTokenDecimal).toNumber();
+		let allowanceNeeded = assetsOffered * strikePrice * multiplyFactor;
+
+    	// init web3
+		cs.initWeb3().then(function(result) {
+
+			// get current allowance of contract
+			cs.getCurrentAllowance().then(function(currentAllowance){
+        
+				// if we dont have enough allowance then throw error
+				// in dev, get more from faucet in palce of error
+				if(currentAllowance < allowanceNeeded) {
+					if(networkVersion == 1){
+						console.log("Not enough allowance")
+						return;
+					}
+
+					let tokenCount = '10000000000000000000000';
+					cs.faucetGetTokens(tokenCount).then(function(result){
+						if(result){
+							cs.faucetApprove(tokenCount).then(function(result){
+
+							})
+						}
+					})
+					
+					return;
+				}
+				
+				cs.createNewOption(
+					baseToken,
+					quoteToken,
+					baseTokenDecimal,
+					quoteTokenDecimal,
+					strikePrice,
+					blockTimestamp
+				).then(function(optionAddress) {
+					
+					cs.issueOption(optionAddress, assetsOffered, premium, expiry).then(function(result) {
+					  console.log("issue" + result);
+					}, function(err) {
+					    console.log(err);
+					}); 
+	
+				}, function(err) {
+					console.log(err);
+				});
+
+      		});
+
+		}, function(err) {
+			console.log(err);
+		});
+  	}
 
     ngOnInit(){
+      
     }
 
     /*isMap(path){
@@ -60,8 +101,6 @@ export class AppComponent implements OnInit {
     }*/
 
     suggestUserName() {
-      const suggestedName = 'Superuser';
-    }
-
-  
+		const suggestedName = 'Superuser';
+    } 
 }
