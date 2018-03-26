@@ -15,7 +15,7 @@ declare interface TokenData {
   providers: [ContractsService]
 })
 export class HomeComponent implements OnInit {
-  demo : string;
+  demo: string;
   value1: any;
   value2: any;
   web3: any = [];
@@ -30,11 +30,15 @@ export class HomeComponent implements OnInit {
   premium: any = '';
   blockdata: any = '';
   newdate: any;
+  date: number;
+  month: number;
+  year:number;
 //    abi_Derivative_Factory: any = json_Derivative_Factory.abi[0];
   constructor(private _contractsService: ContractsService) {
-    function Ctrl($scope) {
-      $scope.date = new Date();
-    }
+
+    // this.demo = demoMethod();
+
+    this.newdate = new Date();
    }
 
   take_special_char(event){
@@ -62,24 +66,20 @@ export class HomeComponent implements OnInit {
 
   onSubmit1(form: HTMLFormElement) {
     this.value1 = form;
-    console.log(this.value1);
     // console.log(form.value.base_token);
     this.base_token = form.value.base_token;
     this.quote_token = form.value.quote_token;
     this.expiry_date_1 = form.value.expiry_date_1;
     this.alloance = form.value.alloance;
-    console.log(this.base_token);
     // console.log(this.alloance);
 
   }
 
   onSubmit2(form2: HTMLFormElement) {
     this.value2 = form2;
-    console.log(this.value2);
     this.assets_offered = form2.value.assets_offered;
     this.premium = form2.value.premium;
     this.blockdata = form2.value.blockdata;
-    console.log(this.premium);
   }
 
   onSubmit3(form3: HTMLFormElement) {
@@ -96,6 +96,6 @@ export class HomeComponent implements OnInit {
 
   minDate() {
     this.newdate = Date();
-    return this.newdate;
+
   }
 }
