@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as Web3 from 'web3';
 
+const ierc20 = require("wandx-options/build/contracts/IERC20.json");
 const derivativeFactory = require("wandx-options/build/contracts/DerivativeFactory.json");
 const option = require("wandx-options/build/contracts/Option.json");
 const wandxfaucet = require("wandx-options/build/contracts/WandXTokenFaucet.json");
@@ -35,6 +36,7 @@ export class ContractsService {
 	private _useNetwork: string = '15';
 	private _useNetworkNumber: number = 15;
 	private _gas = 4000000;
+	private _gasPrice = 21000000000;
 	
 	private _faucetObj: any;
 	private _derivativeFactoryObj: any;
@@ -87,13 +89,8 @@ export class ContractsService {
 
 		if(initStatus == 'success'){
 			let account = await this.getAccount();
-			this._faucetObj = new this._web3.eth.Contract(wandxfaucet.abi, wandxfaucet.networks[this._useNetwork].address);
-			this._faucetObj.options.from = this._web3.eth.defaultAccount;
-			this._faucetObj.options.gas = this._gas;
-
-			this._derivativeFactoryObj = new this._web3.eth.Contract(derivativeFactory.abi, derivativeFactory.networks[this._useNetwork].address);
-			this._derivativeFactoryObj.options.from = this._web3.eth.defaultAccount; // default from address
-			this._derivativeFactoryObj.options.gas = this._gas;
+			this._faucetObj = this.createContractObj(wandxfaucet.abi, wandxfaucet.networks[this._useNetwork].address);
+			this._derivativeFactoryObj = this.createContractObj(derivativeFactory.abi, derivativeFactory.networks[this._useNetwork].address);
 		}
 		
 		return Promise.resolve(initStatus);
@@ -111,27 +108,22 @@ export class ContractsService {
 		return dummyTokenQuote.address;
 	}
 
-	private async getAccount(): Promise<string> {		
-		if (this._account == null) {
-			this._account = await new Promise((resolve, reject) => {
-				this._web3.eth.getAccounts((err, accs) => {
-					if (err != null) {
-						alert('There was an error fetching your accounts.');
-						return;
-					}
-			
-					if (accs.length === 0) {
-						alert(
-							'Couldn\'t get any accounts! Make sure your Ethereum client is configured correctly.'
-						);
-						return;
-					}
-					resolve(accs[0]);
-				})
-			}) as string;
-			this._web3.eth.defaultAccount = this._account;
-		}
-		return Promise.resolve(this._account);
+	public async getContractFee(): Promise<number> {
+		var fee = await new Promise((resolve, reject) => {
+			this._derivativeFactoryObj.methods.getOptionFee().call().then(function(result){
+				resolve(result);
+			});
+		}) as number;
+		return Promise.resolve(fee);
+	}
+
+	public async getUserBalance(): Promise<number> {
+		var fee = await new Promise((resolve, reject) => {
+			this._faucetObj.methods.balanceOf(this._web3.eth.defaultAccount).call().then(function(result){
+				resolve(result);
+			});
+		}) as number;
+		return Promise.resolve(fee);
 	}
 
 	public async getCurrentAllowance(): Promise<number> {		
@@ -184,8 +176,8 @@ export class ContractsService {
 				blockTimestamp
 			)
 			.send()
-			.then(function(receipt){
-				resolve(receipt.events.OptionCreated.returnValues._optionAddress);
+			.on('receipt', function(receipt){ 
+				resolve(receipt.events.LogOptionCreated.returnValues._optionAddress);
 			})
 			.catch(function(error) {
 				console.log("error", error);
@@ -195,11 +187,22 @@ export class ContractsService {
 		return Promise.resolve(optionAddress);
 	}
 
+	public async approveAssets(contractAddress, optionAddress, assetValue): Promise<boolean> {
+		var approve = await new Promise((resolve, reject) => {
+			var assetObj = this.createContractObj(ierc20.abi, contractAddress);
+			assetObj.methods.approve(optionAddress, assetValue).send({}, function(error, result){
+				if(error){
+					reject(false);
+				}
+				resolve(true);
+			});
+		}) as boolean;
+		return Promise.resolve(approve);
+	}
+
 	public async issueOption(optionAddress, assetsOffered, premium, expiry): Promise<any> {
 		var response = await new Promise((resolve, reject) => {			
-			var optionObj = new this._web3.eth.Contract(option.abi, optionAddress);
-			optionObj.options.from = this._web3.eth.defaultAccount; // default from address
-			optionObj.options.gas = this._gas;
+			var optionObj = this.createContractObj(option.abi, optionAddress);
 			optionObj.methods.issueOption(
 				assetsOffered,
 				premium,
@@ -218,19 +221,35 @@ export class ContractsService {
 		}) as any;
 		return Promise.resolve(response);
 	}
-	
-	// public async getUserBalance(): Promise<number> {
-	// 	let account = await this.getAccount();
-	// 	console.log(account);
-	// 	return new Promise((resolve, reject) => {
-	// 		let _web3 = this._web3;
-	// 		//console.log(this._tokenContract.methods.owner.call())
-	// 		/* this._tokenContract.methods.owner(account, function (err, result) {
-	// 			if (err != null) {
-	// 				reject(err);
-	// 			}
-	// 			resolve(_web3.fromWei(result));
-	// 		});*/
-	// 	}) as Promise<number>;
-	// }
+
+	private async getAccount(): Promise<string> {		
+		if (this._account == null) {
+			this._account = await new Promise((resolve, reject) => {
+				this._web3.eth.getAccounts((err, accs) => {
+					if (err != null) {
+						alert('There was an error fetching your accounts.');
+						return;
+					}
+			
+					if (accs.length === 0) {
+						alert(
+							'Couldn\'t get any accounts! Make sure your Ethereum client is configured correctly.'
+						);
+						return;
+					}
+					resolve(accs[0]);
+				})
+			}) as string;
+			this._web3.eth.defaultAccount = this._account;
+		}
+		return Promise.resolve(this._account);
+	}
+
+	private createContractObj(abi, address): any {
+		var contractObj = new this._web3.eth.Contract(abi, address);
+		contractObj.options.from = this._web3.eth.defaultAccount;
+		contractObj.options.gas = this._gas;
+		contractObj.options.gasPrice = this._gasPrice;
+		return contractObj;
+	}
 }

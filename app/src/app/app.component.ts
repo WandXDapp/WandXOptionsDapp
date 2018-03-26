@@ -28,57 +28,65 @@ export class AppComponent implements OnInit {
 
 		let assetsOffered = 50;
 		let premium = 10;
-		let expiry = 10;
+		let expiry = 5000;
 
 		let multiplyFactor = new BigNumber(10).pow(quoteTokenDecimal).toNumber();
-		let allowanceNeeded = assetsOffered * strikePrice * multiplyFactor;
-
+		let assetValue = assetsOffered * strikePrice * multiplyFactor;
+		
     	// init web3
 		cs.initWeb3().then(function(result) {
 
 			// get current allowance of contract
 			cs.getCurrentAllowance().then(function(currentAllowance){
-        
+
 				// if we dont have enough allowance then throw error
 				// in dev, get more from faucet in palce of error
-				if(currentAllowance < allowanceNeeded) {
-					if(networkVersion == 1){
-						console.log("Not enough allowance")
+				cs.getContractFee().then(function(contractFee){
+
+					if(currentAllowance < contractFee) {
+						console.log(currentAllowance, contractFee);
+						if(networkVersion == 1){
+							console.log("Not enough allowance")
+							return;
+						}
+	
+						let tokenCount = '10000000000000000000000';
+						cs.faucetGetTokens(tokenCount).then(function(result){
+							if(result){
+								cs.faucetApprove(tokenCount).then(function(result){
+	
+								})
+							}
+						})
+						
 						return;
 					}
 
-					let tokenCount = '10000000000000000000000';
-					cs.faucetGetTokens(tokenCount).then(function(result){
-						if(result){
-							cs.faucetApprove(tokenCount).then(function(result){
+					// cs.createNewOption(
+					// 	baseToken,
+					// 	quoteToken,
+					// 	baseTokenDecimal,
+					// 	quoteTokenDecimal,
+					// 	strikePrice,
+					// 	blockTimestamp
+					// ).then(function(optionAddress) {
+					// 	cs.approveAssets(quoteToken, optionAddress, assetValue).then(function(result){
+					// 		if(!result){
+					// 			console.log("Unable to approce assets");
+					// 			return;
+					// 		}
+					// 		cs.issueOption(optionAddress, assetsOffered, premium, expiry).then(function(result) {
+					// 			console.log("issue" + result);
+					// 		}, function(err) {
+					// 			console.log(err);
+					// 		}); 
+					// 	});
+					// }, function(err) {
+					// 	console.log(err);
+					// });
 
-							})
-						}
-					})
-					
-					return;
-				}
-				
-				cs.createNewOption(
-					baseToken,
-					quoteToken,
-					baseTokenDecimal,
-					quoteTokenDecimal,
-					strikePrice,
-					blockTimestamp
-				).then(function(optionAddress) {
-					
-					cs.issueOption(optionAddress, assetsOffered, premium, expiry).then(function(result) {
-					  console.log("issue" + result);
-					}, function(err) {
-					    console.log(err);
-					}); 
-	
-				}, function(err) {
-					console.log(err);
 				});
-
-      		});
+			});
 
 		}, function(err) {
 			console.log(err);
