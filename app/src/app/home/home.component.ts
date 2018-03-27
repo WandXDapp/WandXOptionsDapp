@@ -35,7 +35,7 @@ export class HomeComponent implements OnInit {
   blockdata: any = '';
   newdate: any;
   date: number;
-  month: number;
+  month: any;
   year:number;
   validdate:any;
   token:any;
@@ -52,18 +52,32 @@ export class HomeComponent implements OnInit {
   assetsOffered:any;
   assetValue:any;
   multiplyFactor:any;
+  display:any;
 //    abi_Derivative_Factory: any = json_Derivative_Factory.abi[0];
   constructor( _contractsService: ContractsService) {
 
     // this.demo = demoMethod();
 
 
-    this.newdate = new Date();
-    this.date = this.newdate.getDate();
-    this.date = this.date + 1;
-    this.month = this.newdate.getMonth();
+    var day = new Date();
+    //console.log(day); // Apr 30 2000
+
+    var nextDay = new Date(day);
+    nextDay.setDate(day.getDate() + 1);
+    this.date = nextDay.getDate();
+    this.month = nextDay.getMonth();
     this.month = this.month + 1;
-    this.year = this.newdate.getFullYear();
+    if (this.month.toString().length === 1) {
+      this.month = this.month;
+    }
+    this.year = nextDay.getFullYear();
+
+    // this.newdate = new Date();
+    // this.date = this.newdate.getDate();
+    // this.date = this.date + 1;
+    // this.month = this.newdate.getMonth();
+    // this.month = this.month + 1;
+    // this.year = this.newdate.getFullYear();
 
     this.validdate = this.year + '-0' + this.month + '-' + this.date;
     // console.log(this.validdate);
@@ -195,7 +209,7 @@ export class HomeComponent implements OnInit {
     }else {
 
       // popup
-      // this.CurrentAllowance <= this.UserBalance --> confirm on Ok
+      // this.CurrentAllowance < = this.UserBalance --> confirm on Ok
       // faucetApprove()
       // optionCreate();
     }
@@ -243,6 +257,14 @@ export class HomeComponent implements OnInit {
 
   optionCreate() {
 
+  }
+
+  openModal() {
+    this.display = 'block';
+  }
+
+  onCloseHandled() {
+    this.display = 'none';
   }
 
 
