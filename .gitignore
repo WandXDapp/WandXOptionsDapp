@@ -1,1 +1,5 @@
 node_modules/*
+internal_logs/*
+logs_dev/*
+logs_prod/*
+.DS_Store

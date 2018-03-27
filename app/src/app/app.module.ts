@@ -22,9 +22,9 @@ import { ValidateService } from './services/validate.service';
 import { AuthService } from './services/auth.service';
 import { FlashMessagesModule } from 'angular2-flash-messages';
 import { AuthGuard } from './guards/auth.guard';
-import { LoginComponent } from './login/login.component';
-import { RegisterComponent } from './register/register.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
+import { ContractsService } from './services/contracts.service';
+import Web3 from 'web3';
+// import { Web3Service } from '../services/meta.service';
 
 @NgModule({
   declarations: [
@@ -33,10 +33,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     UserComponent,
     TablesComponent,
     TypographyComponent,
-    NotificationsComponent,
-    LoginComponent,
-    RegisterComponent,
-    DashboardComponent
+    NotificationsComponent
 
   ],
   imports: [
@@ -50,7 +47,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     AppRoutingModule,
     FlashMessagesModule.forRoot()
   ],
-  providers: [ValidateService, AuthService, AuthGuard],
+  providers: [ValidateService, AuthService, AuthGuard, ContractsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
