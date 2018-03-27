@@ -17,21 +17,21 @@ export class AppComponent implements OnInit {
 	
 	constructor(cs: ContractsService) {
     
-		let networkVersion = cs.getNetworkVersion();
+		// let networkVersion = cs.getNetworkVersion();
 
-		let baseToken = cs.getBaseTokenAddress();
-		let quoteToken = cs.getQuoteTokenAddress();
-		let baseTokenDecimal = 18;
-		let quoteTokenDecimal = 18;
-		let strikePrice = 1
-		let blockTimestamp = Date.now() + 86400000;
+		// let baseToken = cs.getBaseTokenAddress();
+		// let quoteToken = cs.getQuoteTokenAddress();
+		// let baseTokenDecimal = 18;
+		// let quoteTokenDecimal = 18;
+		// let strikePrice = 1
+		// let blockTimestamp = Date.now() + 86400000;
 
-		let assetsOffered = 50;
-		let premium = 10;
-		let expiry = 5000;
+		// let assetsOffered = 50;
+		// let premium = 10;
+		// let expiry = 5000;
 
-		let multiplyFactor = new BigNumber(10).pow(quoteTokenDecimal).toNumber();
-		let assetValue = assetsOffered * strikePrice * multiplyFactor;
+		// let multiplyFactor = new BigNumber(10).pow(quoteTokenDecimal).toNumber();
+		// let assetValue = assetsOffered * strikePrice * multiplyFactor;
 		
     	// init web3
 		// cs.initWeb3().then(function(result) {
