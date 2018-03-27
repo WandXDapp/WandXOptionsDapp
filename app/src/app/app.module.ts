@@ -22,10 +22,7 @@ import { ValidateService } from './services/validate.service';
 import { AuthService } from './services/auth.service';
 import { FlashMessagesModule } from 'angular2-flash-messages';
 import { AuthGuard } from './guards/auth.guard';
-import { LoginComponent } from './login/login.component';
-import { RegisterComponent } from './register/register.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { ContractsService } from './contracts.service';
+import { ContractsService } from './services/contracts.service';
 import Web3 from 'web3';
 // import { Web3Service } from '../services/meta.service';
 
@@ -36,10 +33,7 @@ import Web3 from 'web3';
     UserComponent,
     TablesComponent,
     TypographyComponent,
-    NotificationsComponent,
-    LoginComponent,
-    RegisterComponent,
-    DashboardComponent
+    NotificationsComponent
 
   ],
   imports: [
