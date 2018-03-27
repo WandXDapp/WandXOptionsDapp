@@ -30,8 +30,8 @@ module.exports = {
     },
     
     get: function () {
-        return db;
-    },
+        return db.db('wandx');
+    }, 
     
     close: function (done) {
         if (!db) {

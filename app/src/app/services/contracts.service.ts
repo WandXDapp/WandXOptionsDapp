@@ -6,8 +6,7 @@ const derivativeFactory = require("wandx-options/build/contracts/DerivativeFacto
 const option = require("wandx-options/build/contracts/Option.json");
 const wandxfaucet = require("wandx-options/build/contracts/WandXTokenFaucet.json");
 
-const dummyTokenBase = require("wandx-options/build/dummyTokenBaseInfo.json");
-const dummyTokenQuote = require("wandx-options/build/dummyTokenQuoteInfo.json");
+const dummyTokens = require("wandx-options/build/dummyTokenInfo.json");
 
 export const WEB3_INITIALIZED = 'WEB3_INITIALIZED';
 
@@ -98,16 +97,29 @@ export class ContractsService {
 		return Promise.resolve(initStatus);
 	}
 	
+	public getweb3Status(): string {
+		return this._web3Status;
+	}
+
 	public getNetworkVersion(): number {
 		return this._useNetworkNumber;
 	}
 
-	public getBaseTokenAddress(): string {
-		return dummyTokenBase.address;
+	public getUserAddress(): string {
+		return this._web3.eth.defaultAccount;
 	}
 
-	public getQuoteTokenAddress(): string {
-		return dummyTokenQuote.address;
+	public getTokenList(): any {
+		return dummyTokens;
+	}
+
+	public getTokenObj(tokenName): any {
+		var retToken = {};
+		dummyTokens.forEach(function(token){
+			if(token.name == tokenName)
+				retToken = token;
+		});
+		return retToken;
 	}
 
 	public async getContractFee(): Promise<number> {
@@ -128,10 +140,6 @@ export class ContractsService {
 		return Promise.resolve(fee);
 	}
 
-	public getweb3Status(){
-		return this._web3Status;
-	}
-
 	public async getCurrentAllowance(): Promise<number> {		
 		var allowance = await new Promise((resolve, reject) => {
 			this._faucetObj.methods.allowance(this._web3.eth.defaultAccount,  derivativeFactory.networks[this._useNetwork].address).call().then(function(result){
@@ -139,6 +147,18 @@ export class ContractsService {
 			});
 		}) as any;
 		return Promise.resolve(allowance);
+	}
+
+	private async getBlockNumber(): Promise<number> {		
+		let blockNumber = await new Promise((resolve, reject) => {
+			this._web3.eth.getBlockNumber((err, blockNumber) => {
+				if (err != null) {
+					reject(0);
+				}
+				resolve(blockNumber);
+			})
+		}) as number;
+		return Promise.resolve(blockNumber);
 	}
 
 	public async faucetGetTokens(tokenCount): Promise<boolean> {		
@@ -156,16 +176,11 @@ export class ContractsService {
 	}
 
 	public async faucetApprove(tokenCount): Promise<boolean> {		
-		var approve = await new Promise((resolve, reject) => {
-			this._faucetObj.methods.approve(derivativeFactory.networks[this._useNetwork].address, tokenCount).send({}, function(error, result){
-				if(error){
-					console.log("faucetApprove erorr", error);
-					resolve(false);
-				}
-				console.log("faucetApprove result", result);
-				resolve(true);
-			});
-		}) as boolean;
+		var approve = await this.approveContract(
+			this._faucetObj, 
+			derivativeFactory.networks[this._useNetwork].address,
+			tokenCount
+		);
 		return Promise.resolve(approve);
 	}
 
@@ -194,15 +209,12 @@ export class ContractsService {
 	}
 
 	public async approveAssets(contractAddress, optionAddress, assetValue): Promise<boolean> {
-		var approve = await new Promise((resolve, reject) => {
-			var assetObj = this.createContractObj(ierc20.abi, contractAddress);
-			assetObj.methods.approve(optionAddress, assetValue).send({}, function(error, result){
-				if(error){
-					reject(false);
-				}
-				resolve(true);
-			});
-		}) as boolean;
+		var assetObj = this.createContractObj(ierc20.abi, contractAddress);
+		var approve = await this.approveContract(
+			assetObj,
+			optionAddress,
+			assetValue
+		);
 		return Promise.resolve(approve);
 	}
 
@@ -249,6 +261,19 @@ export class ContractsService {
 			this._web3.eth.defaultAccount = this._account;
 		}
 		return Promise.resolve(this._account);
+	}
+
+	private async approveContract(contract, address, tokenCount): Promise<boolean> {
+		var approve = await new Promise((resolve, reject) => {
+			contract.methods.approve(address, tokenCount).send({}, function(error, result){
+				if(error){
+					console.log("approveContract erorr", error);
+					resolve(false);
+				}
+				resolve(true);
+			});
+		}) as boolean;
+		return Promise.resolve(approve);
 	}
 
 	private createContractObj(abi, address): any {
