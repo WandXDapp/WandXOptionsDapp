@@ -58,7 +58,9 @@ export class HomeComponent implements OnInit {
   assetValue:any;
   multiplyFactor:any;
   display:any;
-  popupAllowanceInput:any;
+  popupAllowanceInput:number;
+  wandxTokenAddress:any;
+  flag:number;
 //    abi_Derivative_Factory: any = json_Derivative_Factory.abi[0];
   constructor( _contractsService: ContractsService) {
     this.display = 'none';
@@ -98,14 +100,21 @@ export class HomeComponent implements OnInit {
 
     this.contractsService.initWeb3().then((result) => {
 
-      _contractsService.getUserBalance().then((balance: number) => {
+      _contractsService.getWandxTokenAddress().then((wandxTokenAddress: string) => {
+        // console.log(balance);
+        this.wandxTokenAddress = wandxTokenAddress;
+
+
+      });
+
+      _contractsService.getBalance(this.wandxTokenAddress).then((balance: number) => {
         // console.log(balance);
         this.UserBalance = balance;
 
 
       });
 
-      _contractsService.getCurrentAllowance().then((allowance:number) => {
+      _contractsService.getWandxAllowance().then((allowance:number) => {
         // console.log(allowance);
         this.CurrentAllowance = allowance;
 
@@ -192,7 +201,9 @@ export class HomeComponent implements OnInit {
   }
 
   onSubmitAllowance(form: HTMLFormElement) {
-    console.log(form.nodeValue.popupAllowanceInput);
+    // console.log(form.value.popupAllowanceInput);
+    this.popupAllowanceInput = form.value.popupAllowanceInput;
+    this.popupAllowanceInput = this.popupAllowanceInput * 1000000000000000000;
   }
 
   connectMeta() {
@@ -223,10 +234,19 @@ export class HomeComponent implements OnInit {
     }else {
       // popup
       this.display = 'block';
+      console.log(this.popupAllowanceInput + 'popup balce');
+      console.log(this.UserBalance + 'user bal');
       
+      if (this.popupAllowanceInput < this.UserBalance ) {
+       this.flag = 2;
+        this.display = 'none !importent';
+        console.log(this.display);
+        
+
+      }
 
       // this.CurrentAllowance < = this.UserBalance --> confirm on Ok
-      // faucetApprove()
+      // approvewandx()
       // optionCreate();
     }
   }
@@ -239,7 +259,7 @@ export class HomeComponent implements OnInit {
     // console.log(this.optionAddress);
     // console.log(this.quote_token);
 
-    this.contractsService.approveAssets(this.qouteTokenAddress, this.optionAddress, this.assetValue).then(function (result) {
+    this.contractsService.approveAssets(this.qouteTokenAddress, this.optionAddress, this.assetValue).then(function (result) { // approvetoken
         if(!result){
           console.log(' Unable to approce assets ');
           return;
@@ -277,6 +297,17 @@ export class HomeComponent implements OnInit {
 
   optionCreate() {
 
+  }
+
+  approveAllowance() {
+    if (this.popupAllowanceInput < this.UserBalance) {
+      // this.display = 'none';
+    }
+  }
+
+  cancel_btn() {
+    this.display = 'none';
+    this.flag = 1;
   }
 
 }

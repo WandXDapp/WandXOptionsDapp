@@ -15,6 +15,7 @@ import { ValidateService } from './services/validate.service';
 import { AuthService } from './services/auth.service';
 import { FlashMessagesModule } from 'angular2-flash-messages';
 import { AuthGuard } from './guards/auth.guard';
+import { FaucetComponent } from './faucet/faucet.component';
 
 // import { LoginComponent } from './login/login.component';
 // import { RegisterComponent } from './register/register.component';
@@ -26,7 +27,8 @@ const routes: Routes =[
     { path: 'user',           component: UserComponent }, 
     { path: 'activeoptions',          component: TablesComponent },
     { path: 'statistics',     component: TypographyComponent },
-    { path: 'expiredoptions',  component: NotificationsComponent },
+    { path: 'expiredoptions', component: NotificationsComponent },
+    { path: 'faucet',  component:  FaucetComponent},
     { path: '',          redirectTo: 'createoptions', pathMatch: 'full' },
     // { path: 'notifications',  component: NotificationsComponent, canActivate: [AuthGuard] },
     // { path: 'dashboard',      component: HomeComponent, canActivate: [AuthGuard] },

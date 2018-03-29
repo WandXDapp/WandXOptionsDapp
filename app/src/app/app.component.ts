@@ -17,10 +17,9 @@ export class AppComponent implements OnInit {
 	
 	constructor(cs: ContractsService) {
     
-		// let networkVersion = cs.getNetworkVersion();
-
-		// let baseToken = cs.getBaseTokenAddress();
-		// let quoteToken = cs.getQuoteTokenAddress();
+		// // wandx token
+		// let baseToken;
+		// let quoteToken;
 		// let baseTokenDecimal = 18;
 		// let quoteTokenDecimal = 18;
 		// let strikePrice = 1
@@ -28,84 +27,125 @@ export class AppComponent implements OnInit {
 
 		// let assetsOffered = 50;
 		// let premium = 10;
-		// let expiry = 5000;
+		// let expiryBlock = 5000;
 
 		// let multiplyFactor = new BigNumber(10).pow(quoteTokenDecimal).toNumber();
 		// let assetValue = assetsOffered * strikePrice * multiplyFactor;
+
+		// let assetToTrade = 1;
+		// let assetToTradeApprove = 1 * premium * multiplyFactor;
 		
-    	// init web3
+    	// // init web3
 		// cs.initWeb3().then(function(result) {
 
-		// 	// get current allowance of contract
-		// 	cs.getCurrentAllowance().then(function(currentAllowance){
+		// 	baseToken = cs.getWandxTokenAddress();
+		// 	quoteToken = cs.getWandxTokenAddress();
 
-		// 		// if we dont have enough allowance then throw error
-		// 		// in dev, get more from faucet in palce of error
-		// 		cs.getContractFee().then(function(contractFee){
+		//  // START OF STEP 1
+		
+		// 	cs.getBlockNumber().then(function(blockNumber){
 
-		// 			if(currentAllowance < contractFee) {
-		// 				console.log(currentAllowance, contractFee);
-		// 				if(networkVersion == 1){
-		// 					console.log("Not enough allowance")
+		// 		expiryBlock = blockNumber + 50;
+				
+		// 		// get current allowance of contract
+		// 		cs.getWandxAllowance().then(function(currentWandxAllowance){
+
+		// 			// if we dont have enough allowance then throw error
+		// 			// in dev, get more from faucet in palce of error
+		// 			cs.getContractFee().then(function(contractFee){
+
+		// 				if(currentWandxAllowance < contractFee) {
+		// 					console.log("currentWandxAllowance is low", currentWandxAllowance, contractFee);
+							
+		// 					let tokenCount = '10000000000000000000000';
+		// 					cs.faucetGetTokens(tokenCount).then(function(result){});
+		// 					cs.approveWandx(tokenCount).then(function(result){});
 		// 					return;
 		// 				}
-	
-		// 				let tokenCount = '10000000000000000000000';
-		// 				cs.faucetGetTokens(tokenCount).then(function(result){
-		// 					if(result){
-		// 						cs.faucetApprove(tokenCount).then(function(result){
-	
-		// 						})
-		// 					}
-		// 				})
-		// 				return;
-		// 			}
 
-		// 			// cs.createNewOption(
-		// 			// 	baseToken,
-		// 			// 	quoteToken,
-		// 			// 	baseTokenDecimal,
-		// 			// 	quoteTokenDecimal,
-		// 			// 	strikePrice,
-		// 			// 	blockTimestamp
-		// 			// ).then(function(optionAddress) {
-		// 			// 	cs.approveAssets(quoteToken, optionAddress, assetValue).then(function(result){
-		// 			// 		if(!result){
-		// 			// 			console.log("Unable to approce assets");
-		// 			// 			return;
-		// 			// 		}
-		// 			// 		cs.issueOption(optionAddress, assetsOffered, premium, expiry).then(function(result) {
-		// 			// 			console.log("issue" + result);
-		// 			// 		}, function(err) {
-		// 			// 			console.log(err);
-		// 			// 		}); 
-		// 			// 	});
-		// 			// }, function(err) {
-		// 			// 	console.log(err);
-		// 			// });
+		// 				cs.createNewOption(
+		// 					baseToken,
+		// 					quoteToken,
+		// 					baseTokenDecimal,
+		// 					quoteTokenDecimal,
+		// 					strikePrice,
+		// 					blockTimestamp
+		// 				).then(function(optionAddress) {
+		
+		// 					// END OF STEP 1
 
+		// 					// START OF STEP 2
+		
+		// 					cs.approveToken(quoteToken, optionAddress, assetValue).then(function(result){
+		// 						if(!result){
+		// 							console.log("Unable to approve assets");
+		// 							return;
+		// 						}
+
+		// 						cs.issueOption(optionAddress, assetsOffered, premium, expiryBlock).then(function(result) {
+		// 							let tokenProxy = result;
+		// 							console.log("issueOption", result);
+
+		// 							// END OF STEP 2
+
+		// 							// START OF TRADE OPTION
+
+		// 							cs.approveToken(quoteToken, optionAddress, assetToTradeApprove).then(function(result){
+		// 								if(!result){
+		// 									console.log("Unable to approve assets");
+		// 									return;
+		// 								}
+
+		// 								cs.tradeOption(optionAddress, assetToTrade).then(function(response){
+		// 									console.log("tradeOption", response);
+
+		// 									// END OF TRADE OPTION		
+
+		// 									// START OF EXCERCISE OPTION		
+
+		// 									cs.approveToken(optionAddress, optionAddress, assetToTrade).then(function(result){
+		// 										if(!result){
+		// 											console.log("Unable to approve assets");
+		// 											return;
+		// 										}
+
+		// 										cs.approveToken(baseToken, tokenProxy, assetToTradeApprove).then(function(result){
+		// 											if(!result){
+		// 												console.log("Unable to approve assets");
+		// 												return;
+		// 											}
+	
+		// 											cs.exerciseOption(optionAddress, assetToTrade).then(function(result){
+		// 												console.log("exerciseOption", result);
+		// 											});
+	
+		// 										});
+
+		// 									// END OF EXCERCISE OPTION		
+		
+		// 									});
+		// 								}, function(err){
+		// 									console.log(err);
+		// 								})
+		// 							});
+		// 						}, function(err) {
+		// 							console.log(err);
+		// 						}); 
+		// 					});
+		// 				}, function(err) {
+		// 					console.log(err);
+		// 				});
+		// 			});
 		// 		});
 		// 	});
-
 		// }, function(err) {
 		// 	console.log(err);
 		// });
   	}
 
-    ngOnInit(){
+    ngOnInit(){ 
       
     }
-
-    /*isMap(path){
-      var titlee = this.location.prepareExternalUrl(this.location.path());
-      titlee = titlee.slice( 1 );
-      if(path == titlee){
-        return false;
-      }
-      else {
-        return true;
-      }
-    }*/
 
     suggestUserName() {
 		const suggestedName = 'Superuser';

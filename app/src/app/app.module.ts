@@ -24,6 +24,7 @@ import { FlashMessagesModule } from 'angular2-flash-messages';
 import { AuthGuard } from './guards/auth.guard';
 import { ContractsService } from './services/contracts.service';
 import Web3 from 'web3';
+import { FaucetComponent } from './faucet/faucet.component';
 // import { Web3Service } from '../services/meta.service';
 
 @NgModule({
@@ -33,7 +34,8 @@ import Web3 from 'web3';
     UserComponent,
     TablesComponent,
     TypographyComponent,
-    NotificationsComponent
+    NotificationsComponent,
+    FaucetComponent
 
   ],
   imports: [

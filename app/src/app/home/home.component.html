@@ -127,8 +127,8 @@
                     <input placeholder="Allowance..." name="popupAllowanceInput" class="popup_allowance-input" type="number" ngModel required>
                 </div>
                 <div class="form-group form-group-btn">
-                    <input type="button" value="cancel" class="btn btn-cancel" name="btn_cancel">&nbsp;&nbsp;&nbsp;&nbsp;
-                    <input value="Yes. I approve!" class="btn btn-approve" name="btn_confirm" type="submit" [disabled]="!allowance.valid">  
+                    <input type="button" value="cancel" class="btn btn-cancel" (click)="cancel_btn()" name="btn_cancel">&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input value="Yes. I approve!" class="btn btn-approve" (click)="approveAllowance()" name="btn_confirm" type="submit" [disabled]="!allowance.valid">  
                 </div>
             </form>
         </div>

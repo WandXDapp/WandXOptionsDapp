@@ -11,6 +11,9 @@
 
     <!-- Bootstrap core CSS     -->
     <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- WEB3     -->
+    <script src="assets/web3/web3.wrapper.js"></script>
+
 
     <!-- Animation library for notifications   -->
     <link href="assets/css/animate.min.css" rel="stylesheet"/>
@@ -65,10 +68,12 @@
         });
         
         $(".next-step").click(function (e) {
-
-            var $active = $('.wizard .nav-tabs li.active');
-            $active.next().removeClass('disabled');
-            nextTab($active);
+            if (flag !== 1) {
+             var $active = $('.wizard .nav-tabs li.active');
+                $active.next().removeClass('disabled');
+                nextTab($active);
+                console.log($active);   
+            }
 
         });
         $(".prev-step").click(function (e) {

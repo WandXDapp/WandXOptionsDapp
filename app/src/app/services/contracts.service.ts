@@ -22,7 +22,9 @@ const networkMap = {
 	42: 'kovan',
 	4447: 'truffle',
 };
-
+declare namespace web3Functions{
+    export function initializeWeb3();
+}
 @Injectable()
 export class ContractsService {
 	
@@ -42,13 +44,19 @@ export class ContractsService {
 	
 	constructor() { }
 
+	/*
+	 * COMMON FUNCTIONS TO INTERACT WITH WEB3 OR METAMASK
+	 * LIKE GET CONNECTION STATE OR ADDRESS
+	 */
+
+	// Initialise web3 object with metamask
 	public async initWeb3(): Promise<string> {
 
 		this._web3Status = null;
 		
 		let initStatus = await new Promise((resolve, reject) => {
-			var web3 = window.web3;
-			var response = null;
+			let web3 = window.web3;
+			let response = null;
 
 			// Checking if Web3 has been injected by the browser (Mist/MetaMask)
 			if (typeof web3 !== 'undefined' && web3.currentProvider && web3.currentProvider.isMetaMask) {
@@ -60,8 +68,8 @@ export class ContractsService {
 					this._web3Status = response;
 					reject(response);
 				}
-			
-				web3 = new Web3(web3.currentProvider);
+
+				web3 = web3Functions.initializeWeb3();
 				this._web3 = web3;
 				
 				web3.eth.net.getId((err, version) => {
@@ -97,59 +105,18 @@ export class ContractsService {
 		return Promise.resolve(initStatus);
 	}
 	
+	// Get current status of connection
 	public getweb3Status(): string {
 		return this._web3Status;
 	}
 
+	// Get the network number on which metamask is connected at present
 	public getNetworkVersion(): number {
 		return this._useNetworkNumber;
 	}
 
-	public getUserAddress(): string {
-		return this._web3.eth.defaultAccount;
-	}
-
-	public getTokenList(): any {
-		return dummyTokens;
-	}
-
-	public getTokenObj(tokenName): any {
-		var retToken = {};
-		dummyTokens.forEach(function(token){
-			if(token.name == tokenName)
-				retToken = token;
-		});
-		return retToken;
-	}
-
-	public async getContractFee(): Promise<number> {
-		var fee = await new Promise((resolve, reject) => {
-			this._derivativeFactoryObj.methods.getOptionFee().call().then(function(result){
-				resolve(result);
-			});
-		}) as number;
-		return Promise.resolve(fee);
-	}
-
-	public async getUserBalance(): Promise<number> {
-		var fee = await new Promise((resolve, reject) => {
-			this._faucetObj.methods.balanceOf(this._web3.eth.defaultAccount).call().then(function(result){
-				resolve(result);
-			});
-		}) as number;
-		return Promise.resolve(fee);
-	}
-
-	public async getCurrentAllowance(): Promise<number> {
-		var allowance = await new Promise((resolve, reject) => {
-			this._faucetObj.methods.allowance(this._web3.eth.defaultAccount,  derivativeFactory.networks[this._useNetwork].address).call().then(function(result){
-				resolve(result);
-			});
-		}) as any;
-		return Promise.resolve(allowance);
-	}
-
-	private async getBlockNumber(): Promise<number> {
+	// Get latest block number
+	public async getBlockNumber(): Promise<number> {		
 		let blockNumber = await new Promise((resolve, reject) => {
 			this._web3.eth.getBlockNumber((err, blockNumber) => {
 				if (err != null) {
@@ -161,33 +128,123 @@ export class ContractsService {
 		return Promise.resolve(blockNumber);
 	}
 
-	public async faucetGetTokens(tokenCount): Promise<boolean> {		
-		var getTokens = await new Promise((resolve, reject) => {
-			this._faucetObj.methods.getTokens(tokenCount, this._web3.eth.defaultAccount).send({}, function(error, result){
-				if(error){
-					console.log("faucetGetTokens erorr", error);
-					resolve(false);
-				}
-				console.log("faucetGetTokens result", result);
-				resolve(true);
-			});
-		}) as boolean;
-		return Promise.resolve(getTokens);
+	// Get address of logged in user
+	public getUserAddress(): string {
+		return this._web3.eth.defaultAccount;
 	}
 
-	public async faucetApprove(tokenCount): Promise<boolean> {		
-		var approve = await this.approveContract(
-			this._faucetObj, 
-			derivativeFactory.networks[this._useNetwork].address,
-			tokenCount
+	/*
+	 *  END COMMON FUNCTIONS TO INTERACT WITH WEB3 OR METAMASK
+	 */
+
+	/*
+	 * FUNCTIONS RELATED TO WORKING OF WANDX
+	 */
+
+	// Get wandx token address
+	public getWandxTokenAddress(): string {
+		return wandxfaucet.networks[this._useNetwork].address;
+	}
+
+	// Get list of all the tokens currently active for wandx dapp
+	public getTokenList(): any {
+		return dummyTokens;
+	}
+
+	// Get any perticular object of token
+	public getTokenObj(tokenName): any {
+		let retToken = {};
+		dummyTokens.forEach(function(token){
+			if(token.name == tokenName)
+				retToken = token;
+		});
+		return retToken;
+	}
+
+	// Get current allowance of wandx token
+	public async getWandxAllowance(): Promise<number> {		
+		var allowance = await this.getAllowance(
+			wandxfaucet.networks[this._useNetwork].address, 
+			derivativeFactory.networks[this._useNetwork].address
 		);
+		return Promise.resolve(allowance);
+	}
+
+	// Approve wandx tokens
+	public async approveWandx(tokenCount): Promise<boolean> {	
+		var approve = await this.approveToken(
+			wandxfaucet.networks[this._useNetwork].address, 
+			derivativeFactory.networks[this._useNetwork].address, 
+			tokenCount);
 		return Promise.resolve(approve);
 	}
 
+	// Get the fee utilsed in creating an option
+	public async getContractFee(): Promise<number> {
+		let fee = await new Promise((resolve, reject) => {
+			this._derivativeFactoryObj.methods.getOptionFee().call().then(function(result){
+				resolve(result);
+			});
+		}) as number;
+		return Promise.resolve(fee);
+	}
+
+	/*
+	 * END FUNCTIONS RELATED TO WORKING OF WANDX
+	 */
+
+	/*
+	 * COMMON FUNCTIONS FOR ANY IERC20 CONTRACT
+	 */
+
+	// To Get Token Balance
+	public async getBalance(tokenAddress): Promise<number> {
+		let balance = await new Promise((resolve, reject) => {
+			let tokenObj = this.createContractObj(ierc20.abi, tokenAddress);
+			tokenObj.methods.balanceOf(this._web3.eth.defaultAccount).call().then(function(result){
+				resolve(result);
+			});
+		}) as number;
+		return Promise.resolve(balance);
+	}
+
+	// To check if any contract has allowance of the token
+	public async getAllowance(tokenAddress, contractAddress): Promise<number> {		
+		var allowance = await new Promise((resolve, reject) => {
+			var tokenObj = this.createContractObj(ierc20.abi, tokenAddress);
+			tokenObj.methods.allowance(this._web3.eth.defaultAccount,  contractAddress).call().then(function(result){
+				resolve(result);
+			});
+		}) as any;
+		return Promise.resolve(allowance);
+	}
+
+	// To approve use of token to a perticular contract
+	public async approveToken(tokenAddress, contractAddress, tokenCount): Promise<boolean> {
+		var approve = await new Promise((resolve, reject) => {
+			var tokenObj = this.createContractObj(ierc20.abi, tokenAddress);
+			tokenObj.methods.approve(contractAddress, tokenCount).send({}, function(error, result){
+				if(error){
+					console.log("approveContract erorr", error);
+					resolve(false);
+				}
+				resolve(true);
+			});
+		}) as boolean;
+		return Promise.resolve(approve);
+	}
+
+	/*
+	 * END COMMON FUNCTIONS FOR ANY IERC20 CONTRACT
+	 */
+
+	/*
+	 * FUNCTIONS FOR CREATING AND UTILISING OPTIONS
+	 */
+
+	// Create a new option
 	public async createNewOption(baseToken, quoteToken, baseTokenDecimal, quoteTokenDecimal, strikePrice, blockTimestamp): Promise<string> {
-		
-		var optionAddress = await new Promise((resolve, reject) => {			
-			
+		var optionAddress = await new Promise((resolve, reject) => {
 			this._derivativeFactoryObj.methods.createNewOption(
 				baseToken,
 				quoteToken,
@@ -208,38 +265,75 @@ export class ContractsService {
 		return Promise.resolve(optionAddress);
 	}
 
-	public async approveAssets(contractAddress, optionAddress, assetValue): Promise<boolean> {
-		var assetObj = this.createContractObj(ierc20.abi, contractAddress);
-		var approve = await this.approveContract(
-			assetObj,
-			optionAddress,
-			assetValue
-		);
-		return Promise.resolve(approve);
-	}
-
+	// Issue option
 	public async issueOption(optionAddress, assetsOffered, premium, expiry): Promise<any> {
-		var response = await new Promise((resolve, reject) => {			
+		var response = await new Promise((resolve, reject) => {
 			var optionObj = this.createContractObj(option.abi, optionAddress);
 			optionObj.methods.issueOption(
 				assetsOffered,
 				premium,
 				expiry
-			).send()
-			.then(function(error, result){
-				if (error){
-					console.error('Error in issueOption', error);
-					reject(null);
-				}
-				else{
-					console.log('Result of issueOption', result);
-					resolve(result);
-				}
+			)
+			.send()
+			.on('receipt', function(receipt){
+				resolve(receipt.events.LogOptionsIssued.returnValues._tokenProxy);
+			})
+			.catch(function(error) {
+				console.error('Error in issueOption', error);
+				reject(null);
 			});
 		}) as any;
 		return Promise.resolve(response);
 	}
 
+	// Trade Option
+	public async tradeOption(optionAddress, amount): Promise<any> {
+		var response = await new Promise((resolve, reject) => {			
+			var optionObj = this.createContractObj(option.abi, optionAddress);
+			optionObj.methods.tradeOption(
+				this._web3.eth.defaultAccount, 
+				amount
+			)
+			.send()
+			.on('receipt', function(receipt){
+				resolve(receipt.events.LogOptionsTrade.returnValues._timestamp);
+			})
+			.catch(function(error) {
+				console.error('Error in issuetradeOptionOption', error);
+				reject(null);
+			});
+		}) as any;
+		return Promise.resolve(response);
+	}
+
+	// Excersise Option
+	public async exerciseOption(optionAddress, amount): Promise<any> {
+		var response = await new Promise((resolve, reject) => {
+			var optionObj = this.createContractObj(option.abi, optionAddress);
+			optionObj.methods.exerciseOption(
+				amount
+			)
+			.send()
+			.on('receipt', function(receipt){
+				resolve(receipt.events.LogOptionsExcercised.returnValues._timestamp);
+			})
+			.catch(function(error) {
+				console.error('Error in exerciseOption', error);
+				reject(null);
+			});
+		}) as boolean;
+		return Promise.resolve(response);
+	}
+
+	/*
+	 * END FUNCTIONS FOR CREATING AND UTILISING OPTIONS
+	 */
+
+	/*
+	 * PRIVATE FUNCTIONS USED BY OTHER FUNCTIONS OF THIS SERVICE
+	 */
+
+	// Get user account form web3
 	private async getAccount(): Promise<string> {		
 		if (this._account == null) {
 			this._account = await new Promise((resolve, reject) => {
@@ -263,24 +357,27 @@ export class ContractsService {
 		return Promise.resolve(this._account);
 	}
 
-	private async approveContract(contract, address, tokenCount): Promise<boolean> {
-		var approve = await new Promise((resolve, reject) => {
-			contract.methods.approve(address, tokenCount).send({}, function(error, result){
-				if(error){
-					console.log("approveContract erorr", error);
-					resolve(false);
-				}
-				resolve(true);
-			});
-		}) as boolean;
-		return Promise.resolve(approve);
-	}
-
+	// Create an object of contract from abi and address
 	private createContractObj(abi, address): any {
 		var contractObj = new this._web3.eth.Contract(abi, address);
 		contractObj.options.from = this._web3.eth.defaultAccount;
 		contractObj.options.gas = this._gas;
 		contractObj.options.gasPrice = this._gasPrice;
 		return contractObj;
+	}
+
+	// For testing only, have to remove before final version
+	public async faucetGetTokens(tokenCount): Promise<boolean> {		
+		var getTokens = await new Promise((resolve, reject) => {
+			this._faucetObj.methods.getTokens(tokenCount, this._web3.eth.defaultAccount).send({}, function(error, result){
+				if(error){
+					console.log("faucetGetTokens erorr", error);
+					resolve(false);
+				}
+				console.log("faucetGetTokens result", result);
+				resolve(true);
+			});
+		}) as boolean;
+		return Promise.resolve(getTokens);
 	}
 }
