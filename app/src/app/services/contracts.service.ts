@@ -22,7 +22,9 @@ const networkMap = {
 	42: 'kovan',
 	4447: 'truffle',
 };
-
+declare namespace web3Functions{
+    export function initializeWeb3();
+}
 @Injectable()
 export class ContractsService {
 	
@@ -60,8 +62,8 @@ export class ContractsService {
 					this._web3Status = response;
 					reject(response);
 				}
-			
-				web3 = new Web3(web3.currentProvider);
+
+				web3 =web3Functions.initializeWeb3();
 				this._web3 = web3;
 				
 				web3.eth.net.getId((err, version) => {
@@ -218,15 +220,46 @@ export class ContractsService {
 		return Promise.resolve(approve);
 	}
 
-	public async issueOption(optionAddress, assetsOffered, premium, expiry): Promise<any> {
+	public async tradeOption(optionAddress, trader, amount): Promise<any> {
 		var response = await new Promise((resolve, reject) => {			
+			var optionObj = this.createContractObj(option.abi, optionAddress);
+			optionObj.methods.tradeOption(trader, amount).send().then(function(error, result){
+				if (error){
+					console.error('Error in tradeOption', error);
+					reject(null);
+				}
+				else{
+					console.log('Result of tradeOption', result);
+					resolve(result);
+				}
+			});
+		}) as any;
+		return Promise.resolve(response);
+	}
+	public async exerciseOption(optionAddress, amount): Promise<any> {
+		var response = await new Promise((resolve, reject) => {
+			var optionObj = this.createContractObj(option.abi, optionAddress);
+			optionObj.methods.exerciseOption(amount).send().then(function(error, result){
+				if (error){
+					console.error('Error in exerciseOption', error);
+					reject(null);
+				}
+				else{
+					console.log('Result of exerciseOption', result);
+					resolve(result);
+				}
+			});
+		}) as boolean;
+		return Promise.resolve(response);
+	}
+	public async issueOption(optionAddress, assetsOffered, premium, expiry): Promise<any> {
+		var response = await new Promise((resolve, reject) => {
 			var optionObj = this.createContractObj(option.abi, optionAddress);
 			optionObj.methods.issueOption(
 				assetsOffered,
 				premium,
 				expiry
-			).send()
-			.then(function(error, result){
+			).send().then(function(error, result){
 				if (error){
 					console.error('Error in issueOption', error);
 					reject(null);
