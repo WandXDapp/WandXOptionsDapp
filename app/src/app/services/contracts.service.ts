@@ -140,7 +140,7 @@ export class ContractsService {
 		return Promise.resolve(fee);
 	}
 
-	public async getCurrentAllowance(): Promise<number> {		
+	public async getCurrentAllowance(): Promise<number> {
 		var allowance = await new Promise((resolve, reject) => {
 			this._faucetObj.methods.allowance(this._web3.eth.defaultAccount,  derivativeFactory.networks[this._useNetwork].address).call().then(function(result){
 				resolve(result);
@@ -149,7 +149,7 @@ export class ContractsService {
 		return Promise.resolve(allowance);
 	}
 
-	private async getBlockNumber(): Promise<number> {		
+	private async getBlockNumber(): Promise<number> {
 		let blockNumber = await new Promise((resolve, reject) => {
 			this._web3.eth.getBlockNumber((err, blockNumber) => {
 				if (err != null) {
