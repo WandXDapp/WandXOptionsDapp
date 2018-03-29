@@ -41,6 +41,8 @@ export class AppComponent implements OnInit {
 		// 	baseToken = cs.getWandxTokenAddress();
 		// 	quoteToken = cs.getWandxTokenAddress();
 
+		//  // START OF STEP 1
+		
 		// 	cs.getBlockNumber().then(function(blockNumber){
 
 		// 		expiryBlock = blockNumber + 50;
@@ -69,6 +71,11 @@ export class AppComponent implements OnInit {
 		// 					strikePrice,
 		// 					blockTimestamp
 		// 				).then(function(optionAddress) {
+		
+		// 					// END OF STEP 1
+
+		// 					// START OF STEP 2
+		
 		// 					cs.approveToken(quoteToken, optionAddress, assetValue).then(function(result){
 		// 						if(!result){
 		// 							console.log("Unable to approve assets");
@@ -79,6 +86,10 @@ export class AppComponent implements OnInit {
 		// 							let tokenProxy = result;
 		// 							console.log("issueOption", result);
 
+		// 							// END OF STEP 2
+
+		// 							// START OF TRADE OPTION
+
 		// 							cs.approveToken(quoteToken, optionAddress, assetToTradeApprove).then(function(result){
 		// 								if(!result){
 		// 									console.log("Unable to approve assets");
@@ -87,6 +98,10 @@ export class AppComponent implements OnInit {
 
 		// 								cs.tradeOption(optionAddress, assetToTrade).then(function(response){
 		// 									console.log("tradeOption", response);
+
+		// 									// END OF TRADE OPTION		
+
+		// 									// START OF EXCERCISE OPTION		
 
 		// 									cs.approveToken(optionAddress, optionAddress, assetToTrade).then(function(result){
 		// 										if(!result){
@@ -106,16 +121,13 @@ export class AppComponent implements OnInit {
 	
 		// 										});
 
-
-
+		// 									// END OF EXCERCISE OPTION		
+		
 		// 									});
-										
 		// 								}, function(err){
 		// 									console.log(err);
 		// 								})
 		// 							});
-
-									
 		// 						}, function(err) {
 		// 							console.log(err);
 		// 						}); 
