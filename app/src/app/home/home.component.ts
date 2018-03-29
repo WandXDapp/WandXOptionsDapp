@@ -71,9 +71,9 @@ export class HomeComponent implements OnInit {
     // this.token = _contractsService.getUserBalance();
     this.contractsService = _contractsService;
 
-
-    this.base_token = this.contractsService.getBaseTokenAddress();
-    this.quote_token = this.contractsService.getQuoteTokenAddress();
+    let eth = this.contractsService.getTokenObj('ETH');
+		this.base_token = eth.address;
+    this.quote_token = eth.address;
     this.baseTokenDecimal = 18;
     this.quoteTokenDecimal = 18;
     this.strikePrice = 1;
