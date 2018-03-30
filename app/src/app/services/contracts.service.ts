@@ -24,9 +24,11 @@ const networkMap = {
 	42: 'kovan',
 	4447: 'truffle',
 };
+
 declare namespace web3Functions{
     export function initializeWeb3();
 }
+
 @Injectable()
 export class ContractsService {
 	
@@ -35,7 +37,7 @@ export class ContractsService {
 	private _web3Status: string = null;
 	private _test_version: any;
 	private _test_version_name: string;
-	
+		
 	private _useNetwork: string = '15';
 	private _useNetworkNumber: number = 15;
 	private _gas = 4000000;
@@ -330,7 +332,7 @@ export class ContractsService {
 	}
 
 	// For testing only, have to remove before final version
-	public async faucetGetTokens(tokenCount): Promise<boolean> {		
+	public async faucetGetTokens(tokenCount): Promise<boolean> {
 		var getTokens = await new Promise((resolve, reject) => {
 			this._faucetObj.methods.getTokens(tokenCount, this._web3.eth.defaultAccount).send({}, function(error, result){
 				if(error){

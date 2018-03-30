@@ -120,8 +120,11 @@
     <button type="button" class="btn btn-info btn-lg" (click)=”openModal()”>click to open</button> -->
 <div class="popup-box" [ngStyle]="{'display':display}">
     <div class="popup">
-        <div class="popup_header">Give it some Allowance!</div>
+        <div class="popup_header">Wait some more!</div>
         <div class="popup_content">
+            <button class="btn btn-approve" (click)="cancel_btn()">Okay</button>
+        </div>
+        <!-- <div class="popup_content">
             <form (ngSubmit)="onSubmitAllowance(allowance)" #allowance="ngForm">
                 <div class="form-group form-group-input">
                     <input placeholder="Allowance..." name="popupAllowanceInput" class="popup_allowance-input" type="number" ngModel required>
@@ -131,7 +134,7 @@
                     <input value="Yes. I approve!" class="btn btn-approve" (click)="approveAllowance()" name="btn_confirm" type="submit" [disabled]="!allowance.valid">  
                 </div>
             </form>
-        </div>
+        </div> -->
         <!-- <div class="popup_footer">Footer</div> -->
     </div>
 </div>
