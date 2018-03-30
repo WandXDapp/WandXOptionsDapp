@@ -36,7 +36,7 @@
         "jquery": "^3.2.1",
         "npm": "^5.8.0",
         "rxjs": "^5.1.0",
-        "wandx-options": "^0.1.8",
+        "wandx-options": "^0.2.1",
         "web3": "^1.0.0-beta.33",
         "zone.js": "^0.8.4"
     },
