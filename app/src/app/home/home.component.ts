@@ -26,7 +26,7 @@ export class HomeComponent implements OnInit {
   public tableData1: TokenData;
   public tableData2: TokenData;
   base_token: any = '';
-  base_tokenJSON:any;
+  base_tokenJSON: any;
   baseTokenAddress: any = '';
   quote_token: any = '';
   quote_tokenJSON: any = '';
@@ -35,32 +35,33 @@ export class HomeComponent implements OnInit {
   alloance: any = '';
   assets_offered: any = '';
   premium: any = '';
-  blockNumber:any;
-  minBlockNumber:any;
+  blockNumber: any;
+  minBlockNumber: any;
   blockdata: any = '';
   newdate: any;
   date: number;
   month: any;
-  year:number;
-  validdate:any;
-  token:any;
-  eth:any;
+  year: number;
+  validdate: any;
+  token: any;
+  eth: any;
   contractsService:any;
   public UserBalance: any;
   public CurrentAllowance: any;
-  public ContractFee:any; 
-  public optionAddress:any;
-  baseTokenDecimal:any;
-  quoteTokenDecimal:any;
-  strikePrice:any;
-  blockTimestamp:any;
-  assetsOffered:any;
-  assetValue:any;
-  multiplyFactor:any;
-  display:any;
-  popupAllowanceInput:number;
-  wandxTokenAddress:any;
-  flag:number;
+  public ContractFee: any;
+  public optionAddress: any;
+  baseTokenDecimal: any;
+  quoteTokenDecimal: any;
+  strikePrice: any;
+  blockTimestamp: any;
+  assetsOffered: any;
+  assetValue: any;
+  multiplyFactor: any;
+  display: any;
+  popupAllowanceInput: number;
+  wandxTokenAddress: any;
+  flag: number;
+  tokenList: any;
 //    abi_Derivative_Factory: any = json_Derivative_Factory.abi[0];
   constructor( _contractsService: ContractsService) {
     this.display = 'none';
@@ -69,7 +70,7 @@ export class HomeComponent implements OnInit {
 
 
     var day = new Date();
-    //console.log(day); // Apr 30 2000
+    // console.log(day); // Apr 30 2000
 
     var nextDay = new Date(day);
     nextDay.setDate(day.getDate() + 1);
@@ -100,12 +101,11 @@ export class HomeComponent implements OnInit {
 
     this.contractsService.initWeb3().then((result) => {
 
-      _contractsService.getWandxTokenAddress().then((wandxTokenAddress: string) => {
-        // console.log(balance);
-        this.wandxTokenAddress = wandxTokenAddress;
+      this.wandxTokenAddress = _contractsService.getWandxTokenAddress();
 
-
-      });
+      this.tokenList = _contractsService.getTokenList();
+      // console.log(this.tokenList[0].name);
+      // console.log(Object.values(this.tokenList));
 
       _contractsService.getBalance(this.wandxTokenAddress).then((balance: number) => {
         // console.log(balance);
@@ -114,7 +114,7 @@ export class HomeComponent implements OnInit {
 
       });
 
-      _contractsService.getWandxAllowance().then((allowance:number) => {
+      _contractsService.getWandxAllowance().then((allowance: number) => {
         // console.log(allowance);
         this.CurrentAllowance = allowance;
 
@@ -212,10 +212,10 @@ export class HomeComponent implements OnInit {
   }
 
   onStepOne() {
-    console.log(this.ContractFee);
-    console.log(this.CurrentAllowance);
+    // console.log(this.UserBalance);
+    // console.log(this.CurrentAllowance);
 
-    if (this.CurrentAllowance > this.ContractFee) {
+    if (this.UserBalance > this.CurrentAllowance) {
 
       this.contractsService.createNewOption(
         this.baseTokenAddress,
@@ -234,15 +234,13 @@ export class HomeComponent implements OnInit {
     }else {
       // popup
       this.display = 'block';
-      console.log(this.popupAllowanceInput + 'popup balce');
-      console.log(this.UserBalance + 'user bal');
-      
-      if (this.popupAllowanceInput < this.UserBalance ) {
-       this.flag = 2;
-        this.display = 'none !importent';
-        console.log(this.display);
-        
+      // console.log(this.popupAllowanceInput + 'popup balce');
+      // console.log(this.UserBalance + 'user bal');
 
+      if (this.popupAllowanceInput < this.UserBalance ) {
+      //  this.flag = 2;
+        this.display = 'none';
+        console.log(this.display);
       }
 
       // this.CurrentAllowance < = this.UserBalance --> confirm on Ok
@@ -307,7 +305,7 @@ export class HomeComponent implements OnInit {
 
   cancel_btn() {
     this.display = 'none';
-    this.flag = 1;
+    // this.flag = 1;
   }
 
 }

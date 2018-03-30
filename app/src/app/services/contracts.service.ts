@@ -28,21 +28,21 @@ declare namespace web3Functions{
 @Injectable()
 export class ContractsService {
 	
-	private _account: string = null;
-	private _web3: any;
-	private _web3Status: string = null;
-	private _test_version: any;
-	private _test_version_name: string;
+private _account: string = null;
+private _web3: any;
+private _web3Status: string = null;
+private _test_version: any;
+private _test_version_name: string;
 	
-	private _useNetwork: string = '15';
-	private _useNetworkNumber: number = 15;
-	private _gas = 4000000;
-	private _gasPrice = 21000000000;
+private _useNetwork: string = '15';
+private _useNetworkNumber: number = 15;
+private _gas = 4000000;
+private _gasPrice = 21000000000;
 	
-	private _faucetObj: any;
-	private _derivativeFactoryObj: any;
+private _faucetObj: any;
+private _derivativeFactoryObj: any;
 	
-	constructor() { }
+constructor() { }
 
 	/*
 	 * COMMON FUNCTIONS TO INTERACT WITH WEB3 OR METAMASK
@@ -50,13 +50,13 @@ export class ContractsService {
 	 */
 
 	// Initialise web3 object with metamask
-	public async initWeb3(): Promise<string> {
+public async initWeb3(): Promise<string> {
 
-		this._web3Status = null;
+this._web3Status = null;
 		
-		let initStatus = await new Promise((resolve, reject) => {
-			let web3 = window.web3;
-			let response = null;
+let initStatus = await new Promise((resolve, reject) => {
+let web3 = window.web3;
+let response = null;
 
 			// Checking if Web3 has been injected by the browser (Mist/MetaMask)
 			if (typeof web3 !== 'undefined' && web3.currentProvider && web3.currentProvider.isMetaMask) {
@@ -367,17 +367,17 @@ export class ContractsService {
 	}
 
 	// For testing only, have to remove before final version
-	public async faucetGetTokens(tokenCount): Promise<boolean> {		
-		var getTokens = await new Promise((resolve, reject) => {
-			this._faucetObj.methods.getTokens(tokenCount, this._web3.eth.defaultAccount).send({}, function(error, result){
-				if(error){
-					console.log("faucetGetTokens erorr", error);
-					resolve(false);
-				}
-				console.log("faucetGetTokens result", result);
-				resolve(true);
-			});
-		}) as boolean;
-		return Promise.resolve(getTokens);
-	}
+public async faucetGetTokens(tokenCount): Promise<boolean> {		
+	var getTokens = await new Promise((resolve, reject) => {
+		this._faucetObj.methods.getTokens(tokenCount, this._web3.eth.defaultAccount).send({}, function(error, result){
+			if(error){
+				console.log("faucetGetTokens erorr", error);
+				resolve(false);
+			}
+			console.log("faucetGetTokens result", result);
+			resolve(true);
+		});
+	}) as boolean;
+	return Promise.resolve(getTokens);
+}
 }
