@@ -48,9 +48,7 @@ export class ContractsService {
 
 	private _optionWrapper: OptionWrapper = null;
 	
-	constructor() { 
-		this._initWeb3();
-	}
+	constructor() { }
 
 	/*
 	 * COMMON FUNCTIONS TO INTERACT WITH WEB3 OR METAMASK
@@ -108,6 +106,13 @@ export class ContractsService {
 
 	// Get list of all the tokens currently active for wandx dapp
 	public getTokenList(): any {
+		dummyTokens.unshift({
+			"name": "WANDX",
+			"decimals": 18,
+			"symbol": "WANDX",
+			"deployed": true,
+			"address": wandxfaucet.networks[this._useNetwork].address
+		});
 		return dummyTokens;
 	}
 

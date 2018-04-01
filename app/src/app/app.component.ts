@@ -3,7 +3,6 @@ import { LocationStrategy, PlatformLocation, Location } from '@angular/common';
 import { NgForm } from '@angular/forms';
 
 import { AuthService } from './services/auth.service';
-import { ContractsService } from './services/contracts.service';
 
 var BigNumber = require('bignumber.js');
 
@@ -12,14 +11,12 @@ var BigNumber = require('bignumber.js');
 	templateUrl: './app.component.html',
 	styleUrls: ['./app.component.css']
 })
+
 export class AppComponent implements OnInit {
 	public balance: number;
-	
-	constructor() { }
+	constructor( ) { }
 
-    ngOnInit(){ 
-      
-    }
+    ngOnInit(){ }
 
     suggestUserName() {
 		const suggestedName = 'Superuser';
