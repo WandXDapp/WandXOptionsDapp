@@ -20,6 +20,7 @@ import { NotificationsComponent } from './notifications/notifications.component'
 // New Components addition for OAuth
 import { ValidateService } from './services/validate.service';
 import { AuthService } from './services/auth.service';
+import { Web3Service } from './services/web3.service';
 import { FlashMessagesModule } from 'angular2-flash-messages';
 import { AuthGuard } from './guards/auth.guard';
 import { FaucetComponent } from './faucet/faucet.component';
@@ -46,7 +47,7 @@ import { FaucetComponent } from './faucet/faucet.component';
     AppRoutingModule,
     FlashMessagesModule.forRoot()
   ],
-  providers: [ValidateService, AuthService, AuthGuard],
+  providers: [ValidateService, AuthService, AuthGuard,Web3Service],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

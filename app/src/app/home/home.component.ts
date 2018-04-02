@@ -1,4 +1,5 @@
 import { ContractsService } from '../services/contracts.service';
+import { Web3Service } from '../services/web3.service';
 import { Component, OnInit } from '@angular/core';
 import { LocationStrategy, PlatformLocation, Location } from '@angular/common';
 import { LegendItem, ChartType } from '../lbd/lbd-chart/lbd-chart.component';
@@ -58,7 +59,7 @@ export class HomeComponent implements OnInit {
 	
 	flag: number;
 	
-	constructor( public contractsService: ContractsService ) {
+	constructor( public contractsService: ContractsService,public web3Service:Web3Service) {
 		
 		this.display = 'none';
 
@@ -105,6 +106,9 @@ export class HomeComponent implements OnInit {
 				this.minBlockNumber = blockNumber + 50;
 			});
 		});
+
+        let web3=this.web3Service.getWeb3();
+        console.log("Web3",web3.eth.accounts);
 	}
 
 	onSubmit1(form: HTMLFormElement) {
@@ -196,5 +200,7 @@ export class HomeComponent implements OnInit {
 	cancel_btn() {
 		this.display = 'none';
 	}
+
+
 
 }
