@@ -29,18 +29,19 @@ router.put('/insertAddress', function(req, res, next) {
 		if (err) {
 			return res.status(200).json({
 				status: 'error',
-				error: 'Unable to find address in db'
+				error: 'Unable to find address in db',
+				result: false
 			});
 		}
 		
 		if (user !== null) {
 			return res.status(200).json({
 				status: 'error',
-				error: 'Address already exist'
+				error: 'Address already exist',
+				result: false
 			});
 		}
 		
-			
 		var user = {
 			address: address
 		};
@@ -49,13 +50,15 @@ router.put('/insertAddress', function(req, res, next) {
 			if (err) {
 				return res.status(200).json({
 					status: 'error',
-					error: 'Unable to insert address'
+					error: 'Unable to insert address',
+					result: false
 				});
 			}
 			
 			return res.status(200).json({
 				status: 'ok',
-				error: ''
+				error: '',
+				result: true
 			});
 		});
 	});
@@ -69,20 +72,23 @@ router.get('/isAddressPresent', function(req, res, next) {
 		if (err) {
 			return res.status(200).json({
 				status: 'error',
-				error: 'Unable to find address in db'
+				error: 'Unable to find address in db',
+				result: false
 			});
 		}
 		
-		if (user !== null) {
+		if (user == null) {
 			return res.status(200).json({
 				status: 'error',
-				error: 'Address already exist'
+				error: 'Address not exist',
+				result: false
 			});
 		}
 
 		return res.status(200).json({
-			status: 'error',
-			error: 'Address not exist'
+			status: 'ok',
+			error: '',
+			result: true
 		});
 	});
 });
