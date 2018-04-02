@@ -118,8 +118,6 @@ router.put('/updateUserProfile', function(req, res, next) {
 
 	var users = db.get().collection('users');
 	
-	console.log(req.body);
-	
 	var address = req.body.address;
 	var profile = {
 		company: req.body.company,
@@ -159,6 +157,66 @@ router.put('/updateUserProfile', function(req, res, next) {
 				error: '',
 				result: true
 			});
+		});
+	});
+});
+
+router.put('/createNewOption', function(req, res, next) {	
+
+	var userOptions = db.get().collection('useroptions');
+	
+	var address = req.body.address;
+	var optionAddress = req.body.optionAddress;
+
+	var userOptionsObj = {
+		address: address,
+		optionAddress: optionAddress
+	};
+	
+	userOptions.findOne({ optionAddress: optionAddress }, function (err, option) {
+		if (err || option != null) {
+			return res.status(200).json({
+				status: 'Error in connecting to db or option already exist',
+				error: err,
+				result: false
+			});
+		}
+		
+		userOptions.insert(userOptionsObj, function (err) {
+			if (err) {
+				return res.status(200).json({
+					status: 'error',
+					error: 'Unable to insert user option',
+					result: false
+				});
+			}
+			
+			return res.status(200).json({
+				status: 'ok',
+				error: '',
+				result: true
+			});
+		});
+	});
+});
+
+router.get('/getUserOptions', function(req, res, next) {	
+	
+	var useroptions = db.get().collection('useroptions');
+	var address = req.get("address");
+	
+	useroptions.find({ address: address }).toArray(function(err, optionList) {
+		if (err || optionList == null) {
+			return res.status(200).json({
+				status: 'error',
+				error: 'Unable to find address in db',
+				optionList: []
+			});
+		}
+		return res.status(200).json({
+			status: 'ok',
+			error: '',
+			optionList: optionList
 		});
 	});
 });
