@@ -1,0 +1,19 @@
+.table{
+    text-align: center;
+}
+
+th{
+    text-align: center;
+}
+
+.visit_link{
+    /* padding-top: 1rem !important; */
+    padding: 12px 8px;
+    vertical-align: middle;
+    vertical-align: top;
+        
+}
+
+.visit_link a{
+    color:rgb(3, 3, 200) !important;
+}
