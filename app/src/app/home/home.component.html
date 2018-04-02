@@ -1,101 +1,15 @@
-<!--<div class="main-content" >
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="header">
-                        <h4 class="title">Step 1</h4>
-                    </div>
-                    <div class="content">
-                        <form (ngSubmit)="onSubmit1(ff)" #ff="ngForm">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Base Token</label>
-                                        <select class="form-control" id="tokenname" ngModel name="base_token" required><option *ngFor="let cell of tableData1.tokenData">{{ cell }}</option></select>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Quote Token</label>
-                                        <select class="form-control" id="tokenname" ngModel name="quote_token" required><option *ngFor="let cell of tableData2.tokenData">{{ cell }}</option></select>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Expiry Date</label>
-                                        <input type="date" class="form-control" ngModel name="expiry_date_1" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Alloance</label>
-                                        <input type="number" class="form-control" placeholder="Min 10" min="10" required max="10000" (keypress) = "take_special_char($event)" value="10" ngModel name="alloance">
-                                    </div>
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-info btn-fill pull-right" [disabled]="!ff.valid" style="background-image: -webkit-gradient(linear,left top,left bottom,from(#382673),to(#682382)); border-color:#682382;">Submit</button>
-                            <div class="clearfix"></div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+<div class="popup-box" [ngStyle]="{'display':display}">
+    <div class="popup">
+        <div class="popup_header">Wait some more!</div>
+        <div class="popup_content">
+            <button class="btn btn-approve" (click)="cancel_btn()">Okay</button>
         </div>
     </div>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="header">
-                        <h4 class="title">Step 2</h4>
-                    </div>
-                    <div class="content">
-                        <form (ngSubmit)="onSubmit2(f)" #f="ngForm">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Assets Offered</label>
-                                        <input type="text" class="form-control" placeholder="Last Name" min="10" max="10000" required (keypress)="take_special_char($event)" ngModel name="assets_offered">
-                                        <!--<select class="form-control" id="tokenname" name="tokenname"><option *ngFor="let cell of tableData1.tokenData">{{ cell }}</option></select>-->
-                                    <!--</div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Premium</label>
-                                        <input type="text" class="form-control" placeholder="Last Name" min="10" max="10000" required (keypress)="take_special_char($event)" ngModel name="premium">
-                                        <!--<select class="form-control" id="tokenname" name="tokenname"><option *ngFor="let cell of tableData2.tokenData">{{ cell }}</option></select>-->
-                                    <!--</div>
-                                </div>
-                            </div>
+</div>
 
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Expiry Date</label>
-                                        <input type="date" class="form-control" ngModel name="expiry_date_2" required>
-                                    </div>
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-info btn-fill pull-right" [disabled]="!f.valid" style="background-image: -webkit-gradient(linear,left top,left bottom,from(#382673),to(#682382)); border-color:#682382;">Submit</button>
-                            <div class="clearfix"></div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>-->
-<!-- <button class="btn" (click)="getBalance()">
-        btn
-</button> -->
 <div class="container" style="width:100%">
-    <!-- {{base_token}} {{premium}} {{demo}} -->{{balance}}
-    <div class="row">
-         <!-- {{json_Derivative_Factory.abi[0]}} -->
-    </div>
+    {{currentAllowance}} {{userBalance}}
     <div class="row">
         <section>
             <div class="wizard">
@@ -105,21 +19,21 @@
                         <li role="presentation" class="active">
                             <a href="#step1" data-toggle="tab" aria-controls="step1" role="tab" title="Step 1">
                                 <span class="round-tab">
-                                    1<!--<i class="glyphicon glyphicon-folder-open"></i>-->
+                                    1
                                 </span>
                             </a>
                         </li>
                         <li role="presentation" class="disabled">
                             <a href="#step2" data-toggle="tab" aria-controls="step2" role="tab" title="Step 2">
                                 <span class="round-tab">
-                                    2<!--<i class="glyphicon glyphicon-pencil"></i>-->
+                                    2
                                 </span>
                             </a>
                         </li>
                         <li role="presentation" class="disabled">
                             <a href="#step3" data-toggle="tab" aria-controls="step3" role="tab" title="Step 3">
                                 <span class="round-tab">
-                                    3<!--<i class="glyphicon glyphicon-picture"></i>-->
+                                    3
                                 </span>
                             </a>
                         </li>
@@ -137,13 +51,13 @@
                                             <h4 class="title">Step 1</h4>
                                         </div>
                                         <div class="content">
-                                            <form (ngSubmit)="onSubmit1(ff)" #ff="ngForm">
+                                            <form (ngSubmit)="onSubmit1(step1)" #step1="ngForm">
                                                 <div class="row">
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label>Base Token</label>
                                                             <select class="form-control" id="tokenname" ngModel name="base_token" required>
-                                                                <option *ngFor="let cell of tableData1.tokenData">{{ cell }}</option>
+                                                                <option *ngFor="let token of tokenList">{{ token.name }}</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -151,7 +65,7 @@
                                                         <div class="form-group">
                                                             <label>Quote Token</label>
                                                             <select class="form-control" id="tokenname" ngModel name="quote_token" required>
-                                                                <option *ngFor="let cell of tableData2.tokenData">{{ cell }}</option>
+                                                                <option *ngFor="let token of tokenList">{{ token.name }}</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -161,41 +75,36 @@
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label>Expiry Date</label>
-                                                            <input type="date" class="form-control" name="expiry_date_1" min="{{validdate}}" required ngModel>
+                                                            <input type="date" class="form-control" name="blockTimestamp" min="{{validate}}" required ngModel>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <div data-role="rangeslider">
-                                                            <label for="price-min">Alloance:</label>
-                                                            <div class="range row" ms-controller="range-primary">
-                                                                <div class="col-xs-7 col-sm-8">
-                                                                    <div class="range-container">
-                                                                        <div class="range-track progress">
-                                                                            <div class="range-track-bar progress-bar progress-bar-striped active progress-bar-primary" ms-css-width="value + &quot;%&quot;"></div>
-                                                                        </div>
-                                                                        <input class="range-control" type="range" min="10" max="10000" ms-duplex="value" ms-on-change="setValue" ngModel name="alloance" />
-                                                                    </div>
-                                                                </div>
-                                                                <div class="range_input_box">
-                                                                    <div class="range-popover popover right">
-                                                                        <div class="arrow"></div>
-                                                                        <div class="popover-content">
-                                                                            <input class="form-control input-lg text-center" type="number" min="10" max="10000" ms-duplex-number="value"/>
+                                                                <label for="price-min">Alloance:</label>
+                                                                <div class="range row" ms-controller="range-primary">
+                                                                    <div class="col-xs-7 col-sm-8">
+                                                                        <div class="range-container">
+                                                                            <div class="range-track progress">
+                                                                                <div class="range-track-bar progress-bar progress-bar-striped active progress-bar-primary" ms-css-width="value + &quot;%&quot;"></div>
+                                                                            </div>
+                                                                            <input class="range-control" type="range" min="10" max="10000" ms-duplex="value" ms-on-change="setValue" ngModel name="strikePrice" />
                                                                         </div>
                                                                     </div>
+                                                                    <div class="range_input_box">
+                                                                        <div class="range-popover popover right">
+                                                                            <div class="arrow"></div>
+                                                                            <div class="popover-content">
+                                                                                <input class="form-control input-lg text-center" type="number" min="10" max="10000" ms-duplex-number="value"/>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                            <!-- <div class="range-slider">
-                                                                <input class="range-slider__range" type="range" required ngModel name="alloance" value="100" min="10" max="10000">
-                                                                <span class="range-slider__value">0</span>
-                                                            </div> -->
-                                                            <!-- <input type="range" name="price-min" id="price-min" value="100" min="10" max="10000" required ngModel name="alloance"> -->
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <button type="submit" (click)="onStepOne()" class="btn btn-info btn-fill pull-right next-step" [disabled]="!ff.valid" style="background-image: -webkit-gradient(linear,left top,left bottom,from(#382673),to(#682382)); border-color:#682382;">Submit</button>
+                                                <button type="submit" class="btn btn-info btn-fill pull-right next-step" [disabled]="!step1.valid" style="background-image: -webkit-gradient(linear,left top,left bottom,from(#382673),to(#682382)); border-color:#682382;">Submit</button>
                                                 <div class="clearfix"></div>
                                             </form>
                                         </div>
@@ -213,21 +122,19 @@
                                             <h4 class="title">Step 2</h4>
                                         </div>
                                         <div class="content">
-                                            <form (ngSubmit)="onSubmit2(f)" #f="ngForm">
+                                            <form (ngSubmit)="onSubmit2(step2)" #step2="ngForm">
                                                 <div class="row">
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label>Assets Offered</label>
                                                             <input type="number" class="form-control" placeholder="Assets Offered" required (keypress)="take_special_char($event)"
                                                                 ngModel name="assets_offered">
-                                                            <!--<select class="form-control" id="tokenname" name="tokenname"><option *ngFor="let cell of tableData1.tokenData">{{ cell }}</option></select>-->
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label>Premium</label>
                                                             <input type="number" class="form-control" placeholder="Premium" required (keypress)="take_special_char($event)" ngModel name="premium">
-                                                            <!--<select class="form-control" id="tokenname" name="tokenname"><option *ngFor="let cell of tableData2.tokenData">{{ cell }}</option></select>-->
                                                         </div>
                                                     </div>
                                                 </div>
@@ -235,14 +142,12 @@
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label>Expiry Block</label>
-                                                            <input type="number" class="form-control" placeholder="Expire" required (keypress)="take_special_char($event)"
-                                                                ngModel name="blockdata">
-                                                            <!-- <label>Expiry Date</label>
-                                                            <input type="date" class="form-control" ngModel name="expiry_date_2" required> -->
+                                                            <input type="number" class="form-control" [min]="[minBlockNumber]" placeholder="Minimum Block Number + {{minBlockNumber}}" required 
+                                                                ngModel name="expiryBlock">
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <button type="submit" (click)="onStepTwo()" class="btn btn-info btn-fill pull-right next-step" [disabled]="!f.valid" style="background-image: -webkit-gradient(linear,left top,left bottom,from(#382673),to(#682382)); border-color:#682382;">Submit</button>
+                                                <button type="submit" id="submit_two" class="btn btn-info btn-fill pull-right next-step" [disabled]="!step2.valid" style="background-image: -webkit-gradient(linear,left top,left bottom,from(#382673),to(#682382)); border-color:#682382;">Submit</button>
                                                 <div class="clearfix"></div>
                                             </form>
                                             </div>
@@ -285,11 +190,6 @@
                                             <td> {{ blockdata }} </td>
                                         </tr>
                                 </table>
-                                <!-- <ul class="list-inline pull-right">
-                                    <li>
-                                        <button type="submit" class="btn btn-primary btn-info-full next-step">Save and continue</button>
-                                    </li>
-                                </ul> -->
                             </div>
                         </div>
                         <div class="clearfix"></div>
@@ -299,3 +199,9 @@
         </section>
     </div>
 </div>
+
+<!-- <script>
+    if (this.blockdata >= this.minBlockNumber) {
+        document.getElementById("submit_two").disabled = true;
+    }
+</script> -->

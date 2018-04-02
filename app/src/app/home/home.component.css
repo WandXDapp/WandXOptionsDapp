@@ -426,3 +426,77 @@ span.round-tab:hover {
 .progress-bar{
     background-color: transparent;
 }
+
+.popup-box {
+    height: 100vh;
+    width: 100%;
+    margin: 0 auto;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 9999;
+    -webkit-transition: all 100ms ease-in;
+    transition: all 100ms ease-in;
+}
+
+.popup{
+    /* display: block; */
+    margin: 0 auto;
+    width: 30%;
+    height: 33rem;
+    padding: 2rem;
+    position: absolute;
+    left: 58%;
+    top: 45%;
+    transform: translate(-50%,-50%);
+    box-shadow: 0 2rem 4rem rgba(0, 0, 0, 0.2);
+    background-color: #fff;
+    z-index: 99999;
+}
+
+.popup_header{
+    font-size: 2.5rem;
+    padding: 2rem;
+    text-align: center;
+    border-bottom: .5px solid #333;
+}
+
+.popup_content{
+    padding: 2rem;
+}
+
+.popup_footer{
+    padding: 2rem;
+}
+
+.popup_allowance-input{
+    width: 70%;
+    margin: 0 auto;
+    display: block;
+    border-radius: 5px;
+    padding: 1rem;
+}
+
+.form-group-input{
+    padding-top: 2rem;
+}
+
+.form-group-btn{
+    text-align: center;
+    padding-top: 3rem;
+}
+
+.btn-cancel{
+    color: #fff;
+    padding: 6px 12px;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#382673), to(#682382));
+    border-color: #682382;
+}
+
+.btn-approve{
+    color: #fff;
+    padding: 6px 12px;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#382673), to(#682382));
+    border-color: #682382;
+}

@@ -12,7 +12,8 @@ export const ROUTES: RouteInfo[] = [
     { path: 'user', title: 'User Profile',  icon:'pe-7s-user', class: '' },
     { path: 'activeoptions', title: 'Active Options',  icon:'pe-7s-note2', class: '' },
     { path: 'statistics', title: 'Statistics',  icon:'pe-7s-graph1', class: '' },
-    { path: 'expiredoptions', title: 'Expired Options',  icon:'pe-7s-hourglass', class: '' },
+    { path: 'expiredoptions', title: 'Expired Options', icon: 'pe-7s-hourglass', class: '' },
+    { path: 'faucet', title: 'Faucet List', icon:'pe-7s-diamond', class: '' },
 ];
 
 @Component({

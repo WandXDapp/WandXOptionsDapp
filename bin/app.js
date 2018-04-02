@@ -14,6 +14,7 @@ DATE	    PROGRAMMER		COMMENT
 /******************** Node imports ***********************/
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
+import cors from 'cors'
 import express from 'express';
 import favicon from 'serve-favicon'
 import flash from 'connect-flash'
@@ -43,6 +44,9 @@ if(env === 'production') {
 
 // setup port
 app.set('port', envConfig.port);
+
+// enable cors
+app.options('*', cors())
 
 // create log folders if it does not exist
 if (!fs.existsSync(envConfig.logDirectory)) {
@@ -86,6 +90,13 @@ app.use(session({
 		httpOnly: true
 	}
 }));
+
+app.use((req, res, next) => {
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header("Access-Control-Allow-Headers", "Cache-Control, Pragma, Origin, Authorization, Content-Type, X-Requested-With, x-xsrf-token");
+	res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
+	next();
+});
 
 // setup response for OPTIONS hit
 app.use((req, res, next) => {

@@ -22,9 +22,7 @@ import { ValidateService } from './services/validate.service';
 import { AuthService } from './services/auth.service';
 import { FlashMessagesModule } from 'angular2-flash-messages';
 import { AuthGuard } from './guards/auth.guard';
-import { ContractsService } from './services/contracts.service';
-import Web3 from 'web3';
-// import { Web3Service } from '../services/meta.service';
+import { FaucetComponent } from './faucet/faucet.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +31,8 @@ import Web3 from 'web3';
     UserComponent,
     TablesComponent,
     TypographyComponent,
-    NotificationsComponent
+    NotificationsComponent,
+    FaucetComponent
 
   ],
   imports: [
@@ -47,7 +46,7 @@ import Web3 from 'web3';
     AppRoutingModule,
     FlashMessagesModule.forRoot()
   ],
-  providers: [ValidateService, AuthService, AuthGuard, ContractsService],
+  providers: [ValidateService, AuthService, AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

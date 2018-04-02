@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import * as Web3 from 'web3';
 
+const BigNumber = require('bignumber.js');
+
 const ierc20 = require("wandx-options/build/contracts/IERC20.json");
 const derivativeFactory = require("wandx-options/build/contracts/DerivativeFactory.json");
 const option = require("wandx-options/build/contracts/Option.json");
 const wandxfaucet = require("wandx-options/build/contracts/WandXTokenFaucet.json");
 
-const dummyTokenBase = require("wandx-options/build/dummyTokenBaseInfo.json");
-const dummyTokenQuote = require("wandx-options/build/dummyTokenQuoteInfo.json");
+const dummyTokens = require("wandx-options/build/dummyTokenInfo.json");
 
 export const WEB3_INITIALIZED = 'WEB3_INITIALIZED';
 
@@ -24,6 +25,10 @@ const networkMap = {
 	4447: 'truffle',
 };
 
+declare namespace web3Functions{
+    export function initializeWeb3();
+}
+
 @Injectable()
 export class ContractsService {
 	
@@ -32,7 +37,7 @@ export class ContractsService {
 	private _web3Status: string = null;
 	private _test_version: any;
 	private _test_version_name: string;
-	
+		
 	private _useNetwork: string = '15';
 	private _useNetworkNumber: number = 15;
 	private _gas = 4000000;
@@ -40,16 +45,215 @@ export class ContractsService {
 	
 	private _faucetObj: any;
 	private _derivativeFactoryObj: any;
+
+	private _optionWrapper: OptionWrapper = null;
 	
 	constructor() { }
 
-	public async initWeb3(): Promise<string> {
+	/*
+	 * COMMON FUNCTIONS TO INTERACT WITH WEB3 OR METAMASK
+	 * LIKE GET CONNECTION STATE OR ADDRESS
+	 */
+
+	// Initialise web3 object with metamask
+	public async initWeb3(): Promise<boolean> {
+		let response = false;
+		if(await this._initWeb3() == 'success')
+			response = true;
+		return Promise.resolve(response);
+	}
+	
+	// Get current status of connection
+	public getweb3Status(): string {
+		return this._web3Status;
+	}
+
+	// Get the network number on which metamask is connected at present
+	public getNetworkVersion(): number {
+		return this._useNetworkNumber;
+	}
+
+	// Get latest block number
+	public async getBlockNumber(): Promise<number> {		
+		let blockNumber = await new Promise((resolve, reject) => {
+			this._web3.eth.getBlockNumber((err, blockNumber) => {
+				if (err != null) {
+					reject(0);
+				}
+				resolve(blockNumber);
+			})
+		}) as number;
+		return Promise.resolve(blockNumber);
+	}
+
+	// Get address of logged in user
+	public getUserAddress(): string {
+		return this._web3.eth.defaultAccount;
+	}
+
+	/*
+	 *  END COMMON FUNCTIONS TO INTERACT WITH WEB3 OR METAMASK
+	 */
+
+	/*
+	 * FUNCTIONS RELATED TO WORKING OF WANDX
+	 */
+
+	// Get wandx token address
+	public getWandxTokenAddress(): string {
+		return wandxfaucet.networks[this._useNetwork].address;
+	}
+
+	// Get list of all the tokens currently active for wandx dapp
+	public getTokenList(): any {
+		dummyTokens.unshift({
+			"name": "WANDX",
+			"decimals": 18,
+			"symbol": "WANDX",
+			"deployed": true,
+			"address": wandxfaucet.networks[this._useNetwork].address
+		});
+		return dummyTokens;
+	}
+
+	// Get any perticular object of token
+	public getTokenObj(tokenName): any {
+		let retToken = {};
+		dummyTokens.forEach(function(token){
+			if(token.name == tokenName)
+				retToken = token;
+		});
+		return retToken;
+	}
+
+	// Get current allowance of wandx token
+	public async getWandxAllowance(): Promise<number> {		
+		var allowance = await this.getAllowance(
+			wandxfaucet.networks[this._useNetwork].address, 
+			derivativeFactory.networks[this._useNetwork].address
+		);
+		return Promise.resolve(allowance);
+	}
+
+	// Approve wandx tokens
+	public async approveWandx(tokenCount): Promise<boolean> {	
+		var approve = await this.approveToken(
+			wandxfaucet.networks[this._useNetwork].address, 
+			derivativeFactory.networks[this._useNetwork].address, 
+			tokenCount);
+		return Promise.resolve(approve);
+	}
+
+	// Get the fee utilsed in creating an option
+	public async getContractFee(): Promise<number> {
+		let fee = await new Promise((resolve, reject) => {
+			this._derivativeFactoryObj.methods.getOptionFee().call().then(function(result){
+				resolve(result);
+			});
+		}) as number;
+		return Promise.resolve(fee);
+	}
+
+	/*
+	 * END FUNCTIONS RELATED TO WORKING OF WANDX
+	 */
+
+	/*
+	 * COMMON FUNCTIONS FOR ANY IERC20 CONTRACT
+	 */
+
+	// To Get Token Balance
+	public async getBalance(tokenAddress): Promise<number> {
+		let balance = await new Promise((resolve, reject) => {
+			let tokenObj = this.createContractObj(ierc20.abi, tokenAddress);
+			tokenObj.methods.balanceOf(this._web3.eth.defaultAccount).call().then(function(result){
+				resolve(result);
+			});
+		}) as number;
+		return Promise.resolve(balance);
+	}
+
+	// To check if any contract has allowance of the token
+	public async getAllowance(tokenAddress, contractAddress): Promise<number> {		
+		var allowance = await new Promise((resolve, reject) => {
+			var tokenObj = this.createContractObj(ierc20.abi, tokenAddress);
+			tokenObj.methods.allowance(this._web3.eth.defaultAccount,  contractAddress).call().then(function(result){
+				resolve(result);
+			});
+		}) as any;
+		return Promise.resolve(allowance);
+	}
+
+	// To approve use of token to a perticular contract
+	public async approveToken(tokenAddress, contractAddress, tokenCount): Promise<boolean> {
+		var approve = await new Promise((resolve, reject) => {
+			var tokenObj = this.createContractObj(ierc20.abi, tokenAddress);
+			tokenObj.methods.approve(contractAddress, tokenCount).send({}, function(error, result){
+				if(error){
+					console.log("approveContract erorr", error);
+					resolve(false);
+				}
+				resolve(true);
+			});
+		}) as boolean;
+		return Promise.resolve(approve);
+	}
+
+	/*
+	 * END COMMON FUNCTIONS FOR ANY IERC20 CONTRACT
+	 */
+
+	/*
+	 * FUNCTIONS FOR CREATING AND UTILISING OPTIONS
+	 */
+
+	// Create a new option
+	public async createNewOption(baseToken, quoteToken, baseTokenDecimal, quoteTokenDecimal, strikePrice, blockTimestamp): Promise<string> {
+		this._optionWrapper.setBaseToken(baseToken);
+		this._optionWrapper.setQuoteToken(quoteToken);
+		this._optionWrapper.setBaseTokenDecimal(baseTokenDecimal);
+		this._optionWrapper.setQuoteTokenDecimal(quoteTokenDecimal);
+		this._optionWrapper.setStrikePrice(strikePrice);
+		this._optionWrapper.setBlockTimestamp(blockTimestamp);
+		return await this._optionWrapper.createNewOption();
+	}
+
+	// Issue option
+	public async issueOption(assetsOffered, premium, expiry): Promise<any> {
+		this._optionWrapper.setAssetsOffered(assetsOffered);
+		this._optionWrapper.setPremium(premium);
+		this._optionWrapper.setExpiry(expiry);
+		return await this._optionWrapper.issueOption();
+	}
+
+	// Trade Option
+	public async tradeOption(amount): Promise<any> {
+		this._optionWrapper.setTradeOptionAmount(amount);
+		return await this._optionWrapper.tradeOption();
+	}
+
+	// Excersise Option
+	public async exerciseOption(amount): Promise<any> {
+		this._optionWrapper.setExerciseOptionAmount(amount);
+		return await this._optionWrapper.exerciseOption();
+	}
+
+	/*
+	 * END FUNCTIONS FOR CREATING AND UTILISING OPTIONS
+	 */
+
+	/*
+	 * PRIVATE FUNCTIONS USED BY OTHER FUNCTIONS OF THIS SERVICE
+	 */
+
+	// Initialise web3 object with metamask
+	private async _initWeb3(): Promise<string> {
 
 		this._web3Status = null;
 		
 		let initStatus = await new Promise((resolve, reject) => {
-			var web3 = window.web3;
-			var response = null;
+			let web3 = window.web3;
+			let response = null;
 
 			// Checking if Web3 has been injected by the browser (Mist/MetaMask)
 			if (typeof web3 !== 'undefined' && web3.currentProvider && web3.currentProvider.isMetaMask) {
@@ -61,8 +265,8 @@ export class ContractsService {
 					this._web3Status = response;
 					reject(response);
 				}
-			
-				web3 = new Web3(web3.currentProvider);
+
+				web3 = web3Functions.initializeWeb3();
 				this._web3 = web3;
 				
 				web3.eth.net.getId((err, version) => {
@@ -93,141 +297,13 @@ export class ContractsService {
 			let account = await this.getAccount();
 			this._faucetObj = this.createContractObj(wandxfaucet.abi, wandxfaucet.networks[this._useNetwork].address);
 			this._derivativeFactoryObj = this.createContractObj(derivativeFactory.abi, derivativeFactory.networks[this._useNetwork].address);
+			this._optionWrapper = new OptionWrapper(this._web3, this._gas, this._gasPrice, this._derivativeFactoryObj);
 		}
 		
 		return Promise.resolve(initStatus);
 	}
-	
-	public getNetworkVersion(): number {
-		return this._useNetworkNumber;
-	}
 
-	public getBaseTokenAddress(): string {
-		return dummyTokenBase.address;
-	}
-
-	public getQuoteTokenAddress(): string {
-		return dummyTokenQuote.address;
-	}
-
-	public async getContractFee(): Promise<number> {
-		var fee = await new Promise((resolve, reject) => {
-			this._derivativeFactoryObj.methods.getOptionFee().call().then(function(result){
-				resolve(result);
-			});
-		}) as number;
-		return Promise.resolve(fee);
-	}
-
-	public async getUserBalance(): Promise<number> {
-		var fee = await new Promise((resolve, reject) => {
-			this._faucetObj.methods.balanceOf(this._web3.eth.defaultAccount).call().then(function(result){
-				resolve(result);
-			});
-		}) as number;
-		return Promise.resolve(fee);
-	}
-
-	public getweb3Status(){
-		return this._web3Status;
-	}
-
-	public async getCurrentAllowance(): Promise<number> {		
-		var allowance = await new Promise((resolve, reject) => {
-			this._faucetObj.methods.allowance(this._web3.eth.defaultAccount,  derivativeFactory.networks[this._useNetwork].address).call().then(function(result){
-				resolve(result);
-			});
-		}) as any;
-		return Promise.resolve(allowance);
-	}
-
-	public async faucetGetTokens(tokenCount): Promise<boolean> {		
-		var getTokens = await new Promise((resolve, reject) => {
-			this._faucetObj.methods.getTokens(tokenCount, this._web3.eth.defaultAccount).send({}, function(error, result){
-				if(error){
-					console.log("faucetGetTokens erorr", error);
-					resolve(false);
-				}
-				console.log("faucetGetTokens result", result);
-				resolve(true);
-			});
-		}) as boolean;
-		return Promise.resolve(getTokens);
-	}
-
-	public async faucetApprove(tokenCount): Promise<boolean> {		
-		var approve = await new Promise((resolve, reject) => {
-			this._faucetObj.methods.approve(derivativeFactory.networks[this._useNetwork].address, tokenCount).send({}, function(error, result){
-				if(error){
-					console.log("faucetApprove erorr", error);
-					resolve(false);
-				}
-				console.log("faucetApprove result", result);
-				resolve(true);
-			});
-		}) as boolean;
-		return Promise.resolve(approve);
-	}
-
-	public async createNewOption(baseToken, quoteToken, baseTokenDecimal, quoteTokenDecimal, strikePrice, blockTimestamp): Promise<string> {
-		
-		var optionAddress = await new Promise((resolve, reject) => {			
-			
-			this._derivativeFactoryObj.methods.createNewOption(
-				baseToken,
-				quoteToken,
-				baseTokenDecimal,
-				quoteTokenDecimal,
-				strikePrice,
-				blockTimestamp
-			)
-			.send()
-			.on('receipt', function(receipt){ 
-				resolve(receipt.events.LogOptionCreated.returnValues._optionAddress);
-			})
-			.catch(function(error) {
-				console.log("error", error);
-				reject("error");
-			});
-		}) as string;
-		return Promise.resolve(optionAddress);
-	}
-
-	public async approveAssets(contractAddress, optionAddress, assetValue): Promise<boolean> {
-		var approve = await new Promise((resolve, reject) => {
-			var assetObj = this.createContractObj(ierc20.abi, contractAddress);
-			assetObj.methods.approve(optionAddress, assetValue).send({}, function(error, result){
-				if(error){
-					reject(false);
-				}
-				resolve(true);
-			});
-		}) as boolean;
-		return Promise.resolve(approve);
-	}
-
-	public async issueOption(optionAddress, assetsOffered, premium, expiry): Promise<any> {
-		var response = await new Promise((resolve, reject) => {			
-			var optionObj = this.createContractObj(option.abi, optionAddress);
-			optionObj.methods.issueOption(
-				assetsOffered,
-				premium,
-				expiry
-			).send()
-			.then(function(error, result){
-				if (error){
-					console.error('Error in issueOption', error);
-					reject(null);
-				}
-				else{
-					console.log('Result of issueOption', result);
-					resolve(result);
-				}
-			});
-		}) as any;
-		return Promise.resolve(response);
-	}
-
+	// Get user account form web3
 	private async getAccount(): Promise<string> {		
 		if (this._account == null) {
 			this._account = await new Promise((resolve, reject) => {
@@ -251,11 +327,285 @@ export class ContractsService {
 		return Promise.resolve(this._account);
 	}
 
+	// Create an object of contract from abi and address
 	private createContractObj(abi, address): any {
 		var contractObj = new this._web3.eth.Contract(abi, address);
 		contractObj.options.from = this._web3.eth.defaultAccount;
 		contractObj.options.gas = this._gas;
 		contractObj.options.gasPrice = this._gasPrice;
 		return contractObj;
+	}
+
+	// For testing only, have to remove before final version
+	public async faucetGetTokens(tokenCount): Promise<boolean> {
+		var getTokens = await new Promise((resolve, reject) => {
+			this._faucetObj.methods.getTokens(tokenCount, this._web3.eth.defaultAccount).send({}, function(error, result){
+				if(error){
+					console.log("faucetGetTokens erorr", error);
+					resolve(false);
+				}
+				console.log("faucetGetTokens result", result);
+				resolve(true);
+			});
+		}) as boolean;
+		return Promise.resolve(getTokens);
+	}
+}
+
+class OptionWrapper {
+
+	private web3: any = null;
+	private gas: number = 4000000;
+	private gasPrice: number = 21000000000;
+	
+	private derivativeFactoryObj: any = null;
+	
+	private baseToken: string = null;
+	private quoteToken: string = null;
+	private baseTokenDecimal: number = 0;
+	private quoteTokenDecimal: number = 0;
+	private strikePrice: number = 0;
+	private blockTimestamp: number = 0;
+
+	private assetsOffered: number = 0;
+	private premium: number = 0;
+	private expiry: number = 0;
+
+	private tradeOptionAmount: number = 0;
+	private exerciseOptionAmount: number = 0;
+
+	private optionAddress: string = null;
+	private issueOptionTokenProxy: string = null;
+	private tradeOptionTimestamp: number = 0;
+	private exerciseOptionTimestamp: number = 0;
+
+	constructor(web3, gas, gasPrice, derivativeFactoryObj){
+		this.web3 = web3;
+		this.gas = gas;
+		this.gasPrice = gasPrice;
+		this.derivativeFactoryObj = derivativeFactoryObj;
+	}
+
+	public getBaseToken(): string {
+		return this.baseToken;
+	}
+	public setBaseToken(baseToken) {
+		this.baseToken = baseToken;
+	}
+	public getQuoteToken(): string {
+		return this.quoteToken;
+	}
+	public setQuoteToken(quoteToken) {
+		this.quoteToken = quoteToken;
+	}
+	public getBaseTokenDecimal(): number {
+		return this.baseTokenDecimal;
+	}
+	public setBaseTokenDecimal(baseTokenDecimal) {
+		this.baseTokenDecimal = baseTokenDecimal;
+	}
+	public getQuoteTokenDecimal(): number {
+		return this.quoteTokenDecimal;
+	}
+	public setQuoteTokenDecimal(quoteTokenDecimal) {
+		this.quoteTokenDecimal = quoteTokenDecimal;
+	}
+	public getStrikePrice(): number {
+		return this.strikePrice;
+	}
+	public setStrikePrice(strikePrice) {
+		this.strikePrice = strikePrice;
+	}
+	public getBlockTimestamp(): number {
+		return this.blockTimestamp;
+	}
+	public setBlockTimestamp(blockTimestamp) {
+		this.blockTimestamp = blockTimestamp;
+	}
+	public getAssetsOffered(): number {
+		return this.assetsOffered;
+	}
+	public setAssetsOffered(assetsOffered) {
+		this.assetsOffered = assetsOffered;
+	}
+	public getPremium(): number {
+		return this.premium;
+	}
+	public setPremium(premium) {
+		this.premium = premium;
+	}
+	public getExpiry(): number {
+		return this.expiry;
+	}
+	public setExpiry(expiry) {
+		this.expiry = expiry;
+	}
+	public getTradeOptionAmount(): number {
+		return this.tradeOptionAmount;
+	}
+	public setTradeOptionAmount(tradeOptionAmount) {
+		this.tradeOptionAmount = tradeOptionAmount;
+	}
+	public getExerciseOptionAmount(): number {
+		return this.exerciseOptionAmount;
+	}
+	public setExerciseOptionAmount(exerciseOptionAmount) {
+		this.exerciseOptionAmount = exerciseOptionAmount;
+	}
+	public getOptionAddress(): string {
+		return this.optionAddress;
+	}
+	public getIssueOptionTokenProxy(): string {
+		return this.issueOptionTokenProxy;
+	}
+	public getTradeOptionTimestamp(): number {
+		return this.tradeOptionTimestamp
+	}
+	public getExerciseOptionTimestamp(): number {
+		return this.exerciseOptionTimestamp;
+	}
+	
+	public async createNewOption(): Promise<string> {
+		this.optionAddress = await new Promise((resolve, reject) => {
+			this.derivativeFactoryObj.methods.createNewOption(
+				this.baseToken,
+				this.quoteToken,
+				this.baseTokenDecimal,
+				this.quoteTokenDecimal,
+				this.strikePrice,
+				this.blockTimestamp
+			)
+			.send()
+			.on('receipt', function(receipt){ 
+				resolve(receipt.events.LogOptionCreated.returnValues._optionAddress);
+			})
+			.catch(function(error) {
+				console.log("error", error);
+				reject("error");
+			});
+		}) as string;
+		return Promise.resolve(this.optionAddress);
+	}
+
+	public async issueOption(): Promise<string> {
+		let multiplyFactor = new BigNumber(10).pow(this.quoteTokenDecimal).toNumber();
+		let assetValue = this.assetsOffered * this.strikePrice * multiplyFactor;
+		let approve = await this.approveToken(this.quoteToken, this.optionAddress, assetValue);
+		if(!approve)
+			return Promise.resolve(null);
+		var response = await new Promise((resolve, reject) => {
+			var optionObj = this.createContractObj(option.abi, this.optionAddress);
+			optionObj.methods.issueOption(
+				this.assetsOffered,
+				this.premium,
+				this.expiry
+			)
+			.send()
+			.on('receipt', (receipt) => {
+				this.issueOptionTokenProxy = receipt.events.LogOptionsIssued.returnValues._tokenProxy;
+				resolve(this.issueOptionTokenProxy);
+			})
+			.catch(function(error) {
+				console.error('Error in issueOption', error);
+				reject(null);
+			});
+		}) as any;
+		return Promise.resolve(response);
+	}
+
+	// Trade Option
+	public async tradeOption(): Promise<any> {
+		let multiplyFactor = new BigNumber(10).pow(this.quoteTokenDecimal).toNumber();
+		let assetValue = this.tradeOptionAmount * this.premium * multiplyFactor;
+		let approve = await this.approveToken(this.quoteToken, this.optionAddress, assetValue);
+		if(!approve)
+			return Promise.resolve(null);
+		var response = await new Promise((resolve, reject) => {			
+			var optionObj = this.createContractObj(option.abi, this.optionAddress);
+			optionObj.methods.tradeOption(
+				this.web3.eth.defaultAccount, 
+				this.tradeOptionAmount
+			)
+			.send()
+			.on('receipt', function(receipt){
+				this.trandOptionTimestamp = receipt.events.LogOptionsTrade.returnValues._timestamp;
+				resolve(this.trandOptionTimestamp);
+			})
+			.catch(function(error) {
+				console.error('Error in issuetradeOptionOption', error);
+				reject(null);
+			});
+		}) as any;
+		return Promise.resolve(response);
+	}
+
+	// Excersise Option
+	public async exerciseOption(): Promise<any> {
+		let approveAssets = await this.approveToken(this.optionAddress, this.optionAddress, this.exerciseOptionAmount);
+		if(!approveAssets)
+			return Promise.resolve(null);
+		let multiplyFactor = new BigNumber(10).pow(this.baseTokenDecimal).toNumber();
+		let assetValue = this.exerciseOptionAmount * this.premium * multiplyFactor;
+		let approveBaseToken = await this.approveToken(this.baseToken, this.issueOptionTokenProxy, assetValue);
+		if(!approveBaseToken)
+			return Promise.resolve(null);
+		var response = await new Promise((resolve, reject) => {
+			var optionObj = this.createContractObj(option.abi, this.optionAddress);
+			optionObj.methods.exerciseOption(
+				this.exerciseOptionAmount
+			)
+			.send()
+			.on('receipt', function(receipt){
+				this.exerciseOptionTimestamp = receipt.events.LogOptionsExcercised.returnValues._timestamp;
+				resolve(this.exerciseOptionTimestamp);
+			})
+			.catch(function(error) {
+				console.error('Error in exerciseOption', error);
+				reject(null);
+			});
+		}) as boolean;
+		return Promise.resolve(response);
+	}
+
+	// Create an object of contract from abi and address
+	private createContractObj(abi, address): any {
+		var contractObj = new this.web3.eth.Contract(abi, address);
+		contractObj.options.from = this.web3.eth.defaultAccount;
+		contractObj.options.gas = this.gas;
+		contractObj.options.gasPrice = this.gasPrice;
+		return contractObj;
+	}
+
+	// To approve use of token to a perticular contract
+	private async approveToken(tokenAddress, contractAddress, tokenCount): Promise<boolean> {
+		let balance = await this.getBalance(tokenAddress);
+		if(balance < tokenCount)
+			return Promise.reject(false);
+		var approve = await new Promise((resolve, reject) => {
+			let tokenObj = this.createContractObj(ierc20.abi, tokenAddress);
+			tokenObj.methods.approve(
+				contractAddress, 
+				tokenCount
+			)
+			.send()
+			.on('receipt', function(receipt){
+				resolve(true);
+			})
+			.catch(function(error) {
+				reject(false);
+			});
+		}) as boolean;
+		return Promise.resolve(approve);
+	}
+
+	// To Get Token Balance
+	private async getBalance(tokenAddress): Promise<number> {
+		let balance = await new Promise((resolve, reject) => {
+			let tokenObj = this.createContractObj(ierc20.abi, tokenAddress);
+			tokenObj.methods.balanceOf(this.web3.eth.defaultAccount).call().then(function(result){
+				resolve(result);
+			});
+		}) as number;
+		return Promise.resolve(balance);
 	}
 }
