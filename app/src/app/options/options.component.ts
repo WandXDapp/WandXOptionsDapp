@@ -18,7 +18,7 @@ export class OptionsComponent implements OnInit {
 	private myOptions: any;
 	private expiredOptions: any;
 
-	constructor( private contractsService: ContractsService, private apiCalls:ApicallsService ) { }
+	constructor( private apiCalls:ApicallsService, private contractsService: ContractsService ) { }
 	
 	ngOnInit() {
 		
@@ -38,12 +38,10 @@ export class OptionsComponent implements OnInit {
 
 		this.contractsService.getBlockNumber().then((currentBlockNumber) => {
 			this.apiCalls.getActiveOptions(this.tokenname, currentBlockNumber).then((optionList) => {
-				console.log(optionList);
 				this.activeOptions = optionList;
 			});
 
 			this.apiCalls.getUserOptions(this.contractsService.getUserAddress(), this.tokenname, currentBlockNumber).then((optionList) => {
-				console.log(optionList, this.contractsService.getUserAddress());
 				optionList.forEach(element => {
 					if(element.isActive){
 						this.myOptions.push(element);

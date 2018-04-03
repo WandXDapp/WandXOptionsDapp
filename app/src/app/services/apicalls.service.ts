@@ -14,6 +14,7 @@ export class ApicallsService {
 			isAddressPresent: this.backendUrl + "isAddressPresent",
 			getUserDetails: this.backendUrl + "getUserDetails",
 			updateUserProfile: this.backendUrl + "updateUserProfile",
+			createNewOption: this.backendUrl + "createNewOption",
 			getActiveOptions: this.backendUrl + "getActiveOptions",
 			getUserOptions: this.backendUrl + "getUserOptions"
 		}
@@ -39,7 +40,7 @@ export class ApicallsService {
 		let isPresent = await new Promise((resolve, reject) => {
 			var headers = new Headers();
 			headers.append("address", address);
-			this.http.get(this.urlList['insertAddress'], { headers: headers}).subscribe(
+			this.http.get(this.urlList['isAddressPresent'], { headers: headers}).subscribe(
 				data => {
 					resolve(JSON.parse(data['_body']).result);
 				},
@@ -78,6 +79,32 @@ export class ApicallsService {
 				},
 				err => {
 					reject(null);
+				}
+			);
+		}) as any;
+		return Promise.resolve(result);
+	}
+
+	public async createNewOption(address, optionAddress, baseToken, quoteToken, strikePrice, blockTimestamp, expiry, assetsOffered): Promise<boolean> {
+		let result = await new Promise((resolve, reject) => {
+			var headers = new Headers();
+			headers.append("Access-Control-Allow-Origin", '*');
+			var data = {
+				address: address,
+				optionAddress: optionAddress,
+				baseToken: baseToken,
+				quoteToken: quoteToken,
+				strikePrice: strikePrice,
+				blockTimestamp: blockTimestamp,
+				expiry: expiry,
+				assetsOffered: assetsOffered
+			};
+			this.http.put(this.urlList['createNewOption'], data, { headers: headers }).subscribe(
+				data => {
+					resolve(JSON.parse(data['_body']).result);
+				},
+				err => {
+					reject(false);
 				}
 			);
 		}) as any;
