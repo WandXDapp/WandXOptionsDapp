@@ -70,4 +70,39 @@ export class ApicallsService {
 		}) as any;
 		return Promise.resolve(result);
 	}
+
+	public async getActiveOptions(tokenName, currentBlockNumber): Promise<any> {
+		let optionList = await new Promise((resolve, reject) => {
+			var headers = new Headers();
+			headers.append("tokenName", tokenName);
+			headers.append("currentBlockNumber", currentBlockNumber);
+			this.http.get("http://localhost:1414/getActiveOptions", { headers: headers}).subscribe(
+				data => {
+					resolve(JSON.parse(data['_body']).optionList);
+				},
+				err => {
+					reject([]);
+				}
+			);
+		}) as any;
+		return Promise.resolve(optionList);
+	}
+
+	public async getUserOptions(address, tokenName, currentBlockNumber): Promise<any> {
+		let optionList = await new Promise((resolve, reject) => {
+			var headers = new Headers();
+			headers.append("address", address);
+			headers.append("tokenName", tokenName);
+			headers.append("currentBlockNumber", currentBlockNumber);
+			this.http.get("http://localhost:1414/getUserOptions", { headers: headers}).subscribe(
+				data => {
+					resolve(JSON.parse(data['_body']).optionList);
+				},
+				err => {
+					reject([]);
+				}
+			);
+		}) as any;
+		return Promise.resolve(optionList);
+	}
 }

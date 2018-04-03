@@ -43,16 +43,6 @@ export class NavbarComponent implements OnInit{
         this.toggleButton = navbar.getElementsByClassName('navbar-toggle')[0];
     }
 
-    onLogoutClick() {
-        this.authService.logout();
-        this.flashMessagesServie.show('You Are Logout ', {
-            cssClass: 'alert-success',
-            timeout: 1000
-        });
-        this.router.navigate(['']);
-        return false;
-    };
-
     sidebarOpen() {
         const toggleButton = this.toggleButton;
         const body = document.getElementsByTagName('body')[0];

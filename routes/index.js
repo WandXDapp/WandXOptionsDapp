@@ -167,10 +167,22 @@ router.put('/createNewOption', function(req, res, next) {
 	
 	var address = req.body.address;
 	var optionAddress = req.body.optionAddress;
+	var baseToken = req.body.baseToken;
+	var quoteToken = req.body.quoteToken;
+	var strikePrice = req.body.strikePrice;
+	var blockTimestamp = req.body.blockTimestamp;
+	var expiry = req.body.expiry;
+	var assetsOffered = req.body.assetsOffered;
 
 	var userOptionsObj = {
 		address: address,
-		optionAddress: optionAddress
+		optionAddress: optionAddress,
+		baseToken: baseToken,
+		quoteToken: quoteToken,
+		strikePrice: strikePrice,
+		blockTimestamp: blockTimestamp,
+		expiry: expiry,
+		assetsOffered: assetsOffered
 	};
 	
 	userOptions.findOne({ optionAddress: optionAddress }, function (err, option) {
@@ -204,6 +216,7 @@ router.get('/getUserOptions', function(req, res, next) {
 	
 	var useroptions = db.get().collection('useroptions');
 	var address = req.get("address");
+	var currentBlockNumber = req.get("currentBlockNumber");
 	
 	useroptions.find({ address: address }).toArray(function(err, optionList) {
 		if (err || optionList == null) {
@@ -213,6 +226,42 @@ router.get('/getUserOptions', function(req, res, next) {
 				optionList: []
 			});
 		}
+		optionList.forEach(element => {
+			if(parseInt(element.expiry) < parseInt(currentBlockNumber)){
+				element.isActive = false;
+			}
+			else {
+				element.isActive = true;
+			}
+		});
+		return res.status(200).json({
+			status: 'ok',
+			error: '',
+			optionList: optionList
+		});
+	});
+});
+
+router.get('/getActiveOptions', function(req, res, next) {	
+	
+	var useroptions = db.get().collection('useroptions');
+	var currentBlockNumber = req.get("currentBlockNumber");
+	useroptions.find({ }).toArray(function(err, optionList) {
+		if (err || optionList == null) {
+			return res.status(200).json({
+				status: 'error',
+				error: 'Unable to find address in db',
+				optionList: []
+			});
+		}
+
+		let count = optionList.length
+		while (count--) {
+			if (parseInt(optionList[count].expiry) < parseInt(currentBlockNumber)) {
+				optionList.splice(count, 1);
+			}
+		}
+
 		return res.status(200).json({
 			status: 'ok',
 			error: '',
