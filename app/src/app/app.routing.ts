@@ -15,11 +15,12 @@ import { FlashMessagesModule } from 'angular2-flash-messages';
 import { AuthGuard } from './guards/auth.guard';
 import { FaucetComponent } from './faucet/faucet.component';
 
-const routes: Routes =[
+const routes: Routes = [
 	{ path: 'createoptions',	component: HomeComponent },
-	{ path: 'user',				component: UserComponent }, 
+	{ path: 'user',				component: UserComponent },
 	{ path: 'activeoptions',	component: TablesComponent },
-	{ path: 'statistics',		component: TypographyComponent },
+  { path: 'statistics', component: TypographyComponent },
+	{ path: 'statistics/:name',		component: TypographyComponent },
 	{ path: 'expiredoptions',	component: NotificationsComponent },
 	{ path: 'faucet',			component:  FaucetComponent},
 	{ path: '',					redirectTo: 'createoptions', pathMatch: 'full' }

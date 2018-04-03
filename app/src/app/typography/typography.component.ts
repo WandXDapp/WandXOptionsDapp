@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 
 @Component({
   selector: 'app-typography',
@@ -7,9 +8,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TypographyComponent implements OnInit {
 
-  constructor() { }
+  id: any;
+  constructor(private activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
+    // subscribe to router event
+    this.activatedRoute.params.subscribe((params: Params) => {
+      let userId = params['userId'];
+      // console.log(userId);
+    });
+
+    console.log(window.location.href);
+    this.id = window.location.href.replace('http://localhost:4200/statistics/', '');
+    console.log(this.id);
   }
 
 }
