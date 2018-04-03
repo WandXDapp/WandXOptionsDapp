@@ -109,6 +109,7 @@ export class HomeComponent implements OnInit {
 		this.contractsService.initWeb3().then((result) => {
 			this.contractsService.getBalance(this.wandxTokenAddress).then((balance: number) => {
 				this.userBalance = balance;
+				this.userBalance = 0;
 				console.log(this.userBalance);
 			});
 	

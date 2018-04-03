@@ -217,8 +217,9 @@ router.get('/getUserOptions', function(req, res, next) {
 	var useroptions = db.get().collection('useroptions');
 	var address = req.get("address");
 	var currentBlockNumber = req.get("currentBlockNumber");
-	
-	useroptions.find({ address: address }).toArray(function(err, optionList) {
+	var tokenName = req.get("tokenName");
+
+	useroptions.find({ address: address, baseToken: tokenName }).toArray(function(err, optionList) {
 		if (err || optionList == null) {
 			return res.status(200).json({
 				status: 'error',
@@ -246,7 +247,9 @@ router.get('/getActiveOptions', function(req, res, next) {
 	
 	var useroptions = db.get().collection('useroptions');
 	var currentBlockNumber = req.get("currentBlockNumber");
-	useroptions.find({ }).toArray(function(err, optionList) {
+	var tokenName = req.get("tokenName");
+
+	useroptions.find({ baseToken: tokenName }).toArray(function(err, optionList) {
 		if (err || optionList == null) {
 			return res.status(200).json({
 				status: 'error',

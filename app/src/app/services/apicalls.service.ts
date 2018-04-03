@@ -3,14 +3,27 @@ import { Http, Headers, RequestOptions } from "@angular/http";
 
 @Injectable()
 export class ApicallsService {
-	
-	constructor(private http: Http) { }
+
+	private backendUrl = "http://localhost:1414/";
+
+	private urlList: any;
+
+	constructor(private http: Http) {
+		this.urlList = {
+			insertAddress: this.backendUrl + "insertAddress",
+			isAddressPresent: this.backendUrl + "isAddressPresent",
+			getUserDetails: this.backendUrl + "getUserDetails",
+			updateUserProfile: this.backendUrl + "updateUserProfile",
+			getActiveOptions: this.backendUrl + "getActiveOptions",
+			getUserOptions: this.backendUrl + "getUserOptions"
+		}
+	}
 
 	public async insertAddress(address): Promise<boolean> {
 		let result = await new Promise((resolve, reject) => {
 			var headers = new Headers();
 			headers.append("Access-Control-Allow-Origin", '*');
-			this.http.put("http://localhost:1414/insertAddress", { "address": address}, { headers: headers }).subscribe(
+			this.http.put(this.urlList['insertAddress'], { "address": address}, { headers: headers }).subscribe(
 				data => {
 					resolve(JSON.parse(data['_body']).result);
 				},
@@ -26,7 +39,7 @@ export class ApicallsService {
 		let isPresent = await new Promise((resolve, reject) => {
 			var headers = new Headers();
 			headers.append("address", address);
-			this.http.get("http://localhost:1414/isAddressPresent", { headers: headers}).subscribe(
+			this.http.get(this.urlList['insertAddress'], { headers: headers}).subscribe(
 				data => {
 					resolve(JSON.parse(data['_body']).result);
 				},
@@ -42,7 +55,7 @@ export class ApicallsService {
 		let userProfile = await new Promise((resolve, reject) => {
 			var headers = new Headers();
 			headers.append("address", address);
-			this.http.get("http://localhost:1414/getUserDetails", { headers: headers}).subscribe(
+			this.http.get(this.urlList['getUserDetails'], { headers: headers}).subscribe(
 				data => {
 					resolve(JSON.parse(data['_body']).user);
 				},
@@ -59,7 +72,7 @@ export class ApicallsService {
 			var headers = new Headers();
 			headers.append("Access-Control-Allow-Origin", '*');
 			userProfile.address = address;
-			this.http.put("http://localhost:1414/updateUserProfile", userProfile, { headers: headers }).subscribe(
+			this.http.put(this.urlList['updateUserProfile'], userProfile, { headers: headers }).subscribe(
 				data => {
 					resolve(data);
 				},
@@ -76,7 +89,7 @@ export class ApicallsService {
 			var headers = new Headers();
 			headers.append("tokenName", tokenName);
 			headers.append("currentBlockNumber", currentBlockNumber);
-			this.http.get("http://localhost:1414/getActiveOptions", { headers: headers}).subscribe(
+			this.http.get(this.urlList['getActiveOptions'], { headers: headers}).subscribe(
 				data => {
 					resolve(JSON.parse(data['_body']).optionList);
 				},
@@ -94,7 +107,7 @@ export class ApicallsService {
 			headers.append("address", address);
 			headers.append("tokenName", tokenName);
 			headers.append("currentBlockNumber", currentBlockNumber);
-			this.http.get("http://localhost:1414/getUserOptions", { headers: headers}).subscribe(
+			this.http.get(this.urlList['getUserOptions'], { headers: headers}).subscribe(
 				data => {
 					resolve(JSON.parse(data['_body']).optionList);
 				},
