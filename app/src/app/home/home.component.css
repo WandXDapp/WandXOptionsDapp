@@ -455,15 +455,60 @@ span.round-tab:hover {
     z-index: 99999;
 }
 
+.popup-NotEnoughBalance{
+    margin: 0 auto;
+    width: 30%;
+    height: 25rem;
+    /* padding: 2rem; */
+    position: absolute;
+    left: 58%;
+    top: 45%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 2rem 4rem rgba(0, 0, 0, 0.2);
+    background-color: #fff;
+    z-index: 99999;
+}
+
+.popup-box-gif{
+    text-align: center;
+}
+
+.popup-gif{
+    margin: 0 auto;
+    width: 30%;
+    height: 30rem;
+    position: absolute;
+    left: 58%;
+    top: 45%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    z-index: 99999;
+}
+
+.gif_footer{
+    font-size: 2rem;
+}
+
 .popup_header{
+    color: #fff;
     font-size: 2.5rem;
     padding: 2rem;
     text-align: center;
     border-bottom: .5px solid #333;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#382673), to(#682382));
+    background-image: gradient(linear, left top, left bottom, from(#382673), to(#682382));
 }
 
 .popup_content{
     padding: 2rem;
+    text-align: center;
+}
+
+.popup_sub{
+    display: block;
+    font-size: 1.7rem;
+    text-align: center;
+    padding-bottom: 3rem;
 }
 
 .popup_footer{
@@ -476,6 +521,10 @@ span.round-tab:hover {
     display: block;
     border-radius: 5px;
     padding: 1rem;
+}
+
+.gif-img{
+    width: 12rem;
 }
 
 .form-group-input{

@@ -49,9 +49,7 @@
 <!--<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&key=YOUR_KEY_HERE"></script>-->
 
 <!-- <script type="text/javascript" src="assets/json/DerivativeFactory.js"></script> -->
-<script>
 
-</script>
 <script>
     $(document).ready(function () {
         //Initialize tooltips
@@ -70,9 +68,10 @@
         $(".next-step").click(function (e) {
             // if (flag !== 1) {
              var $active = $('.wizard .nav-tabs li.active');
+            //  if (flag !== 1) {
                 $active.next().removeClass('disabled');
                 nextTab($active);
-                console.log($active);   
+                console.log('active'+ $active);   
             // }
 
         });
