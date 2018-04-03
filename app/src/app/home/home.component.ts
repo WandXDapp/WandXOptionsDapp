@@ -46,7 +46,7 @@ export class HomeComponent implements OnInit {
 	assetValue: any;
 
 	newdate: any;
-	date: number;
+	date: any;
 	month: any;
 	year: number;
 	
@@ -57,17 +57,35 @@ export class HomeComponent implements OnInit {
 	multiplyFactor: any;
 	
 	flag: number;
+
+	displayNotEnoughBalance: any;
+	displayAllowanceApproval: any;
+	displayGif: any;
+
+	faucetToken1: any;
 	
 	constructor( public contractsService: ContractsService ) {
 		
+		// this.faucetToken1 = contractsService.faucetGetTokens('10000000000000000000000');
+
+		this.flag = 1;
 		this.display = 'none';
+		this.displayNotEnoughBalance = 'none';
+		this.displayAllowanceApproval = 'none';
+		this.displayGif = 'none';
 
 		var day = new Date();
 		var nextDay = new Date();
 		nextDay.setDate(day.getDate() + 1);
 		
 		this.date = nextDay.getDate();
+		if (this.date.length !== 2) {
+			this.date = '0' + this.date;
+		}
 		this.month = nextDay.getMonth() + 1;
+		if (this.month.length !== 2) {
+			this.month = '0' + this.month;
+		}
 		this.year = nextDay.getFullYear();
 
 		this.validate = this.year + '-' + this.month + '-' + this.date;
@@ -91,6 +109,7 @@ export class HomeComponent implements OnInit {
 		this.contractsService.initWeb3().then((result) => {
 			this.contractsService.getBalance(this.wandxTokenAddress).then((balance: number) => {
 				this.userBalance = balance;
+				console.log(this.userBalance);
 			});
 	
 			this.contractsService.getWandxAllowance().then((allowance: number) => {
@@ -139,22 +158,27 @@ export class HomeComponent implements OnInit {
 	onStepOne() {
 		// check if user has allowance to create option
 		if (this.currentAllowance >= this.contractFee) {
-			console.log("have allowance")
+			console.log('have allowance');
 			// create new option
 			this.createNewOption();
 		}else {
 			// check user has enough balance to create option
 			let allowanceNeeded = this.contractFee - this.currentAllowance;
-			console.log("getting allowance", allowanceNeeded);
-			if(this.userBalance < allowanceNeeded) {
-				console.log("Not enough balance")
+			console.log('getting allowance', allowanceNeeded);
+			if (this.userBalance < allowanceNeeded) {
+				console.log('Not enough balance');
+				// let tokenCount = '10000000000000000000000';
+				// this.contractsService.faucetGetTokens(tokenCount);
+				// return;
+				this.displayNotEnoughBalance = 'block';
 				return;
 			}
 
 			// get allowance to create option
 			this.contractsService.approveWandx(allowanceNeeded).then((result) => {
-				if(!result){
-					console.log("Unable to get allowance approval");
+				if (!result) {
+					console.log('Unable to get allowance approval');
+					this.displayAllowanceApproval = 'block';
 					return;
 				}
 
@@ -166,11 +190,11 @@ export class HomeComponent implements OnInit {
 
 	onStepTwo() {
 		this.contractsService.issueOption(
-			this.assetsOffered, 
-			this.premium, 
+			this.assetsOffered,
+			this.premium,
 			this.expiryBlock
 		).then(function(result) {
-			console.log("issueOption", result);
+			console.log('issueOption', result);
 		});
 	}
 
@@ -183,7 +207,14 @@ export class HomeComponent implements OnInit {
 			this.strikePrice,
 			this.blockTimestamp
 		).then((optionAddress) => {
-			console.log("createNewOption", optionAddress);
+			console.log('createNewOption', optionAddress);
+			this.flag = 1;
+			// optionAddress = null;
+			if (optionAddress === undefined || optionAddress === null) {
+				this.displayGif = 'block';
+			}else{
+				this.displayGif = 'none';
+			}
 		});
 	}
 
@@ -195,6 +226,8 @@ export class HomeComponent implements OnInit {
 
 	cancel_btn() {
 		this.display = 'none';
+		this.displayNotEnoughBalance = 'none';
+		this.displayAllowanceApproval = 'none';
 	}
 
 }

@@ -1,6 +1,10 @@
+import { LetterBoldPipe } from './pipe/letter-bold.pipe';
+import { SearchFilterPipe } from './pipe/filter-pipe';
+import { ClickOutsideDirective } from './directive/dropdown.directive';
+
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 
@@ -16,13 +20,13 @@ import { UserComponent } from './user/user.component';
 import { TablesComponent } from './tables/tables.component';
 import { TypographyComponent } from './typography/typography.component';
 import { NotificationsComponent } from './notifications/notifications.component';
+import { FaucetComponent } from './faucet/faucet.component';
 
 // New Components addition for OAuth
 import { ValidateService } from './services/validate.service';
 import { AuthService } from './services/auth.service';
 import { FlashMessagesModule } from 'angular2-flash-messages';
 import { AuthGuard } from './guards/auth.guard';
-import { FaucetComponent } from './faucet/faucet.component';
 
 @NgModule({
   declarations: [
@@ -32,12 +36,16 @@ import { FaucetComponent } from './faucet/faucet.component';
     TablesComponent,
     TypographyComponent,
     NotificationsComponent,
-    FaucetComponent
+    FaucetComponent,
+    ClickOutsideDirective,
+    SearchFilterPipe,
+    LetterBoldPipe
 
   ],
   imports: [
     BrowserModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpModule,
     NavbarModule,
     FooterModule,
@@ -47,6 +55,9 @@ import { FaucetComponent } from './faucet/faucet.component';
     FlashMessagesModule.forRoot()
   ],
   providers: [ValidateService, AuthService, AuthGuard],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  // exports: [
+  //   ReactiveFormsModule,
+  // ]
 })
 export class AppModule { }
