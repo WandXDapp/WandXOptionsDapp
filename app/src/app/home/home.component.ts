@@ -1,3 +1,4 @@
+import { ApicallsService } from '../services/apicalls.service';
 import { ContractsService } from '../services/contracts.service';
 import { Component, OnInit } from '@angular/core';
 import { LocationStrategy, PlatformLocation, Location } from '@angular/common';
@@ -10,7 +11,7 @@ var BigNumber = require('bignumber.js');
 	selector: 'app-home',
 	templateUrl: './home.component.html',
 	styleUrls: ['./home.component.css'],
-	providers: [ContractsService]
+	providers: [ ApicallsService, ContractsService ]
 })
 
 export class HomeComponent implements OnInit {
@@ -40,39 +41,50 @@ export class HomeComponent implements OnInit {
 	assets_offered: any = '';
 	premium: any = '';
 	expiryBlock: any = '';
+
+	optionAddress: string = null;
 	
 	minBlockNumber: any;
-	assetsOffered: any;
-	assetValue: any;
-
+	
 	newdate: any;
-	date: number;
+	date: any;
 	month: any;
 	year: number;
 	
 	validate: any;
-	token: any;
-	eth: any;
-	
-	multiplyFactor: any;
 	
 	flag: number;
+
+	displayNotEnoughBalance: any;
+	displayAllowanceApproval: any;
+	displayGif: any;
+
+	faucetToken1: any;
 	
-	constructor( public contractsService: ContractsService ) {
+	constructor( private apiCalls:ApicallsService, private contractsService: ContractsService ) {
 		
+		this.flag = 1;
 		this.display = 'none';
+		this.displayNotEnoughBalance = 'none';
+		this.displayAllowanceApproval = 'none';
+		this.displayGif = 'none';
 
 		var day = new Date();
 		var nextDay = new Date();
 		nextDay.setDate(day.getDate() + 1);
 		
 		this.date = nextDay.getDate();
+		if (this.date.length !== 2) {
+			this.date = '0' + this.date;
+		}
 		this.month = nextDay.getMonth() + 1;
+		if (this.month.length !== 2) {
+			this.month = '0' + this.month;
+		}
 		this.year = nextDay.getFullYear();
 
 		this.validate = this.year + '-' + this.month + '-' + this.date;
 		
-		this.assetsOffered = 50;
 		this.premium = 10;
 
 		this.wandxTokenAddress = this.contractsService.getWandxTokenAddress();
@@ -91,6 +103,7 @@ export class HomeComponent implements OnInit {
 		this.contractsService.initWeb3().then((result) => {
 			this.contractsService.getBalance(this.wandxTokenAddress).then((balance: number) => {
 				this.userBalance = balance;
+				console.log(this.userBalance);
 			});
 	
 			this.contractsService.getWandxAllowance().then((allowance: number) => {
@@ -139,22 +152,24 @@ export class HomeComponent implements OnInit {
 	onStepOne() {
 		// check if user has allowance to create option
 		if (this.currentAllowance >= this.contractFee) {
-			console.log("have allowance")
+			console.log('have allowance');
 			// create new option
 			this.createNewOption();
 		}else {
 			// check user has enough balance to create option
 			let allowanceNeeded = this.contractFee - this.currentAllowance;
-			console.log("getting allowance", allowanceNeeded);
-			if(this.userBalance < allowanceNeeded) {
-				console.log("Not enough balance")
+			console.log('getting allowance', allowanceNeeded);
+			if (this.userBalance < allowanceNeeded) {
+				console.log('Not enough balance');
+				this.displayNotEnoughBalance = 'block';
 				return;
 			}
 
 			// get allowance to create option
 			this.contractsService.approveWandx(allowanceNeeded).then((result) => {
-				if(!result){
-					console.log("Unable to get allowance approval");
+				if (!result) {
+					console.log('Unable to get allowance approval');
+					this.displayAllowanceApproval = 'block';
 					return;
 				}
 
@@ -166,11 +181,25 @@ export class HomeComponent implements OnInit {
 
 	onStepTwo() {
 		this.contractsService.issueOption(
-			this.assetsOffered, 
-			this.premium, 
+			this.assets_offered,
+			this.premium,
 			this.expiryBlock
-		).then(function(result) {
-			console.log("issueOption", result);
+		).then((result) => {
+			console.log('issueOption', result);
+			if(result != undefined && result != null){
+				this.apiCalls.createNewOption(
+					this.contractsService.getUserAddress(),
+					this.optionAddress,
+					this.base_token,
+					this.quote_token,
+					this.strikePrice,
+					this.blockTimestamp,
+					this.expiryBlock,
+					this.assets_offered
+				).then((createResult) => {
+					console.log("createNewOption", createResult);
+				});
+			}
 		});
 	}
 
@@ -183,7 +212,15 @@ export class HomeComponent implements OnInit {
 			this.strikePrice,
 			this.blockTimestamp
 		).then((optionAddress) => {
-			console.log("createNewOption", optionAddress);
+			this.optionAddress = optionAddress;
+			console.log('createNewOption', optionAddress);
+			this.flag = 1;
+			// optionAddress = null;
+			if (optionAddress === undefined || optionAddress === null) {
+				this.displayGif = 'block';
+			}else{
+				this.displayGif = 'none';
+			}
 		});
 	}
 
@@ -195,6 +232,8 @@ export class HomeComponent implements OnInit {
 
 	cancel_btn() {
 		this.display = 'none';
+		this.displayNotEnoughBalance = 'none';
+		this.displayAllowanceApproval = 'none';
 	}
 
 }

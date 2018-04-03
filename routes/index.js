@@ -118,8 +118,6 @@ router.put('/updateUserProfile', function(req, res, next) {
 
 	var users = db.get().collection('users');
 	
-	console.log(req.body);
-	
 	var address = req.body.address;
 	var profile = {
 		company: req.body.company,
@@ -159,6 +157,118 @@ router.put('/updateUserProfile', function(req, res, next) {
 				error: '',
 				result: true
 			});
+		});
+	});
+});
+
+router.put('/createNewOption', function(req, res, next) {	
+
+	var userOptions = db.get().collection('useroptions');
+	
+	var address = req.body.address;
+	var optionAddress = req.body.optionAddress;
+	var baseToken = req.body.baseToken;
+	var quoteToken = req.body.quoteToken;
+	var strikePrice = req.body.strikePrice;
+	var blockTimestamp = req.body.blockTimestamp;
+	var expiry = req.body.expiry;
+	var assetsOffered = req.body.assetsOffered;
+
+	var userOptionsObj = {
+		address: address,
+		optionAddress: optionAddress,
+		baseToken: baseToken,
+		quoteToken: quoteToken,
+		strikePrice: strikePrice,
+		blockTimestamp: blockTimestamp,
+		expiry: expiry,
+		assetsOffered: assetsOffered
+	};
+	
+	userOptions.findOne({ optionAddress: optionAddress }, function (err, option) {
+		if (err || option != null) {
+			return res.status(200).json({
+				status: 'Error in connecting to db or option already exist',
+				error: err,
+				result: false
+			});
+		}
+		
+		userOptions.insert(userOptionsObj, function (err) {
+			if (err) {
+				return res.status(200).json({
+					status: 'error',
+					error: 'Unable to insert user option',
+					result: false
+				});
+			}
+			
+			return res.status(200).json({
+				status: 'ok',
+				error: '',
+				result: true
+			});
+		});
+	});
+});
+
+router.get('/getUserOptions', function(req, res, next) {	
+	
+	var useroptions = db.get().collection('useroptions');
+	var address = req.get("address");
+	var currentBlockNumber = req.get("currentBlockNumber");
+	var tokenName = req.get("tokenName");
+
+	useroptions.find({ address: address, baseToken: tokenName }).toArray(function(err, optionList) {
+		if (err || optionList == null) {
+			return res.status(200).json({
+				status: 'error',
+				error: 'Unable to find address in db',
+				optionList: []
+			});
+		}
+		optionList.forEach(element => {
+			if(parseInt(element.expiry) < parseInt(currentBlockNumber)){
+				element.isActive = false;
+			}
+			else {
+				element.isActive = true;
+			}
+		});
+		return res.status(200).json({
+			status: 'ok',
+			error: '',
+			optionList: optionList
+		});
+	});
+});
+
+router.get('/getActiveOptions', function(req, res, next) {	
+	
+	var useroptions = db.get().collection('useroptions');
+	var currentBlockNumber = req.get("currentBlockNumber");
+	var tokenName = req.get("tokenName");
+
+	useroptions.find({ baseToken: tokenName }).toArray(function(err, optionList) {
+		if (err || optionList == null) {
+			return res.status(200).json({
+				status: 'error',
+				error: 'Unable to find address in db',
+				optionList: []
+			});
+		}
+
+		let count = optionList.length
+		while (count--) {
+			if (parseInt(optionList[count].expiry) < parseInt(currentBlockNumber)) {
+				optionList.splice(count, 1);
+			}
+		}
+
+		return res.status(200).json({
+			status: 'ok',
+			error: '',
+			optionList: optionList
 		});
 	});
 });
