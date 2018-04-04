@@ -507,7 +507,7 @@ class OptionWrapper {
 			})
 			.catch(function(error) {
 				console.error('Error in issueOption', error);
-				reject(null);
+				resolve(null);
 			});
 		}) as any;
 		return Promise.resolve(response);

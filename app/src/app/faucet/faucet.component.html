@@ -1,10 +1,10 @@
 <div class="main-content">
   <div class="container-fluid">
-	<!-- {{tokenList[0].name}} -->
+	<!-- {{tokenListArray[0]}} -->
 	<div class="input_faucet">
 		<form [formGroup]='tokenForm' autocomplete="new-password" novalidate>
 			<div class="form-group form-group-input">
-				<input id="search" type="text" class="text_box-faucet" formControlName='search' (click)=' openDropDown() ' placeholder="Search Faucet...">
+				<input id="search" type="text" class="text_box-faucet" value="{{tokenListArray[0]}}" formControlName='search' (click)=' openDropDown() ' placeholder="Search Faucet...">
 				<div clickOutside (clickOutside)="closeDropDown()">
 					<div *ngIf="showDropDown" class="search-dropdown" [ngStyle]="{'display':displayDropDown}">
 						<div (click)='selectValue(s)' class='search-results ' *ngFor="let s of tokenListArray | searchFilter: getSearchValue()">
@@ -15,8 +15,13 @@
 					</div>
 				</div>
 			</div>
+		</form>
+		<form (ngSubmit)="onSubmit_token(token)" #token="ngForm">
+			<div class="form-group form-group-tokens">
+				<input type="number" class="text_box-faucet" placeholder="No of Tokens..." ngModel required name="noOfTokens">
+			</div>
 			<div class="form-group-btn">
-				<input type="submit" class="btn btn-approve submit-btn">
+				<input type="submit" class="btn-approve waves-effect waves-light btn submit-btn" [disabled]="!token.valid">
 			</div>
 		</form>
 	</div>

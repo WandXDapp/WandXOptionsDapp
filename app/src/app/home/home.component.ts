@@ -61,6 +61,9 @@ export class HomeComponent implements OnInit {
 	displayNotEnoughBalance: any;
 	displayAllowanceApproval: any;
 	displayGif: any;
+	displayStepOne: any;
+	displayStepTwo: any;
+	displayStepThree: any;
 
 	faucetToken1: any;
 	
@@ -68,11 +71,26 @@ export class HomeComponent implements OnInit {
 		
 		// this.faucetToken1 = contractsService.faucetGetTokens('10000000000000000000000');
 
+		// document.getElementById("jQueryScript").remove();
+		// var jQueryScript = document.createElement("script");
+		// jQueryScript.setAttribute("id", "jQueryScript");
+		// jQueryScript.setAttribute("src", "//code.jquery.com/jquery-1.11.1.min.js");
+		// document.body.appendChild(jQueryScript);
+
+		// document.getElementById("testScript").remove();
+		// var testScript = document.createElement("script");
+		// testScript.setAttribute('id', "testScript");
+		// testScript.setAttribute('src', 'https://unpkg.com/avalon2@2.2.8/dist/avalon.js');
+		// document.body.appendChild(testScript);
+
 		this.flag = 1;
 		this.display = 'none';
 		this.displayNotEnoughBalance = 'none';
 		this.displayAllowanceApproval = 'none';
 		this.displayGif = 'none';
+		this.displayStepOne = 'block';
+		this.displayStepTwo = 'none';
+		this.displayStepThree = 'none';
 
 		var day = new Date();
 		var nextDay = new Date();
@@ -127,6 +145,8 @@ export class HomeComponent implements OnInit {
 	}
 
 	onSubmit1(form: HTMLFormElement) {
+		console.log(form);
+		
 		this.base_token = form.value.base_token;
 		this.base_tokenJSON = this.contractsService.getTokenObj(this.base_token);
 		this.baseTokenDecimal = this.base_tokenJSON.decimals;
@@ -196,6 +216,8 @@ export class HomeComponent implements OnInit {
 			this.expiryBlock
 		).then(function(result) {
 			console.log('issueOption', result);
+			this.displayStepThree = 'block';
+			this.displayStepTwo = 'none';
 		});
 	}
 
@@ -215,6 +237,8 @@ export class HomeComponent implements OnInit {
 				this.displayGif = 'block';
 			}else{
 				this.displayGif = 'none';
+				this.displayStepTwo = 'block';
+				this.displayStepOne = 'none';
 			}
 		});
 	}
@@ -229,6 +253,11 @@ export class HomeComponent implements OnInit {
 		this.display = 'none';
 		this.displayNotEnoughBalance = 'none';
 		this.displayAllowanceApproval = 'none';
+	}
+
+	backButton() {
+		this.displayStepTwo = 'none';
+		this.displayStepOne = 'block';
 	}
 
 }

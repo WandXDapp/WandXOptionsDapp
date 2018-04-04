@@ -20,7 +20,6 @@ export class TypographyComponent implements OnInit {
 
     console.log(window.location.href);
     this.id = window.location.href.replace('http://localhost:4200/statistics/', '');
-    console.log(this.id);
   }
 
 }
