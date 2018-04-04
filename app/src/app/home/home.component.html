@@ -1,20 +1,9 @@
 
-<div class="popup-box" [ngStyle]="{'display':display}">
-    <div class="popup">
-        <div class="popup_header">Wait some more!</div>
-        <div class="popup_content">
-            <!-- <img src="../../../src/assets/img/loader.gif" alt="Loader"> -->
-            <button class="btn btn-approve" (click)="cancel_btn()">Okay</button>
-        </div>
-    </div>
-</div>
-
 <div class="popup-box" [ngStyle]="{'display':displayNotEnoughBalance}">
     <div class="popup-NotEnoughBalance">
         <div class="popup_header">Opps!</div>
         <div class="popup_content">
-            <div class="popup_sub">Sorry you don't have enough Balance</div>
-            <!-- <img src="../../../src/assets/img/loader.gif" alt="Loader"> -->
+            <div class="popup_sub">Sorry you don't have enough balance</div>
             <button class="btn btn-approve" (click)="cancel_btn()">Okay</button>
         </div>
     </div>
@@ -32,28 +21,28 @@
     </div>
 </div>
 
-<!-- <div class="popup-box" [ngStyle]="{'display':displayGif}">
-    <div class="popup-box-gif">
-        
-        <div class="popup-gif">
-            
-        </div>
-    </div>
-</div> -->
-
 <div class="popup-box" [ngStyle]="{'display':displayAllowanceApproval}">
     <div class="popup-NotEnoughBalance">
         <div class="popup_header">Opps!</div>
         <div class="popup_content">
             <div class="popup_sub">Unable to get allowance approval</div>
-            <!-- <img src="../../../src/assets/img/loader.gif" alt="Loader"> -->
+            <button class="btn btn-approve" (click)="cancel_btn()">Okay</button>
+        </div>
+    </div>
+</div>
+
+<div class="popup-box" [ngStyle]="{'display':errorBox}">
+    <div class="popup-errorBox">
+        <div class="popup_header">Opps!</div>
+        <div class="popup_content">
+            <div class="popup_sub">Unable to create option at the moment</div>
             <button class="btn btn-approve" (click)="cancel_btn()">Okay</button>
         </div>
     </div>
 </div>
 
 <div class="container" style="width:100%">
-    <!-- {{currentAllowance}} {{userBalance}} -->
+    {{currentAllowance}} {{userBalance}}
     <div class="row">
         <section>
             <div class="wizard">

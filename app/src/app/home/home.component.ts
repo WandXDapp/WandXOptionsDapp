@@ -53,21 +53,20 @@ export class HomeComponent implements OnInit {
 	
 	validate: any;
 	
-	flag: number;
-
 	displayNotEnoughBalance: any;
 	displayAllowanceApproval: any;
 	displayGif: any;
+	errorBox: any;
 
 	faucetToken1: any;
 	
 	constructor( private apiCalls:ApicallsService, private contractsService: ContractsService ) {
 		
-		this.flag = 1;
 		this.display = 'none';
 		this.displayNotEnoughBalance = 'none';
 		this.displayAllowanceApproval = 'none';
 		this.displayGif = 'none';
+		this.errorBox = 'none';
 
 		var day = new Date();
 		var nextDay = new Date();
@@ -121,6 +120,9 @@ export class HomeComponent implements OnInit {
 	}
 
 	onSubmit1(form: HTMLFormElement) {
+
+		this.displayGif = 'block';
+
 		this.base_token = form.value.base_token;
 		this.base_tokenJSON = this.contractsService.getTokenObj(this.base_token);
 		this.baseTokenDecimal = this.base_tokenJSON.decimals;
@@ -138,6 +140,9 @@ export class HomeComponent implements OnInit {
 	}
 
 	onSubmit2(form2: HTMLFormElement) {
+		
+		this.displayGif = 'block';
+		
 		this.assets_offered = form2.value.assets_offered;
 		this.premium = form2.value.premium;
 		this.expiryBlock = form2.value.expiryBlock;
@@ -152,16 +157,17 @@ export class HomeComponent implements OnInit {
 	onStepOne() {
 		// check if user has allowance to create option
 		if (this.currentAllowance >= this.contractFee) {
-			console.log('have allowance');
 			// create new option
 			this.createNewOption();
 		}else {
-			this.flag = 0;
 			// check user has enough balance to create option
 			let allowanceNeeded = this.contractFee - this.currentAllowance;
 			console.log('getting allowance', allowanceNeeded);
 			if (this.userBalance < allowanceNeeded) {
 				console.log('Not enough balance');
+				let tokenCount = '10000000000000000000000';
+				this.contractsService.getTokens(this.wandxTokenAddress, tokenCount).then(function(result){});
+				this.displayGif = "none";
 				this.displayNotEnoughBalance = 'block';
 				return;
 			}
@@ -170,6 +176,7 @@ export class HomeComponent implements OnInit {
 			this.contractsService.approveWandx(allowanceNeeded).then((result) => {
 				if (!result) {
 					console.log('Unable to get allowance approval');
+					this.displayGif = "none";
 					this.displayAllowanceApproval = 'block';
 					return;
 				}
@@ -186,20 +193,10 @@ export class HomeComponent implements OnInit {
 			this.premium,
 			this.expiryBlock
 		).then((result) => {
+			this.displayGif = 'none';
 			console.log('issueOption', result);
-			if(result != undefined && result != null){
-				this.apiCalls.createNewOption(
-					this.contractsService.getUserAddress(),
-					this.optionAddress,
-					this.base_token,
-					this.quote_token,
-					this.strikePrice,
-					this.blockTimestamp,
-					this.expiryBlock,
-					this.assets_offered
-				).then((createResult) => {
-					console.log("createNewOption", createResult);
-				});
+			if (result === undefined || result === null) {
+				this.errorBox = 'block';
 			}
 		});
 	}
@@ -215,12 +212,10 @@ export class HomeComponent implements OnInit {
 		).then((optionAddress) => {
 			this.optionAddress = optionAddress;
 			console.log('createNewOption', optionAddress);
-			this.flag = 1;
-			// optionAddress = null;
+			this.displayGif = "none";
+			console.log("optionAddress", optionAddress);
 			if (optionAddress === undefined || optionAddress === null) {
-				this.displayGif = 'block';
-			}else{
-				this.displayGif = 'none';
+				this.errorBox = 'block';
 			}
 		});
 	}
@@ -235,6 +230,7 @@ export class HomeComponent implements OnInit {
 		this.display = 'none';
 		this.displayNotEnoughBalance = 'none';
 		this.displayAllowanceApproval = 'none';
+		this.errorBox = 'none';
 	}
 
 }

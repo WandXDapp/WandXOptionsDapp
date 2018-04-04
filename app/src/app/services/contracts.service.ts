@@ -8,7 +8,7 @@ const derivativeFactory = require("wandx-options/build/contracts/DerivativeFacto
 const option = require("wandx-options/build/contracts/Option.json");
 const wandxfaucet = require("wandx-options/build/contracts/WandXTokenFaucet.json");
 
-const dummyTokens = require("wandx-options/build/dummyTokenInfo.json");
+const dummyTokenInfo = require("wandx-options/build/dummyTokenInfo.json");
 
 export const WEB3_INITIALIZED = 'WEB3_INITIALIZED';
 
@@ -101,27 +101,39 @@ export class ContractsService {
 
 	// Get wandx token address
 	public getWandxTokenAddress(): string {
-		return wandxfaucet.networks[this._useNetwork].address;
+		let address = null;
+		dummyTokenInfo.forEach(element => {
+			if(element.name == 'WANDX'){
+				address = element.address[this._useNetwork];
+				return;
+			}
+		});
+		return address;
 	}
 
 	// Get list of all the tokens currently active for wandx dapp
 	public getTokenList(): any {
-		dummyTokens.unshift({
-			"name": "WANDX",
-			"decimals": 18,
-			"symbol": "WANDX",
-			"deployed": true,
-			"address": wandxfaucet.networks[this._useNetwork].address
-		});
-		return dummyTokens;
+		return dummyTokenInfo;
 	}
 
 	// Get any perticular object of token
 	public getTokenObj(tokenName): any {
-		let retToken = {};
-		dummyTokens.forEach(function(token){
-			if(token.name == tokenName)
-				retToken = token;
+		let retToken = {
+			address: '',
+			decimals: '',
+			deployed: '',
+			name: '',
+			symbol: ''
+		};
+		dummyTokenInfo.forEach(element => {
+			if(element.name == tokenName){
+				retToken.address = element.address[this._useNetwork];
+				retToken.decimals = element.decimals;
+				retToken.deployed = element.deployed;
+				retToken.name = element.name;
+				retToken.symbol = element.symbol;
+				return;
+			}
 		});
 		return retToken;
 	}
@@ -199,6 +211,22 @@ export class ContractsService {
 		return Promise.resolve(approve);
 	}
 
+	// This is not IERC20 function, but will be used in faucet page
+	public async getTokens(tokenAddress, tokenCount): Promise<boolean> {
+		var getTokens = await new Promise((resolve, reject) => {
+			var tokenObj = this.createContractObj(wandxfaucet.abi, tokenAddress);
+			tokenObj.methods.getTokens(tokenCount, this._web3.eth.defaultAccount).send({}, function(error, result){
+				if(error){
+					console.log("getTokens erorr", error);
+					resolve(false);
+				}
+				console.log("getTokens result", result);
+				resolve(true);
+			});
+		}) as boolean;
+		return Promise.resolve(getTokens);
+	}
+
 	/*
 	 * END COMMON FUNCTIONS FOR ANY IERC20 CONTRACT
 	 */
@@ -215,7 +243,7 @@ export class ContractsService {
 		this._optionWrapper.setQuoteTokenDecimal(quoteTokenDecimal);
 		this._optionWrapper.setStrikePrice(strikePrice);
 		this._optionWrapper.setBlockTimestamp(blockTimestamp);
-		return await this._optionWrapper.createNewOption();
+		return Promise.resolve(this._optionWrapper.createNewOption());
 	}
 
 	// Issue option
@@ -223,19 +251,19 @@ export class ContractsService {
 		this._optionWrapper.setAssetsOffered(assetsOffered);
 		this._optionWrapper.setPremium(premium);
 		this._optionWrapper.setExpiry(expiry);
-		return await this._optionWrapper.issueOption();
+		return Promise.resolve(await this._optionWrapper.issueOption());
 	}
 
 	// Trade Option
 	public async tradeOption(amount): Promise<any> {
 		this._optionWrapper.setTradeOptionAmount(amount);
-		return await this._optionWrapper.tradeOption();
+		return Promise.resolve(await this._optionWrapper.tradeOption());
 	}
 
 	// Excersise Option
 	public async exerciseOption(amount): Promise<any> {
 		this._optionWrapper.setExerciseOptionAmount(amount);
-		return await this._optionWrapper.exerciseOption();
+		return Promise.resolve(await this._optionWrapper.exerciseOption());
 	}
 
 	/*
@@ -481,7 +509,7 @@ class OptionWrapper {
 			})
 			.catch(function(error) {
 				console.log("error", error);
-				reject("error");
+				resolve(null);
 			});
 		}) as string;
 		return Promise.resolve(this.optionAddress);
@@ -507,7 +535,7 @@ class OptionWrapper {
 			})
 			.catch(function(error) {
 				console.error('Error in issueOption', error);
-				reject(null);
+				resolve(null);
 			});
 		}) as any;
 		return Promise.resolve(response);
@@ -533,7 +561,7 @@ class OptionWrapper {
 			})
 			.catch(function(error) {
 				console.error('Error in issuetradeOptionOption', error);
-				reject(null);
+				resolve(null);
 			});
 		}) as any;
 		return Promise.resolve(response);
@@ -561,7 +589,7 @@ class OptionWrapper {
 			})
 			.catch(function(error) {
 				console.error('Error in exerciseOption', error);
-				reject(null);
+				resolve(null);
 			});
 		}) as boolean;
 		return Promise.resolve(response);

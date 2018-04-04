@@ -455,7 +455,7 @@ span.round-tab:hover {
     z-index: 99999;
 }
 
-.popup-NotEnoughBalance{
+.popup-NotEnoughBalance, .popup-errorBox{
     margin: 0 auto;
     width: 30%;
     height: 25rem;
