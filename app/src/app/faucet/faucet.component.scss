@@ -4,3 +4,42 @@
     left:45%;
     transform: translate(-50% -50%);
 }
+
+.text_box-faucet {
+    position: relative;
+    display: block;
+    margin: 0 auto;
+    width: 70%;
+    padding: 1rem;
+    border-radius: 4px;
+}
+
+.search-dropdown{
+    position: relative;
+    display: block;
+    margin: 0 auto;
+    width: 70%;
+    background-color: #fff;
+}
+
+.search-results {
+    padding: 1rem;
+    cursor: pointer;
+}
+
+.search-results:hover{
+    background-color: #777;
+    color: #fff !important;
+}
+
+.search-results .dropDownLink {
+    color: #333;
+}
+
+.search-results .dropDownLink:hover {
+    color: #fff;
+}
+
+.form-group-btn{
+    text-align: center;
+}

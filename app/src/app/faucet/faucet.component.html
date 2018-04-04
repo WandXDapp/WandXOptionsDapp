@@ -2,24 +2,23 @@
   <div class="container-fluid">
 	<!-- {{tokenList[0].name}} -->
 	<div class="input_faucet">
-		<form [formGroup]='tokenForm' novalidate>
+		<form [formGroup]='tokenForm' autocomplete="new-password" novalidate>
 			<div class="form-group form-group-input">
-				<input id="search" type="text" class="text_box-faucet" (click)="toggleDropDown()" formControlName='search' (click)=' openDropDown() ' placeholder="Search Faucet...">
+				<input id="search" type="text" class="text_box-faucet" formControlName='search' (click)=' openDropDown() ' placeholder="Search Faucet...">
 				<div clickOutside (clickOutside)="closeDropDown()">
-					<div *ngIf="showDropDown" class="search-dropdown">
-						<div>
-							<div class="token_list" *ngFor="let t of tokenListArray | searchFilter:getSearchValue()">
+					<div *ngIf="showDropDown" class="search-dropdown" [ngStyle]="{'display':displayDropDown}">
+						<div (click)='selectValue(s)' class='search-results ' *ngFor="let s of tokenListArray | searchFilter: getSearchValue()">
+							<a [innerHTML]="s | letterBold: getSearchValue()" class="dropDownLink">
 								{{t}}
-							</div>
+							</a>
 						</div>
 					</div>
 				</div>
 			</div>
 			<div class="form-group-btn">
-				<input type="submit" class="btn btn-approve text-center">
+				<input type="submit" class="btn btn-approve submit-btn">
 			</div>
 		</form>
-		
 	</div>
   </div>
 </div>
