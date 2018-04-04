@@ -17,9 +17,8 @@ import { AppComponent } from './app.component';
 
 import { HomeComponent } from './home/home.component';
 import { UserComponent } from './user/user.component';
-import { TablesComponent } from './tables/tables.component';
-import { TypographyComponent } from './typography/typography.component';
-import { NotificationsComponent } from './notifications/notifications.component';
+import { OptionsComponent } from './options/options.component';
+import { OptionDetailsComponent } from './optiondetails/optiondetails.component';
 import { FaucetComponent } from './faucet/faucet.component';
 
 // New Components addition for OAuth
@@ -33,14 +32,12 @@ import { AuthGuard } from './guards/auth.guard';
     AppComponent,
     HomeComponent,
     UserComponent,
-    TablesComponent,
-    TypographyComponent,
-    NotificationsComponent,
+    OptionsComponent,
+    OptionDetailsComponent,
     FaucetComponent,
     ClickOutsideDirective,
     SearchFilterPipe,
     LetterBoldPipe
-
   ],
   imports: [
     BrowserModule,

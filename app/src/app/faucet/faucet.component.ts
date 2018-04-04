@@ -31,10 +31,16 @@ export class FaucetComponent implements OnInit {
   selectedTokenAddress: any;
   selectedTokenDecimals: any;
 
+  displaySuccess: any;
+  displayFail: any;
+
 
   tokenForm: FormGroup;
 
   constructor(public contractsService: ContractsService, private fb: FormBuilder, private cdRef: ChangeDetectorRef) {
+
+    this.displaySuccess = 'none';
+    this.displayFail = 'none';
 
   this.faucetTokenList = contractsService.getTokenList();
     this.displayDropDown = 'none';
@@ -86,5 +92,22 @@ export class FaucetComponent implements OnInit {
     this.selectedTokenDecimals = this.selectedTokenJSON.decimals;
     let multiplyFactor = new BigNumber(10).pow(this.selectedTokenDecimals).toNumber();
     this.selectedTokenDecimals = multiplyFactor * this.noOfDesiredTokens;
+
+    this.contractsService.initWeb3().then((result) => {
+      this.contractsService.getTokens(this.selectedTokenAddress, this.selectedTokenDecimals).then((output: boolean) => {
+        if (output === true) {
+          this.displaySuccess = 'block';
+          // Success
+        }else{
+          this.displayFail = 'block';
+          // fail
+        }
+      });
+    })
   }
+
+   cancel_btn() {
+    this.displaySuccess = 'none';
+    this.displayFail = 'none';
+   }
 }

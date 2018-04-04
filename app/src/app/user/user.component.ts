@@ -12,14 +12,19 @@ export class UserComponent implements OnInit {
 	
 	private userAddress: String = null;
 	private userProfile: any = null;
+	displaySuccess: any;
+	displayFail: any;
 	
-	constructor( 
+	constructor(
 		private contractsService:ContractsService,
 		private apiCalls:ApicallsService) {
-			this.userAddress = "";
+		this.displaySuccess = 'none';
+		this.displayFail = 'none';
+
+			this.userAddress = '';
 			this.userProfile = {
-				"aboutMe": "",
-				"address": "",
+				"aboutMe": '',
+				"address": '',
 				"city": "",
 				"company": "",
 				"country": "",
@@ -58,6 +63,16 @@ export class UserComponent implements OnInit {
 	updateUserProfile(form: HTMLFormElement) {
 		this.apiCalls.updateUserProfile(form.value, this.userAddress).then((result) => {
 			console.log(result);
+			if (result === undefined || result === null) {
+				this.displayFail = 'block';
+			}else{
+				this.displaySuccess = 'block';
+			}
 		});
+	}
+
+	cancel_btn() {
+		this.displaySuccess = 'none';
+		this.displayFail = 'none';
 	}
 }

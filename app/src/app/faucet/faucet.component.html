@@ -1,3 +1,24 @@
+<div class="popup-box" [ngStyle]="{'display':displaySuccess}">
+	<div class="popup-NotEnoughBalance">
+		<div class="popup_header">Success</div>
+		<div class="popup_content">
+			<div class="popup_sub">Yayy! Cration was successfull</div>
+			<button class="btn btn-approve" (click)="cancel_btn()">Okay</button>
+		</div>
+	</div>
+</div>
+
+<div class="popup-box" [ngStyle]="{'display':displayFail}">
+	<div class="popup-NotEnoughBalance">
+		<div class="popup_header">Opps!</div>
+		<div class="popup_content">
+			<div class="popup_sub">Sorry Creating get failed</div>
+			<button class="btn btn-approve" (click)="cancel_btn()">Okay</button>
+		</div>
+	</div>
+</div>
+
+
 <div class="main-content">
   <div class="container-fluid">
 	<!-- {{tokenListArray[0]}} -->
