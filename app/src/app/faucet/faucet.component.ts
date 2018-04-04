@@ -6,11 +6,12 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 @Component({
   selector: 'app-faucet',
   templateUrl: './faucet.component.html',
-  styleUrls: ['./faucet.component.scss']
+  styleUrls: ['./faucet.component.scss'],
+	providers: [ContractsService]
 })
 export class FaucetComponent implements OnInit {
 
-  tokenList: any;
+  faucetTokenList: any;
   tokenListJSON: any;
   values: any;
   result: any;
@@ -18,28 +19,21 @@ export class FaucetComponent implements OnInit {
   i = 0;
   length: any;
   showDropDown = false;
+  filterdStatus = '';
+  displayDropDown: any;
 
   tokenForm: FormGroup;
 
-  constructor(_contractsService: ContractsService, private fb: FormBuilder) {
+	constructor(public contractsService: ContractsService, private fb: FormBuilder) {
 
-    // var tokenListArray = new Array();
-	// tslint:disable-next-line:indent
-  this.tokenList = _contractsService.getTokenList();
-    // this.tokenListJSON = JSONparse(this.tokenList);
-    // console.log(this.tokenList);
-    // console.log(this.tokenList[0].name.length);
-    // this.length = this.tokenList[0].name.length;
-    // // console.log(this.length);
+  this.faucetTokenList = contractsService.getTokenList();
+    this.displayDropDown = 'none';
+	
     this.i = 0;
-    while (this.tokenList[this.i] !== undefined) {
-      // this.tokenListArray[this.i] = this.tokenList[this.i].name;
-      // console.log(this.tokenList[this.i].name);
-      this.tokenListArray[this.i] = this.tokenList[this.i].name;
-      // console.log(this.tokenListArray);
+		while (this.faucetTokenList[this.i] !== undefined) {
+			this.tokenListArray[this.i] = this.faucetTokenList[this.i].name;
       this.i++;
     }
-    // console.log(this.tokenListArray);
     this.initForm();
    }
 
@@ -55,6 +49,7 @@ export class FaucetComponent implements OnInit {
   selectValue(value) {
     this.tokenForm.patchValue({ 'search': value });
     this.showDropDown = false;
+    this.displayDropDown = 'none';
   }
 
   closeDropDown() {
@@ -66,6 +61,7 @@ export class FaucetComponent implements OnInit {
   }
 
   getSearchValue() {
+    this.displayDropDown = 'block';
     return this.tokenForm.value.search;
   }
 }

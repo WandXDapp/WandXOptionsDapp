@@ -55,9 +55,6 @@ import { AuthGuard } from './guards/auth.guard';
     FlashMessagesModule.forRoot()
   ],
   providers: [ValidateService, AuthService, AuthGuard],
-  bootstrap: [AppComponent],
-  // exports: [
-  //   ReactiveFormsModule,
-  // ]
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -95,6 +95,7 @@ export class HomeComponent implements OnInit {
 
 		this.wandxTokenAddress = this.contractsService.getWandxTokenAddress();
 		this.tokenList = this.contractsService.getTokenList();
+		
 		this.base_token = this.tokenList[0].name;
 		this.quote_token = this.tokenList[0].name;
 
@@ -109,7 +110,6 @@ export class HomeComponent implements OnInit {
 		this.contractsService.initWeb3().then((result) => {
 			this.contractsService.getBalance(this.wandxTokenAddress).then((balance: number) => {
 				this.userBalance = balance;
-				console.log(this.userBalance);
 			});
 	
 			this.contractsService.getWandxAllowance().then((allowance: number) => {
@@ -162,6 +162,7 @@ export class HomeComponent implements OnInit {
 			// create new option
 			this.createNewOption();
 		}else {
+			this.flag = 0;
 			// check user has enough balance to create option
 			let allowanceNeeded = this.contractFee - this.currentAllowance;
 			console.log('getting allowance', allowanceNeeded);
