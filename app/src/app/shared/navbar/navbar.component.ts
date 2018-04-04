@@ -35,6 +35,7 @@ export class NavbarComponent implements OnInit{
 		this.toggleButton = navbar.getElementsByClassName('navbar-toggle')[0];
 	}
 
+<<<<<<< HEAD
 	sidebarOpen() {
 		const toggleButton = this.toggleButton;
 		const body = document.getElementsByTagName('body')[0];
@@ -51,6 +52,15 @@ export class NavbarComponent implements OnInit{
 		this.sidebarVisible = false;
 		body.classList.remove('nav-open');
 	}
+=======
+    sidebarOpen() {
+        const toggleButton = this.toggleButton;
+        const body = document.getElementsByTagName('body')[0];
+        setTimeout(function(){
+            toggleButton.classList.add('toggled');
+        }, 500);
+        body.classList.add('nav-open');
+>>>>>>> master
 
 	sidebarToggle() {
 		if (this.sidebarVisible === false) {
