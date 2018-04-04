@@ -91,7 +91,6 @@ export class HomeComponent implements OnInit {
 		
 		this.base_token = this.tokenList[0].name;
 		this.quote_token = this.tokenList[0].name;
-
 	}
 
 	take_special_char(event){

@@ -38,8 +38,8 @@ export class ContractsService {
 	private _test_version: any;
 	private _test_version_name: string;
 		
-	private _useNetwork: string = '15';
-	private _useNetworkNumber: number = 15;
+	private _useNetwork: string = '3';
+	private _useNetworkNumber: number = 3;
 	private _gas = 4000000;
 	private _gasPrice = 21000000000;
 	
