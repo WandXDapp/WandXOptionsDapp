@@ -235,6 +235,11 @@ export class ContractsService {
 	 * FUNCTIONS FOR CREATING AND UTILISING OPTIONS
 	 */
 
+	// Init optionwarraper with given option address
+	public async initWithOptionAddress(optionAddress): Promise<boolean> {
+		return Promise.resolve(this._optionWrapper.initWithOptionAddress(optionAddress));
+	}
+	
 	// Create a new option
 	public async createNewOption(baseToken, quoteToken, baseTokenDecimal, quoteTokenDecimal, strikePrice, blockTimestamp): Promise<string> {
 		this._optionWrapper.setBaseToken(baseToken);
@@ -264,6 +269,11 @@ export class ContractsService {
 	public async exerciseOption(amount): Promise<any> {
 		this._optionWrapper.setExerciseOptionAmount(amount);
 		return Promise.resolve(await this._optionWrapper.exerciseOption());
+	}
+
+	// Get premium of option
+	public getOptionPremium(): number {
+		return this._optionWrapper.getPremium();
 	}
 
 	/*
@@ -493,6 +503,36 @@ class OptionWrapper {
 		return this.exerciseOptionTimestamp;
 	}
 	
+	public async initWithOptionAddress(optionAddress): Promise<boolean> {
+		let result = await new Promise((resolve, reject) => {
+			var optionObj = this.createContractObj(option.abi, optionAddress);
+			optionObj.methods.getOptionDetails().call((error, result) => {
+				if(error == null){
+					this.optionAddress = optionAddress;
+					this.baseToken = result[1];
+					this.quoteToken = result[2];
+					this.issueOptionTokenProxy = result[3];
+					this.strikePrice = result[4];
+					this.expiry = result[5];
+					this.premium = result[6];
+
+					optionObj.methods.B_DECIMAL_FACTOR().call((error, result) => {
+						this.baseTokenDecimal = result;
+					});
+
+					optionObj.methods.Q_DECIMAL_FACTOR().call((error, result) => {
+						this.quoteTokenDecimal = result;
+					});
+					resolve(true);
+				}
+				else {
+					resolve(false);
+				}
+			});
+		}) as boolean;
+		return Promise.resolve(result);
+	}
+	
 	public async createNewOption(): Promise<string> {
 		this.optionAddress = await new Promise((resolve, reject) => {
 			this.derivativeFactoryObj.methods.createNewOption(
@@ -543,7 +583,7 @@ class OptionWrapper {
 
 	// Trade Option
 	public async tradeOption(): Promise<any> {
-		let multiplyFactor = new BigNumber(10).pow(this.quoteTokenDecimal).toNumber();
+		let multiplyFactor = new BigNumber(10).pow(parseInt(this.quoteTokenDecimal.toString())).toNumber();
 		let assetValue = this.tradeOptionAmount * this.premium * multiplyFactor;
 		let approve = await this.approveToken(this.quoteToken, this.optionAddress, assetValue);
 		if(!approve)
@@ -572,7 +612,7 @@ class OptionWrapper {
 		let approveAssets = await this.approveToken(this.optionAddress, this.optionAddress, this.exerciseOptionAmount);
 		if(!approveAssets)
 			return Promise.resolve(null);
-		let multiplyFactor = new BigNumber(10).pow(this.baseTokenDecimal).toNumber();
+		let multiplyFactor = new BigNumber(10).pow(parseInt(this.baseTokenDecimal.toString())).toNumber();
 		let assetValue = this.exerciseOptionAmount * this.premium * multiplyFactor;
 		let approveBaseToken = await this.approveToken(this.baseToken, this.issueOptionTokenProxy, assetValue);
 		if(!approveBaseToken)

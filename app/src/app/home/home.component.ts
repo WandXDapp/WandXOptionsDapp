@@ -198,6 +198,20 @@ export class HomeComponent implements OnInit {
 			if (result === undefined || result === null) {
 				this.errorBox = 'block';
 			}
+			else {
+				this.apiCalls.createNewOption(
+					this.contractsService.getUserAddress(),
+					this.optionAddress,
+					this.base_token,
+					this.quote_token,
+					this.strikePrice,
+					this.blockTimestamp,
+					this.expiryBlock,
+					this.assets_offered
+				).then((createResult) => {
+					console.log("createNewOption", createResult);
+				});
+			}
 		});
 	}
 
