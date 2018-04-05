@@ -189,7 +189,7 @@ export class ContractsService {
 	public async getAllowance(tokenAddress, contractAddress): Promise<number> {		
 		var allowance = await new Promise((resolve, reject) => {
 			var tokenObj = this.createContractObj(ierc20.abi, tokenAddress);
-			tokenObj.methods.allowance(this._web3.eth.defaultAccount,  contractAddress).call().then(function(result){
+			tokenObj.methods.allowance(this._web3.eth.defaultAccount,  contractAddress).call().then((result) => {
 				resolve(result);
 			});
 		}) as any;
@@ -200,12 +200,21 @@ export class ContractsService {
 	public async approveToken(tokenAddress, contractAddress, tokenCount): Promise<boolean> {
 		var approve = await new Promise((resolve, reject) => {
 			var tokenObj = this.createContractObj(ierc20.abi, tokenAddress);
-			tokenObj.methods.approve(contractAddress, tokenCount).send({}, function(error, result){
-				if(error){
-					console.log("approveContract erorr", error);
-					resolve(false);
-				}
+			tokenObj.methods.approve(
+				contractAddress, 
+				tokenCount
+			)
+			.send()
+			.on('receipt', function(receipt){ 
 				resolve(true);
+			})
+			.on('error', function(error){ 
+				console.log("Error in approveToken", error);
+				resolve(false);
+			})
+			.catch(function(error) {
+				console.log("Catch in approveToken", error);
+				resolve(false);
 			});
 		}) as boolean;
 		return Promise.resolve(approve);
@@ -213,7 +222,7 @@ export class ContractsService {
 
 	// This is not IERC20 function, but will be used in faucet page
 	public async getTokens(tokenAddress, tokenCount): Promise<boolean> {
-		var getTokens = await new Promise((resolve, reject) => {
+		return await new Promise((resolve, reject) => {
 			var tokenObj = this.createContractObj(wandxfaucet.abi, tokenAddress);
 			tokenObj.methods.getTokens(
 				tokenCount, 
@@ -226,9 +235,8 @@ export class ContractsService {
 			.catch(function(error) {
 				console.log("error", error);
 				resolve(false);
-			});;
+			});
 		}) as boolean;
-		return Promise.resolve(getTokens);
 	}
 
 	/*
@@ -552,7 +560,7 @@ class OptionWrapper {
 				resolve(receipt.events.LogOptionCreated.returnValues._optionAddress);
 			})
 			.catch(function(error) {
-				console.log("error", error);
+				console.log("Catch in createNewOption", error);
 				resolve(null);
 			});
 		}) as string;
@@ -561,7 +569,7 @@ class OptionWrapper {
 
 	public async issueOption(): Promise<string> {
 		let multiplyFactor = new BigNumber(10).pow(this.quoteTokenDecimal).toNumber();
-		let assetValue = this.assetsOffered * this.strikePrice * multiplyFactor;
+		let assetValue = new BigNumber(this.assetsOffered * this.strikePrice * multiplyFactor);
 		let approve = await this.approveToken(this.quoteToken, this.optionAddress, assetValue);
 		if(!approve)
 			return Promise.resolve(null);
@@ -632,7 +640,7 @@ class OptionWrapper {
 				resolve(this.exerciseOptionTimestamp);
 			})
 			.catch(function(error) {
-				console.error('Error in exerciseOption', error);
+				console.error('Catch in exerciseOption', error);
 				resolve(null);
 			});
 		}) as boolean;

@@ -22,8 +22,11 @@ export class HomeComponent implements OnInit {
 	private tokenList: any;
 	
 	public contractFee: any;
+	public contractFeeFormatted: any;
 	public userBalance: any;
+	public userBalanceFormatted: any;
 	public currentAllowance: any;
+	public currentAllowanceFormatted: any;
 	
 	base_token: any = '';
 	base_tokenJSON: any;
@@ -67,21 +70,6 @@ export class HomeComponent implements OnInit {
 	
 	constructor( private apiCalls:ApicallsService, private contractsService: ContractsService ) {
 		
-		// this.faucetToken1 = contractsService.faucetGetTokens('10000000000000000000000');
-
-		// document.getElementById("jQueryScript").remove();
-		// var jQueryScript = document.createElement("script");
-		// jQueryScript.setAttribute("id", "jQueryScript");
-		// jQueryScript.setAttribute("src", "//code.jquery.com/jquery-1.11.1.min.js");
-		// document.body.appendChild(jQueryScript);
-
-		// document.getElementById("testScript").remove();
-		// var testScript = document.createElement("script");
-		// testScript.setAttribute('id', "testScript");
-		// testScript.setAttribute('src', 'https://unpkg.com/avalon2@2.2.8/dist/avalon.js');
-		// document.body.appendChild(testScript);
-
-
 		this.display = 'none';
 		this.displayNotEnoughBalance = 'none';
 		this.displayAllowanceApproval = 'none';
@@ -126,16 +114,22 @@ export class HomeComponent implements OnInit {
 
 	ngOnInit() {
 		this.contractsService.initWeb3().then((result) => {
+			
+			let multiplyFactor = new BigNumber(10).pow(18).toNumber();
+
 			this.contractsService.getBalance(this.wandxTokenAddress).then((balance: number) => {
 				this.userBalance = balance;
+				this.userBalanceFormatted = balance / multiplyFactor;
 			});
 	
-			this.contractsService.getWandxAllowance().then((allowance: number) => {
+			this.contractsService.getWandxAllowance().then((allowance) => {
 				this.currentAllowance = allowance;
+				this.currentAllowanceFormatted = allowance / multiplyFactor;
 			});
 	
 			this.contractsService.getContractFee().then((contractFee: number) => {
 				this.contractFee = contractFee;
+				this.contractFeeFormatted = contractFee / multiplyFactor;
 			});
 	
 			this.contractsService.getBlockNumber().then((blockNumber: number) => {
@@ -186,11 +180,9 @@ export class HomeComponent implements OnInit {
 		}else {
 			// check user has enough balance to create option
 			let allowanceNeeded = this.contractFee - this.currentAllowance;
-			console.log('getting allowance', allowanceNeeded);
+			console.log('getting allowance', this.userBalance, allowanceNeeded);
 			if (this.userBalance < allowanceNeeded) {
 				console.log('Not enough balance');
-				let tokenCount = '10000000000000000000000';
-				this.contractsService.getTokens(this.wandxTokenAddress, tokenCount).then(function(result){});
 				this.displayGif = 'none';
 				this.displayNotEnoughBalance = 'block';
 				return;
@@ -255,18 +247,12 @@ export class HomeComponent implements OnInit {
 		).then((optionAddress) => {
 			this.optionAddress = optionAddress;
 			console.log('createNewOption', optionAddress);
-			this.displayGif = "none";
-			console.log("optionAddress", optionAddress);
+			this.displayGif = 'none';
 			if (optionAddress === undefined || optionAddress === null) {
-
-				this.displayGif = 'block';
+				this.errorBox = 'block';
 			}else{
-				this.displayGif = 'none';
 				this.displayStepTwo = 'block';
 				this.displayStepOne = 'none';
-
-				this.errorBox = 'block';
-
 			}
 		});
 	}
@@ -276,7 +262,7 @@ export class HomeComponent implements OnInit {
 	}
 
 	optionCreate() { }
-
+	
 	cancel_btn() {
 		this.display = 'none';
 		this.displayNotEnoughBalance = 'none';

@@ -47,36 +47,11 @@
             <div class="wizard">
                 <div class="row" style="width:100%">
                     <ul class="balAllowUI">
-                        <li>Balance: {{userBalance}}</li>
-                        <li>Allowance: {{currentAllowance}}</li>
+                        <li>Balance: {{userBalanceFormatted}}</li>
+                        <li>Allowance: {{currentAllowanceFormatted}}</li>
+                        <li>Contract Fee: {{contractFeeFormatted}}</li>
                     </ul>
                 </div>
-                <!-- <div class="wizard-inner">
-                    <div class="connecting-line"></div>
-                    <ul class="nav nav-tabs" role="tablist">
-                        <li role="presentation" class="active">
-                            <a href="#step1" data-toggle="tab" aria-controls="step1" role="tab" title="Step 1">
-                                <span class="round-tab">
-                                    1
-                                </span>
-                            </a>
-                        </li>
-                        <li role="presentation" class="disabled">
-                            <a href="#step2" data-toggle="tab" aria-controls="step2" role="tab" title="Step 2">
-                                <span class="round-tab">
-                                    2
-                                </span>
-                            </a>
-                        </li>
-                        <li role="presentation" class="disabled">
-                            <a href="#step3" data-toggle="tab" aria-controls="step3" role="tab" title="Step 3">
-                                <span class="round-tab">
-                                    3
-                                </span>
-                            </a>
-                        </li>
-                    </ul>
-                </div> -->
 
                 <form>
                     <div class="tab-content">
@@ -85,7 +60,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="card">
-																			<div class="stepCount">1/3</div>
+                                        <div class="stepCount">1/3</div>
                                         <div class="header">
                                             <h4 class="title">Step 1</h4>
                                         </div>

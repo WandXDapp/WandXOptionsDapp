@@ -61,13 +61,23 @@ export class NavbarComponent implements OnInit{
 	}
 
 	getTitle(){
-        var titlee = this.location.prepareExternalUrl(this.location.path());        
-        titlee = titlee.split('/').pop();
+        let mainTitle = this.location.prepareExternalUrl(this.location.path());        
+		
+		// Check name in last part
+		let title = mainTitle.split('/').pop();
 		for(var item = 0; item < this.listTitles.length; item++){
-			if(this.listTitles[item].path === titlee){
+			if(this.listTitles[item].path === title){
 				return this.listTitles[item].title;
 			}
 		}
-		return 'Statistics';
+		
+		// Check name in second last part
+		let titleSplit = mainTitle.split("/");
+		let pageName = titleSplit[titleSplit.length - 2];
+		if(pageName == 'optiondetails')
+			return 'Option Details';
+		
+		// Default
+		return "Dashboard";
 	}
 }

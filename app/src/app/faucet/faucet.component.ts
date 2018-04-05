@@ -64,7 +64,7 @@ export class FaucetComponent implements OnInit {
 	requestToken() {
 		this.displayGif = 'block';
 		let multiplyFactor = new BigNumber(10).pow(this.selectedToken.decimals).toNumber();
-		let noOfDesiredTokens = this.tokenToRequest * multiplyFactor;
+		let noOfDesiredTokens = new BigNumber(this.tokenToRequest * multiplyFactor);
 		this.contractsService.getTokens(this.selectedToken.address, noOfDesiredTokens).then((output: boolean) => {
 			this.displayGif = 'none';
 			if (output === true) {
@@ -96,54 +96,5 @@ export class FaucetComponent implements OnInit {
 				}
 			});
 		}
-	}
-	
-
-	// initForm(): FormGroup {
-	// 	return this.tokenForm = this.fb.group({
-	// 		search: [null]
-	// 	});
-	// }
-
-
-	// selectValue(value) {
-	// 	this.tokenForm.patchValue({ 'search': value });
-	// 	this.showDropDown = false;
-	// 	this.displayDropDown = 'none';
-	// 	this.selectedValue = value;
-	// }
-	
-	// closeDropDown() {
-	// 	this.showDropDown = !this.showDropDown;
-	// }
-	
-	// openDropDown() {
-	// 	this.showDropDown = false;
-	// }
-	
-	// getSearchValue() {
-	// 	this.displayDropDown = 'block';
-	// 	return this.tokenForm.value.search;
-	// }
-	
-	// onSubmit_token(form: HTMLFormElement) {
-		
-	// 	let noOfDesiredTokens = form.value.noOfTokens;
-    // 	let selectedToken = this.contractsService.getTokenObj(this.selectedValue);
-	// 	let selectedTokenDecimals = selectedToken.decimals;
-	// 	let multiplyFactor = new BigNumber(10).pow(selectedTokenDecimals).toNumber();
-		
-	// 	noOfDesiredTokens = noOfDesiredTokens * multiplyFactor;
-
-	// 	this.contractsService.getTokens(selectedToken.address, noOfDesiredTokens).then((output: boolean) => {
-	// 		if (output === true) {
-	// 			this.displaySuccess = 'block';
-	// 		}
-	// 		else {
-	// 			this.displayFail = 'block';
-	// 		}
-	// 	});
-	// }
-	
-	
+	}	
 }
