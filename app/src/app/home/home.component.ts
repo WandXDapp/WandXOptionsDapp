@@ -66,22 +66,6 @@ export class HomeComponent implements OnInit {
 	faucetToken1: any;
 	
 	constructor( private apiCalls:ApicallsService, private contractsService: ContractsService ) {
-		
-		// this.faucetToken1 = contractsService.faucetGetTokens('10000000000000000000000');
-
-		// document.getElementById("jQueryScript").remove();
-		// var jQueryScript = document.createElement("script");
-		// jQueryScript.setAttribute("id", "jQueryScript");
-		// jQueryScript.setAttribute("src", "//code.jquery.com/jquery-1.11.1.min.js");
-		// document.body.appendChild(jQueryScript);
-
-		// document.getElementById("testScript").remove();
-		// var testScript = document.createElement("script");
-		// testScript.setAttribute('id', "testScript");
-		// testScript.setAttribute('src', 'https://unpkg.com/avalon2@2.2.8/dist/avalon.js');
-		// document.body.appendChild(testScript);
-
-
 		this.display = 'none';
 		this.displayNotEnoughBalance = 'none';
 		this.displayAllowanceApproval = 'none';
@@ -237,7 +221,7 @@ export class HomeComponent implements OnInit {
 					this.expiryBlock,
 					this.assets_offered
 				).then((createResult) => {
-					console.log("createNewOption", createResult);
+					console.log('createNewOption', createResult);
 				});
 			}
 
