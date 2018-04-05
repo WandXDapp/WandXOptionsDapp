@@ -12,30 +12,33 @@ export class UserComponent implements OnInit {
 	
 	private userAddress: String = null;
 	private userProfile: any = null;
-	displaySuccess: any;
-	displayFail: any;
+	
+	private displaySuccess: any;
+	private displayFail: any;
+	private displayGif: any;
 	
 	constructor(
 		private contractsService:ContractsService,
 		private apiCalls:ApicallsService) {
 		this.displaySuccess = 'none';
 		this.displayFail = 'none';
+		this.displayGif = 'none';
 
-			this.userAddress = '';
-			this.userProfile = {
-				"aboutMe": '',
-				"address": '',
-				"city": "",
-				"company": "",
-				"country": "",
-				"email": "",
-				"firstName": "",
-				"lastName": "",
-				"pincode": "",
-				"residential_address": "",
-				"username": "",
-				"_id": ""
-			};
+		this.userAddress = '';
+		this.userProfile = {
+			"aboutMe": '',
+			"address": '',
+			"city": "",
+			"company": "",
+			"country": "",
+			"email": "",
+			"firstName": "",
+			"lastName": "",
+			"pincode": "",
+			"residential_address": "",
+			"username": "",
+			"_id": ""
+		};
 	}
 	
 	ngOnInit() {
@@ -61,11 +64,12 @@ export class UserComponent implements OnInit {
 	}
 
 	updateUserProfile(form: HTMLFormElement) {
+		this.displayGif = 'block';
 		this.apiCalls.updateUserProfile(form.value, this.userAddress).then((result) => {
-			console.log(result);
+			this.displayGif = 'none';
 			if (result === undefined || result === null) {
 				this.displayFail = 'block';
-			}else{
+			} else {
 				this.displaySuccess = 'block';
 			}
 		});
