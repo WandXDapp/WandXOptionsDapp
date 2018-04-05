@@ -8,106 +8,142 @@ import { NgForm } from '@angular/forms';
 var BigNumber = require('bignumber.js');
 
 @Component({
-  selector: 'app-faucet',
-  templateUrl: './faucet.component.html',
-  styleUrls: ['./faucet.component.scss'],
+	selector: 'app-faucet',
+	templateUrl: './faucet.component.html',
+	styleUrls: ['./faucet.component.scss'],
 	providers: [ContractsService]
 })
+
 export class FaucetComponent implements OnInit {
 
-  faucetTokenList: any;
-  tokenListJSON: any;
-  values: any;
-  result: any;
-  tokenListArray = [''];
-  i = 0;
-  length: any;
-  showDropDown = false;
-  filterdStatus = '';
-  displayDropDown: any;
-  selectedValue: any;
-  noOfDesiredTokens: number;
-  selectedTokenJSON: any;
-  selectedTokenAddress: any;
-  selectedTokenDecimals: any;
+	faucetTokenList: any;
+	searchTokenList: any;
+	
+	displaySuccess: string;
+	displayFail: string;
+	displayGif: string;
 
-  displaySuccess: any;
-  displayFail: any;
+	selectedToken: any;
+	tokenBalance: number = 0;
+
+	tokenToRequest: number = 0;
+
+	search: string = null;
+	
+	constructor(public contractsService: ContractsService, private fb: FormBuilder, private cdRef: ChangeDetectorRef) {
+		this.displaySuccess = 'none';
+		this.displayFail = 'none';
+		this.displayGif = 'none';
+		this.faucetTokenList = contractsService.getTokenList();
+		this.searchTokenList = this.faucetTokenList;
+		this.selectedToken = this.searchTokenList[0];
+	}
+
+	ngOnInit() {
+		this.contractsService.initWeb3().then((result) => {
+			this.setCurrentToken(this.searchTokenList[0]);
+		});
+	}
+
+	setCurrentToken(token) {
+		this.selectedToken = this.getTokenObj(token);
+		this.getTokenBalance();
+	}
+
+	getTokenObj(token){
+		return this.contractsService.getTokenObj(token.name);
+	}
+
+	getTokenBalance(){
+		let multiplyFactor = new BigNumber(10).pow(this.selectedToken.decimals).toNumber();
+		this.contractsService.getBalance(this.selectedToken.address).then((balance) => {
+			this.tokenBalance = balance / multiplyFactor;
+		});
+	}
+
+	requestToken() {
+		this.displayGif = 'block';
+		let multiplyFactor = new BigNumber(10).pow(this.selectedToken.decimals).toNumber();
+		let noOfDesiredTokens = this.tokenToRequest * multiplyFactor;
+		this.contractsService.getTokens(this.selectedToken.address, noOfDesiredTokens).then((output: boolean) => {
+			this.displayGif = 'none';
+			if (output === true) {
+				this.displaySuccess = 'block';
+			}
+			else {
+				this.displayFail = 'block';
+			}
+			this.tokenToRequest = 0;
+			this.getTokenBalance();
+		});
+	}
+
+	cancel_btn() {
+		this.displayGif = 'none';
+		this.displaySuccess = 'none';
+		this.displayFail = 'none';
+	}
+
+	searchToken() {
+		if(this.search == ''){
+			this.searchTokenList = this.faucetTokenList;
+		}
+		else {
+			this.searchTokenList = [];
+			this.faucetTokenList.forEach(element => {
+				if(element.name.toLowerCase().includes(this.search.toLowerCase())){
+					this.searchTokenList.push(element);
+				}
+			});
+		}
+	}
+	
+
+	// initForm(): FormGroup {
+	// 	return this.tokenForm = this.fb.group({
+	// 		search: [null]
+	// 	});
+	// }
 
 
-  tokenForm: FormGroup;
+	// selectValue(value) {
+	// 	this.tokenForm.patchValue({ 'search': value });
+	// 	this.showDropDown = false;
+	// 	this.displayDropDown = 'none';
+	// 	this.selectedValue = value;
+	// }
+	
+	// closeDropDown() {
+	// 	this.showDropDown = !this.showDropDown;
+	// }
+	
+	// openDropDown() {
+	// 	this.showDropDown = false;
+	// }
+	
+	// getSearchValue() {
+	// 	this.displayDropDown = 'block';
+	// 	return this.tokenForm.value.search;
+	// }
+	
+	// onSubmit_token(form: HTMLFormElement) {
+		
+	// 	let noOfDesiredTokens = form.value.noOfTokens;
+    // 	let selectedToken = this.contractsService.getTokenObj(this.selectedValue);
+	// 	let selectedTokenDecimals = selectedToken.decimals;
+	// 	let multiplyFactor = new BigNumber(10).pow(selectedTokenDecimals).toNumber();
+		
+	// 	noOfDesiredTokens = noOfDesiredTokens * multiplyFactor;
 
-  constructor(public contractsService: ContractsService, private fb: FormBuilder, private cdRef: ChangeDetectorRef) {
-
-    this.displaySuccess = 'none';
-    this.displayFail = 'none';
-
-  this.faucetTokenList = contractsService.getTokenList();
-    this.displayDropDown = 'none';
-
-    this.i = 0;
-		while (this.faucetTokenList[this.i] !== undefined) {
-			this.tokenListArray[this.i] = this.faucetTokenList[this.i].name;
-      this.i++;
-    }
-    this.initForm();
-
-
-   }
-
-  initForm(): FormGroup {
-    return this.tokenForm = this.fb.group({
-      search: [null]
-    })
-  }
-
-  ngOnInit() {
-  }
-
-  selectValue(value) {
-    this.tokenForm.patchValue({ 'search': value });
-    this.showDropDown = false;
-    this.displayDropDown = 'none';
-    this.selectedValue = value;
-  }
-
-  closeDropDown() {
-    this.showDropDown = !this.showDropDown;
-  }
-
-  openDropDown() {
-    this.showDropDown = false;
-  }
-
-  getSearchValue() {
-    this.displayDropDown = 'block';
-    return this.tokenForm.value.search;
-  }
-
-  onSubmit_token(form: HTMLFormElement) {
-    this.noOfDesiredTokens = form.value.noOfTokens;
-    console.log(this.selectedValue);
-    this.selectedTokenJSON = this.contractsService.getTokenObj(this.selectedValue);
-    this.selectedTokenAddress = this.selectedTokenJSON.address;
-    this.selectedTokenDecimals = this.selectedTokenJSON.decimals;
-    let multiplyFactor = new BigNumber(10).pow(this.selectedTokenDecimals).toNumber();
-    this.selectedTokenDecimals = multiplyFactor * this.noOfDesiredTokens;
-
-    this.contractsService.initWeb3().then((result) => {
-      this.contractsService.getTokens(this.selectedTokenAddress, this.selectedTokenDecimals).then((output: boolean) => {
-        if (output === true) {
-          this.displaySuccess = 'block';
-          // Success
-        }else{
-          this.displayFail = 'block';
-          // fail
-        }
-      });
-    })
-  }
-
-   cancel_btn() {
-    this.displaySuccess = 'none';
-    this.displayFail = 'none';
-   }
+	// 	this.contractsService.getTokens(selectedToken.address, noOfDesiredTokens).then((output: boolean) => {
+	// 		if (output === true) {
+	// 			this.displaySuccess = 'block';
+	// 		}
+	// 		else {
+	// 			this.displayFail = 'block';
+	// 		}
+	// 	});
+	// }
+	
+	
 }

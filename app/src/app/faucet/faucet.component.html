@@ -1,3 +1,15 @@
+<div class="popup-box" [ngStyle]="{'display':displayGif}">
+	<div class="popup-gif">
+		<div class="popup_header">Please Wait!</div>
+		<div class="popup_content">
+			<div class="popup_sub">
+				<img src="../../assets/img/loader.gif" alt="Gif loader" class="gif-img">
+			</div>
+			<div class="gif_footer">Option is being created!</div>
+		</div>
+	</div>
+</div>
+
 <div class="popup-box" [ngStyle]="{'display':displaySuccess}">
 	<div class="popup-NotEnoughBalance">
 		<div class="popup_header">Success</div>
@@ -20,12 +32,72 @@
 
 
 <div class="main-content">
-  <div class="container-fluid">
-	<!-- {{tokenListArray[0]}} -->
-	<div class="input_faucet">
-		<form [formGroup]='tokenForm' autocomplete="new-password" novalidate>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-5">
+				<div class="card">
+					<div class="header">
+						<h4 class="title">Select Token</h4>
+					</div>
+					<div class="content">
+						<form>
+							<div class="row">
+								<div class="col-md-10">
+									<div class="form-group">
+										<input type="text" class="form-control" name="search" placeholder="Seach Token" [(ngModel)]="search" (ngModelChange)="searchToken()">
+									</div>
+								</div>
+								<div class="col-md-2"></div>
+								<div class="col-md-12">
+									<div class="form-group">
+										<ul>
+											<li *ngFor="let token of searchTokenList" (click)="setCurrentToken(token);">{{ token.name }}</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-7">
+				<div class="card card-user">
+					<div class="image">
+						<img src="https://ununsplash.imgix.net/photo-1431578500526-4d9613015464?fit=crop&fm=jpg&h=300&q=75&w=400" alt="..."/>
+					</div>
+					<div class="content">
+						<div class="author">
+							<a href="#">
+								<img class="avatar border-gray" src="assets/img/faces/face-1.jpg" alt="..."/>
+
+								<h4 class="title">
+									{{selectedToken.name}} ({{selectedToken.symbol}})
+									<br />
+									<small>Balance: {{tokenBalance}}</small>
+								</h4>
+							</a>
+						</div>
+						<br><br>
+						<form>
+							<div class="form-group form-group-tokens">
+								How many tokens do you want?
+								<input type="number" class="text_box-faucet" placeholder="Token Count" [(ngModel)]="tokenToRequest" required name="noOfTokens">
+							</div>
+							<div class="form-group-btn">
+								<input type="button" class="btn-approve waves-effect waves-light btn submit-btn" value="Request" (click)="requestToken()">
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+	
+		<!-- <div class="input_faucet">
+		<form [formGroup]='tokenForm' novalidate>
 			<div class="form-group form-group-input">
-				<input id="search" type="text" class="text_box-faucet" value="{{tokenListArray[0]}}" formControlName='search' (click)=' openDropDown() ' placeholder="Search Faucet...">
+				<input id="search" type="text" class="text_box-faucet" value="{{tokenListArray[0]}}" formControlName='search' (click)=' openDropDown() ' placeholder="Search Faucet..." readonly onfocus="this.removeAttribute('readonly');">
 				<div clickOutside (clickOutside)="closeDropDown()">
 					<div *ngIf="showDropDown" class="search-dropdown" [ngStyle]="{'display':displayDropDown}">
 						<div (click)='selectValue(s)' class='search-results ' *ngFor="let s of tokenListArray | searchFilter: getSearchValue()">
@@ -39,12 +111,15 @@
 		</form>
 		<form (ngSubmit)="onSubmit_token(token)" #token="ngForm">
 			<div class="form-group form-group-tokens">
+				<input type="number" class="text_box-faucet" ngModel required readonly placeholder="Current Balance: 0">
+			</div>
+			<div class="form-group form-group-tokens">
 				<input type="number" class="text_box-faucet" placeholder="No of Tokens..." ngModel required name="noOfTokens">
 			</div>
 			<div class="form-group-btn">
 				<input type="submit" class="btn-approve waves-effect waves-light btn submit-btn" [disabled]="!token.valid">
 			</div>
 		</form>
-	</div>
+	</div> 
   </div>
-</div>
+</div>-->

@@ -38,8 +38,8 @@ export class ContractsService {
 	private _test_version: any;
 	private _test_version_name: string;
 		
-	private _useNetwork: string = '15';
-	private _useNetworkNumber: number = 15;
+	private _useNetwork: string = '3';
+	private _useNetworkNumber: number = 3;
 	private _gas = 4000000;
 	private _gasPrice = 21000000000;
 	
@@ -215,14 +215,18 @@ export class ContractsService {
 	public async getTokens(tokenAddress, tokenCount): Promise<boolean> {
 		var getTokens = await new Promise((resolve, reject) => {
 			var tokenObj = this.createContractObj(wandxfaucet.abi, tokenAddress);
-			tokenObj.methods.getTokens(tokenCount, this._web3.eth.defaultAccount).send({}, function(error, result){
-				if(error){
-					console.log("getTokens erorr", error);
-					resolve(false);
-				}
-				console.log("getTokens result", result);
+			tokenObj.methods.getTokens(
+				tokenCount, 
+				this._web3.eth.defaultAccount
+			)
+			.send()
+			.on('receipt', function(receipt){ 
 				resolve(true);
-			});
+			})
+			.catch(function(error) {
+				console.log("error", error);
+				resolve(false);
+			});;
 		}) as boolean;
 		return Promise.resolve(getTokens);
 	}
