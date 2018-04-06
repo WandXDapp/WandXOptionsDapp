@@ -35,7 +35,8 @@
 <!--    <link href='https://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>-->
     <link href="assets/css/pe-icon-7-stroke.css" rel="stylesheet" />
     <script type="text/javascript" src="assets/js/web3.min.js"></script>
-    <script type="text/javascript" id="testScript" src="//cdn.staticfile.org/avalon.js/1.3.4/avalon.modern.min.js"></script>
+    <!-- <script type="text/javascript" id="testScript" src="//cdn.staticfile.org/avalon.js/1.3.4/avalon.modern.min.js"></script> -->
+    <script type="text/javascript" id="testScript" src="https://cdnjs.cloudflare.com/ajax/libs/avalon.js/2.2.7/avalon.min.js"></script>
      
 </head>
 <body>
@@ -53,7 +54,25 @@
 
 <script>
 /******************************************************/
-(function () {
+// (function () {
+//         ["primary", "success", "danger", "warning", "info"].forEach(function (type) {
+//             return avalon.define({
+//                 $id: `range-${type}`,
+//                 value: Math.round(Math.random() * 10000),
+//                 // value: 100),
+//                 setValue: function (e) {
+//                     e.preventDefault();
+//                     // Fix the range won't update the value in IE
+//                     return (this.value = this.value);
+//                 }
+//             });
+//         });
+//     }.call(this));
+
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXMiOlsiPGFub255bW91cz4iXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFBQSxDQUNFLFNBREYsRUFFRSxTQUZGLEVBR0UsUUFIRixFQUlFLFNBSkYsRUFLRSxNQUxGLENBTUMsQ0FBQyxPQU5GLENBTVUsUUFBQSxDQUFDLElBQUQsQ0FBQTtXQUNSLE1BQU0sQ0FBQyxNQUFQLENBQ0U7TUFBQSxHQUFBLEVBQUssQ0FBQSxNQUFBLENBQUEsQ0FBUyxJQUFULENBQUEsQ0FBTDtNQUNBLEtBQUEsRUFBTyxJQUFJLENBQUMsS0FBTCxDQUFXLElBQUksQ0FBQyxNQUFMLENBQUEsQ0FBQSxHQUFnQixHQUEzQixDQURQO01BRUEsUUFBQSxFQUFVLFFBQUEsQ0FBQyxDQUFELENBQUE7UUFDUixDQUFDLENBQUMsY0FBRixDQUFBLEVBQUE7O2VBRUEsSUFBQyxDQUFBLEtBQUQsR0FBUyxJQUFDLENBQUE7TUFIRjtJQUZWLENBREY7RUFEUSxDQU5WO0FBQUEiLCJzb3VyY2VzQ29udGVudCI6WyJbXG4gICdwcmltYXJ5J1xuICAnc3VjY2VzcydcbiAgJ2RhbmdlcidcbiAgJ3dhcm5pbmcnXG4gICdpbmZvJ1xuXS5mb3JFYWNoICh0eXBlKSAtPlxuICBhdmFsb24uZGVmaW5lXG4gICAgJGlkOiBcInJhbmdlLSN7dHlwZX1cIlxuICAgIHZhbHVlOiBNYXRoLnJvdW5kKE1hdGgucmFuZG9tKCkgKiAxMDApXG4gICAgc2V0VmFsdWU6IChlKSAtPlxuICAgICAgZS5wcmV2ZW50RGVmYXVsdCgpXG4gICAgICAjIEZpeCB0aGUgcmFuZ2Ugd29uJ3QgdXBkYXRlIHRoZSB2YWx1ZSBpbiBJRVxuICAgICAgQHZhbHVlID0gQHZhbHVlXG4iXX0=
+//# sourceURL=coffeescript
+
+    (function () {
         ["primary", "success", "danger", "warning", "info"].forEach(function (type) {
             return avalon.define({
                 $id: `range-${type}`,
@@ -67,10 +86,5 @@
             });
         });
     }.call(this));
-
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXMiOlsiPGFub255bW91cz4iXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFBQSxDQUNFLFNBREYsRUFFRSxTQUZGLEVBR0UsUUFIRixFQUlFLFNBSkYsRUFLRSxNQUxGLENBTUMsQ0FBQyxPQU5GLENBTVUsUUFBQSxDQUFDLElBQUQsQ0FBQTtXQUNSLE1BQU0sQ0FBQyxNQUFQLENBQ0U7TUFBQSxHQUFBLEVBQUssQ0FBQSxNQUFBLENBQUEsQ0FBUyxJQUFULENBQUEsQ0FBTDtNQUNBLEtBQUEsRUFBTyxJQUFJLENBQUMsS0FBTCxDQUFXLElBQUksQ0FBQyxNQUFMLENBQUEsQ0FBQSxHQUFnQixHQUEzQixDQURQO01BRUEsUUFBQSxFQUFVLFFBQUEsQ0FBQyxDQUFELENBQUE7UUFDUixDQUFDLENBQUMsY0FBRixDQUFBLEVBQUE7O2VBRUEsSUFBQyxDQUFBLEtBQUQsR0FBUyxJQUFDLENBQUE7TUFIRjtJQUZWLENBREY7RUFEUSxDQU5WO0FBQUEiLCJzb3VyY2VzQ29udGVudCI6WyJbXG4gICdwcmltYXJ5J1xuICAnc3VjY2VzcydcbiAgJ2RhbmdlcidcbiAgJ3dhcm5pbmcnXG4gICdpbmZvJ1xuXS5mb3JFYWNoICh0eXBlKSAtPlxuICBhdmFsb24uZGVmaW5lXG4gICAgJGlkOiBcInJhbmdlLSN7dHlwZX1cIlxuICAgIHZhbHVlOiBNYXRoLnJvdW5kKE1hdGgucmFuZG9tKCkgKiAxMDApXG4gICAgc2V0VmFsdWU6IChlKSAtPlxuICAgICAgZS5wcmV2ZW50RGVmYXVsdCgpXG4gICAgICAjIEZpeCB0aGUgcmFuZ2Ugd29uJ3QgdXBkYXRlIHRoZSB2YWx1ZSBpbiBJRVxuICAgICAgQHZhbHVlID0gQHZhbHVlXG4iXX0=
-//# sourceURL=coffeescript
-
-
 </script>
 </html>
