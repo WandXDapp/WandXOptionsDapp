@@ -180,7 +180,6 @@ export class HomeComponent implements OnInit {
 		}else {
 			// check user has enough balance to create option
 			let allowanceNeeded = this.contractFee - this.currentAllowance;
-			console.log('getting allowance', this.userBalance, allowanceNeeded);
 			if (this.userBalance < allowanceNeeded) {
 				console.log('Not enough balance');
 				this.displayGif = 'none';
