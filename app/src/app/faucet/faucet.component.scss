@@ -277,3 +277,63 @@
     text-transform: uppercase;
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
 }
+
+.card_token{
+    height: 50rem;
+}
+
+.tokenList{
+    overflow: auto;
+    height: 35rem;
+    padding: 0;
+    list-style: none;
+}
+
+.tokenList li {
+    
+}
+
+.tokenList li:hover{
+    color: #fff;
+    cursor: pointer;
+    background-color: #525252;
+}
+
+.tokenList-items{
+    padding: 1rem;
+}
+
+.tokenList-items:hover{
+    overflow: hidden;
+    padding: 1rem;
+}
+
+.faucetCard-right{
+    text-align: center;
+    padding: 2rem;
+}
+
+.faucetCard-right-heading{
+    padding: 1rem;
+    font-size: 1.7rem;
+}
+
+.avatar{
+    border: none;
+    width: 129px;
+    height: 129px;
+    border-radius: 0;
+}
+
+.avatar-img{
+    // background-color: #fff;
+    height: 150px;
+    width: 150px;
+    background-color: rgba(255, 255, 255, 0.719);
+    margin: 0 auto;
+    position: relative;
+    /* left: 40%; */
+
+    padding: 1rem;
+    border-radius: 50%;
+}

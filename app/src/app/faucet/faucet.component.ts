@@ -91,7 +91,7 @@ export class FaucetComponent implements OnInit {
 		else {
 			this.searchTokenList = [];
 			this.faucetTokenList.forEach(element => {
-				if(element.name.toLowerCase().includes(this.search.toLowerCase())){
+				if (element.name.toLowerCase().includes(this.search.toLowerCase())){
 					this.searchTokenList.push(element);
 				}
 			});

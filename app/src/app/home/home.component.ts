@@ -228,7 +228,7 @@ export class HomeComponent implements OnInit {
 					this.expiryBlock,
 					this.assets_offered
 				).then((createResult) => {
-					console.log("createNewOption", createResult);
+					console.log('createNewOption', createResult);
 				});
 			}
 
