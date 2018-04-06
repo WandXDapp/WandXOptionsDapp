@@ -8,7 +8,7 @@ const derivativeFactory = require("wandx-options/build/contracts/DerivativeFacto
 const option = require("wandx-options/build/contracts/Option.json");
 const wandxfaucet = require("wandx-options/build/contracts/WandXTokenFaucet.json");
 
-const dummyTokens = require("wandx-options/build/dummyTokenInfo.json");
+const dummyTokenInfo = require("wandx-options/build/dummyTokenInfo.json");
 
 export const WEB3_INITIALIZED = 'WEB3_INITIALIZED';
 
@@ -38,8 +38,8 @@ export class ContractsService {
 	private _test_version: any;
 	private _test_version_name: string;
 		
-	private _useNetwork: string = '15';
-	private _useNetworkNumber: number = 15;
+	private _useNetwork: string = '3';
+	private _useNetworkNumber: number = 3;
 	private _gas = 4000000;
 	private _gasPrice = 21000000000;
 	
@@ -75,7 +75,7 @@ export class ContractsService {
 
 	// Get latest block number
 	public async getBlockNumber(): Promise<number> {		
-		let blockNumber = await new Promise((resolve, reject) => {
+		return await new Promise((resolve, reject) => {
 			this._web3.eth.getBlockNumber((err, blockNumber) => {
 				if (err != null) {
 					reject(0);
@@ -83,7 +83,6 @@ export class ContractsService {
 				resolve(blockNumber);
 			})
 		}) as number;
-		return Promise.resolve(blockNumber);
 	}
 
 	// Get address of logged in user
@@ -101,57 +100,66 @@ export class ContractsService {
 
 	// Get wandx token address
 	public getWandxTokenAddress(): string {
-		return wandxfaucet.networks[this._useNetwork].address;
+		let address = null;
+		dummyTokenInfo.forEach(element => {
+			if(element.name == 'WANDX'){
+				address = element.address[this._useNetwork];
+				return;
+			}
+		});
+		return address;
 	}
 
 	// Get list of all the tokens currently active for wandx dapp
 	public getTokenList(): any {
-		dummyTokens.unshift({
-			"name": "WANDX",
-			"decimals": 18,
-			"symbol": "WANDX",
-			"deployed": true,
-			"address": wandxfaucet.networks[this._useNetwork].address
-		});
-		return dummyTokens;
+		return dummyTokenInfo;
 	}
 
 	// Get any perticular object of token
 	public getTokenObj(tokenName): any {
-		let retToken = {};
-		dummyTokens.forEach(function(token){
-			if(token.name == tokenName)
-				retToken = token;
+		let retToken = {
+			address: '',
+			decimals: '',
+			deployed: '',
+			name: '',
+			symbol: ''
+		};
+		dummyTokenInfo.forEach(element => {
+			if(element.name == tokenName){
+				retToken.address = element.address[this._useNetwork];
+				retToken.decimals = element.decimals;
+				retToken.deployed = element.deployed;
+				retToken.name = element.name;
+				retToken.symbol = element.symbol;
+				return;
+			}
 		});
 		return retToken;
 	}
 
 	// Get current allowance of wandx token
 	public async getWandxAllowance(): Promise<number> {		
-		var allowance = await this.getAllowance(
+		return await this.getAllowance(
 			wandxfaucet.networks[this._useNetwork].address, 
 			derivativeFactory.networks[this._useNetwork].address
 		);
-		return Promise.resolve(allowance);
 	}
 
 	// Approve wandx tokens
 	public async approveWandx(tokenCount): Promise<boolean> {	
-		var approve = await this.approveToken(
+		return await this.approveToken(
 			wandxfaucet.networks[this._useNetwork].address, 
 			derivativeFactory.networks[this._useNetwork].address, 
 			tokenCount);
-		return Promise.resolve(approve);
 	}
 
 	// Get the fee utilsed in creating an option
 	public async getContractFee(): Promise<number> {
-		let fee = await new Promise((resolve, reject) => {
+		return await new Promise((resolve, reject) => {
 			this._derivativeFactoryObj.methods.getOptionFee().call().then(function(result){
 				resolve(result);
 			});
 		}) as number;
-		return Promise.resolve(fee);
 	}
 
 	/*
@@ -164,39 +172,54 @@ export class ContractsService {
 
 	// To Get Token Balance
 	public async getBalance(tokenAddress): Promise<number> {
-		let balance = await new Promise((resolve, reject) => {
+		return await new Promise((resolve, reject) => {
 			let tokenObj = this.createContractObj(ierc20.abi, tokenAddress);
 			tokenObj.methods.balanceOf(this._web3.eth.defaultAccount).call().then(function(result){
 				resolve(result);
 			});
 		}) as number;
-		return Promise.resolve(balance);
 	}
 
 	// To check if any contract has allowance of the token
 	public async getAllowance(tokenAddress, contractAddress): Promise<number> {		
-		var allowance = await new Promise((resolve, reject) => {
+		return await new Promise((resolve, reject) => {
 			var tokenObj = this.createContractObj(ierc20.abi, tokenAddress);
-			tokenObj.methods.allowance(this._web3.eth.defaultAccount,  contractAddress).call().then(function(result){
+			tokenObj.methods.allowance(this._web3.eth.defaultAccount,  contractAddress).call().then((result) => {
 				resolve(result);
 			});
 		}) as any;
-		return Promise.resolve(allowance);
 	}
 
 	// To approve use of token to a perticular contract
 	public async approveToken(tokenAddress, contractAddress, tokenCount): Promise<boolean> {
-		var approve = await new Promise((resolve, reject) => {
+		var txHash = await new Promise((resolve, reject) => {
 			var tokenObj = this.createContractObj(ierc20.abi, tokenAddress);
-			tokenObj.methods.approve(contractAddress, tokenCount).send({}, function(error, result){
-				if(error){
-					console.log("approveContract erorr", error);
-					resolve(false);
-				}
+			tokenObj.methods.approve( contractAddress, tokenCount )
+				.send({}, (error, txHash) => { resolve(txHash); })
+				.catch((error) => { resolve(null); });
+		}) as string;
+		if(txHash == null)
+			return Promise.resolve(false);
+		else return Promise.resolve(await this.isTransactionConfirmed(txHash));
+	}
+	
+	// This is not IERC20 function, but will be used in faucet page
+	public async getTokens(tokenAddress, tokenCount): Promise<boolean> {
+		return await new Promise((resolve, reject) => {
+			var tokenObj = this.createContractObj(wandxfaucet.abi, tokenAddress);
+			tokenObj.methods.getTokens(
+				tokenCount, 
+				this._web3.eth.defaultAccount
+			)
+			.send()
+			.on('receipt', function(receipt){ 
 				resolve(true);
+			})
+			.catch(function(error) {
+				console.log("error", error);
+				resolve(false);
 			});
 		}) as boolean;
-		return Promise.resolve(approve);
 	}
 
 	/*
@@ -207,6 +230,11 @@ export class ContractsService {
 	 * FUNCTIONS FOR CREATING AND UTILISING OPTIONS
 	 */
 
+	// Init optionwarraper with given option address
+	public async initWithOptionAddress(optionAddress): Promise<boolean> {
+		return Promise.resolve(this._optionWrapper.initWithOptionAddress(optionAddress));
+	}
+	
 	// Create a new option
 	public async createNewOption(baseToken, quoteToken, baseTokenDecimal, quoteTokenDecimal, strikePrice, blockTimestamp): Promise<string> {
 		this._optionWrapper.setBaseToken(baseToken);
@@ -215,7 +243,7 @@ export class ContractsService {
 		this._optionWrapper.setQuoteTokenDecimal(quoteTokenDecimal);
 		this._optionWrapper.setStrikePrice(strikePrice);
 		this._optionWrapper.setBlockTimestamp(blockTimestamp);
-		return await this._optionWrapper.createNewOption();
+		return Promise.resolve(this._optionWrapper.createNewOption());
 	}
 
 	// Issue option
@@ -223,19 +251,24 @@ export class ContractsService {
 		this._optionWrapper.setAssetsOffered(assetsOffered);
 		this._optionWrapper.setPremium(premium);
 		this._optionWrapper.setExpiry(expiry);
-		return await this._optionWrapper.issueOption();
+		return Promise.resolve(await this._optionWrapper.issueOption());
 	}
 
 	// Trade Option
 	public async tradeOption(amount): Promise<any> {
 		this._optionWrapper.setTradeOptionAmount(amount);
-		return await this._optionWrapper.tradeOption();
+		return Promise.resolve(await this._optionWrapper.tradeOption());
 	}
 
 	// Excersise Option
 	public async exerciseOption(amount): Promise<any> {
 		this._optionWrapper.setExerciseOptionAmount(amount);
-		return await this._optionWrapper.exerciseOption();
+		return Promise.resolve(await this._optionWrapper.exerciseOption());
+	}
+
+	// Get premium of option
+	public getOptionPremium(): number {
+		return this._optionWrapper.getPremium();
 	}
 
 	/*
@@ -334,6 +367,21 @@ export class ContractsService {
 		contractObj.options.gas = this._gas;
 		contractObj.options.gasPrice = this._gasPrice;
 		return contractObj;
+	}
+
+	// Check if the trsanction is confirmed or not
+	private async isTransactionConfirmed(txHash): Promise<boolean> {
+		return await new Promise((resolve, reject) => {
+			this._web3.eth.getTransactionReceipt(txHash, async (err, transactionReceipt) => {
+				if(transactionReceipt == null){
+					return resolve(await this.isTransactionConfirmed(txHash));
+				}
+				else if(transactionReceipt.status == '0x1'){
+					return resolve(true);
+				}
+				else return resolve(false);
+			})
+		}) as boolean;
 	}
 
 	// For testing only, have to remove before final version
@@ -465,8 +513,38 @@ class OptionWrapper {
 		return this.exerciseOptionTimestamp;
 	}
 	
+	public async initWithOptionAddress(optionAddress): Promise<boolean> {
+		return await new Promise((resolve, reject) => {
+			var optionObj = this.createContractObj(option.abi, optionAddress);
+			optionObj.methods.getOptionDetails().call((error, result) => {
+				if(error == null){
+					this.optionAddress = optionAddress;
+					this.baseToken = result[1];
+					this.quoteToken = result[2];
+					this.issueOptionTokenProxy = result[3];
+					this.strikePrice = result[4];
+					this.expiry = result[5];
+					this.premium = result[6];
+
+					optionObj.methods.B_DECIMAL_FACTOR().call((error, result) => {
+						this.baseTokenDecimal = result;
+					});
+
+					optionObj.methods.Q_DECIMAL_FACTOR().call((error, result) => {
+						this.quoteTokenDecimal = result;
+					});
+					resolve(true);
+				}
+				else {
+					resolve(false);
+				}
+			});
+		}) as boolean;
+	}
+	
 	public async createNewOption(): Promise<string> {
-		this.optionAddress = await new Promise((resolve, reject) => {
+		this.optionAddress = null;
+		return await new Promise((resolve, reject) => {
 			this.derivativeFactoryObj.methods.createNewOption(
 				this.baseToken,
 				this.quoteToken,
@@ -475,47 +553,53 @@ class OptionWrapper {
 				this.strikePrice,
 				this.blockTimestamp
 			)
-			.send()
-			.on('receipt', function(receipt){ 
-				resolve(receipt.events.LogOptionCreated.returnValues._optionAddress);
+			.send({}, (error, txHash) => {  })
+			.on('receipt', (receipt) => { 
+				this.optionAddress = receipt.events.LogOptionCreated.returnValues._optionAddress;
+				resolve(this.optionAddress);
 			})
-			.catch(function(error) {
-				console.log("error", error);
-				reject("error");
-			});
+			.catch((error) => { console.log("Error in createNewOption",error); resolve(null); });
 		}) as string;
-		return Promise.resolve(this.optionAddress);
+		// if(txHash == null)
+		// 	return Promise.resolve(null);
+		// else {
+		// 	let isTransactionConfirmed = await this.isTransactionConfirmed(txHash);
+		// 	return Promise.resolve(this.optionAddress);
+		// }
 	}
 
 	public async issueOption(): Promise<string> {
+		let lTokenProxy = null;
 		let multiplyFactor = new BigNumber(10).pow(this.quoteTokenDecimal).toNumber();
-		let assetValue = this.assetsOffered * this.strikePrice * multiplyFactor;
+		let assetValue = new BigNumber(this.assetsOffered * this.strikePrice * multiplyFactor);
 		let approve = await this.approveToken(this.quoteToken, this.optionAddress, assetValue);
 		if(!approve)
 			return Promise.resolve(null);
-		var response = await new Promise((resolve, reject) => {
+		return await new Promise((resolve, reject) => {
 			var optionObj = this.createContractObj(option.abi, this.optionAddress);
 			optionObj.methods.issueOption(
 				this.assetsOffered,
 				this.premium,
 				this.expiry
 			)
-			.send()
+			.send({}, (error, txHash) => {  })
 			.on('receipt', (receipt) => {
 				this.issueOptionTokenProxy = receipt.events.LogOptionsIssued.returnValues._tokenProxy;
 				resolve(this.issueOptionTokenProxy);
 			})
-			.catch(function(error) {
-				console.error('Error in issueOption', error);
-				reject(null);
-			});
-		}) as any;
-		return Promise.resolve(response);
+			.catch((error) => { resolve(null); });
+		}) as string;
+		// if(txHash == null)
+		// 	return Promise.resolve(null);
+		// else {
+		// 	let isTransactionConfirmed = await this.isTransactionConfirmed(txHash);
+		// 	return Promise.resolve(this.issueOptionTokenProxy);
+		// }
 	}
 
 	// Trade Option
 	public async tradeOption(): Promise<any> {
-		let multiplyFactor = new BigNumber(10).pow(this.quoteTokenDecimal).toNumber();
+		let multiplyFactor = new BigNumber(10).pow(parseInt(this.quoteTokenDecimal.toString())).toNumber();
 		let assetValue = this.tradeOptionAmount * this.premium * multiplyFactor;
 		let approve = await this.approveToken(this.quoteToken, this.optionAddress, assetValue);
 		if(!approve)
@@ -533,7 +617,7 @@ class OptionWrapper {
 			})
 			.catch(function(error) {
 				console.error('Error in issuetradeOptionOption', error);
-				reject(null);
+				resolve(null);
 			});
 		}) as any;
 		return Promise.resolve(response);
@@ -544,7 +628,7 @@ class OptionWrapper {
 		let approveAssets = await this.approveToken(this.optionAddress, this.optionAddress, this.exerciseOptionAmount);
 		if(!approveAssets)
 			return Promise.resolve(null);
-		let multiplyFactor = new BigNumber(10).pow(this.baseTokenDecimal).toNumber();
+		let multiplyFactor = new BigNumber(10).pow(parseInt(this.baseTokenDecimal.toString())).toNumber();
 		let assetValue = this.exerciseOptionAmount * this.premium * multiplyFactor;
 		let approveBaseToken = await this.approveToken(this.baseToken, this.issueOptionTokenProxy, assetValue);
 		if(!approveBaseToken)
@@ -560,8 +644,8 @@ class OptionWrapper {
 				resolve(this.exerciseOptionTimestamp);
 			})
 			.catch(function(error) {
-				console.error('Error in exerciseOption', error);
-				reject(null);
+				console.error('Catch in exerciseOption', error);
+				resolve(null);
 			});
 		}) as boolean;
 		return Promise.resolve(response);
@@ -581,31 +665,50 @@ class OptionWrapper {
 		let balance = await this.getBalance(tokenAddress);
 		if(balance < tokenCount)
 			return Promise.reject(false);
-		var approve = await new Promise((resolve, reject) => {
-			let tokenObj = this.createContractObj(ierc20.abi, tokenAddress);
-			tokenObj.methods.approve(
-				contractAddress, 
-				tokenCount
-			)
-			.send()
-			.on('receipt', function(receipt){
-				resolve(true);
-			})
-			.catch(function(error) {
-				reject(false);
-			});
-		}) as boolean;
-		return Promise.resolve(approve);
+		var txHash = await new Promise((resolve, reject) => {
+			var tokenObj = this.createContractObj(ierc20.abi, tokenAddress);
+			tokenObj.methods.approve( contractAddress, tokenCount )
+				.send({}, (error, txHash) => { resolve(txHash); })
+				.catch((error) => { resolve(null); });
+		}) as string;
+		if(txHash == null)
+			return Promise.resolve(false);
+		else return Promise.resolve(await this.isTransactionConfirmed(txHash));
 	}
 
 	// To Get Token Balance
 	private async getBalance(tokenAddress): Promise<number> {
-		let balance = await new Promise((resolve, reject) => {
+		return await new Promise((resolve, reject) => {
 			let tokenObj = this.createContractObj(ierc20.abi, tokenAddress);
 			tokenObj.methods.balanceOf(this.web3.eth.defaultAccount).call().then(function(result){
 				resolve(result);
 			});
 		}) as number;
-		return Promise.resolve(balance);
+	}
+
+	// Get transaction receipt
+	private async getTransactionReceipt(txHash): Promise<any> {
+		return await new Promise((resolve, reject) => {
+			this.web3.eth.getTransactionReceipt(txHash, async (err, transactionReceipt) => {
+				if(transactionReceipt == null)
+					return resolve(await this.getTransactionReceipt(txHash));
+				else return resolve(transactionReceipt);
+			})
+		}) as any;
+	}
+
+	// Check if the trsanction is confirmed or not
+	private async isTransactionConfirmed(txHash): Promise<boolean> {
+		return await new Promise((resolve, reject) => {
+			this.web3.eth.getTransactionReceipt(txHash, async (err, transactionReceipt) => {
+				if(transactionReceipt == null){
+					return resolve(await this.isTransactionConfirmed(txHash));
+				}
+				else if(transactionReceipt.status == '0x1'){
+					return resolve(true);
+				}
+				else return resolve(false);
+			})
+		}) as boolean;
 	}
 }

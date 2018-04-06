@@ -1,3 +1,47 @@
+<div class="popup-box" [ngStyle]="{'display':displayGif}">
+    <div class="popup-gif">
+        <div class="popup_header">Please Wait!</div>
+        <div class="popup_content">
+            <div class="popup_sub">
+                <img src="../../assets/img/loader.gif" alt="Gif loader" class="gif-img">
+            </div>
+            <div class="gif_footer">Updating profile....</div>
+        </div>
+    </div>
+</div>
+
+<div class="popup-box" [ngStyle]="{'display':displaySuccess}">
+    <div class="popup-NotEnoughBalance">
+        <div class="popup_header">Success</div>
+        <div class="popup_content">
+            <div class="popup_sub">Yayy! Profile updation was successfull</div>
+            <button class="btn btn-approve" (click)="cancel_btn()">Okay</button>
+        </div>
+    </div>
+</div>
+
+<div class="popup-box" [ngStyle]="{'display':displayFail}">
+    <div class="popup-NotEnoughBalance">
+        <div class="popup_header">Opps!</div>
+        <div class="popup_content">
+            <div class="popup_sub">Sorry, Unable to update profile at the moment.</div>
+            <button class="btn btn-approve" (click)="cancel_btn()">Okay</button>
+        </div>
+    </div>
+</div>
+
+<div class="popup-box" [ngStyle]="{'display':displayFail}">
+    <div class="popup-gif">
+        <div class="popup_header">Please Wait!</div>
+        <div class="popup_content">
+            <div class="popup_sub">
+                <img src="../../assets/img/loader.gif" alt="Gif loader" class="gif-img">
+            </div>
+            <div class="gif_footer">Option is being created!</div>
+        </div>
+    </div>
+</div>
+
 <div class="main-content" >
     <div class="container-fluid">
         <div class="row">
@@ -33,7 +77,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>First Name *</label>
-                                        <input type="text" class="form-control" name="firstName" placeholder="Company" [(ngModel)]="userProfile.firstName" required>
+                                        <input type="text" class="form-control" name="firstName" placeholder="First Name" [(ngModel)]="userProfile.firstName" required>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -98,19 +142,19 @@
                             <a href="#">
                                 <img class="avatar border-gray" src="assets/img/faces/face-1.jpg" alt="..."/>
 
-                                <h4 class="title">Wander<br />
-                                    <small>wandx</small>
+                                <h4 class="title">
+                                    <span *ngIf="userProfile.firstName == ''"> &lt;First Name&gt; </span>
+                                     {{userProfile.firstName}}
+                                    <span *ngIf="userProfile.lastName == ''"> &lt;Last Name&gt; </span>
+                                     {{userProfile.lastName}}
+                                    <br />
+                                    <span *ngIf="userProfile.email == ''"> <small>&lt;Email&gt;</small> </span>
+                                    <small>{{userProfile.email}}</small>
                                 </h4>
                             </a>
                         </div>
-                        <p class="description text-center">Decentralised trading of ERC20 tokens and ERC20 token baskets.
-                        </p>
-                    </div>
-                    <hr>
-                    <div class="text-center">
-                        <button href="https://www.facebook.com/wandx.co" target="_blank" class="btn btn-simple"><i class="fa fa-facebook-square" ></i></button>
-                        <button href="https://twitter.com/wandxdapp" target="_blank" class="btn btn-simple"><i class="fa fa-twitter"></i></button>
-                        <!-- <button href="#" class="btn btn-simple"><i class="fa fa-google-plus-square"></i></button> -->
+                        <p class="description text-center" *ngIf="userProfile.aboutMe == ''"> &lt;About Me&gt;</p>
+                        <p class="description text-center">{{userProfile.aboutMe}}</p>
                     </div>
                 </div>
             </div>

@@ -11,7 +11,7 @@ export const ROUTES: RouteInfo[] = [
     { path: 'createoptions', title: 'Create Options',  icon: 'pe-7s-plus', class: '' },
     { path: 'user', title: 'User Profile',  icon:'pe-7s-user', class: '' },
     { path: 'activeoptions', title: 'Active Options',  icon:'pe-7s-note2', class: '' },
-    { path: 'faucet', title: 'Faucet List', icon:'pe-7s-diamond', class: '' },
+    { path: 'faucet', title: 'Faucet List', icon: 'pe-7s-diamond', class: '' },
 ];
 
 @Component({

@@ -1,25 +1,97 @@
+<div class="popup-box" [ngStyle]="{'display':displayGif}">
+	<div class="popup-gif">
+		<div class="popup_header">Please Wait!</div>
+		<div class="popup_content">
+			<div class="popup_sub">
+				<img src="../../assets/img/loader.gif" alt="Gif loader" class="gif-img">
+			</div>
+			<div class="gif_footer">Getting tokens from faucet</div>
+		</div>
+	</div>
+</div>
+
+<div class="popup-box" [ngStyle]="{'display':displaySuccess}">
+	<div class="popup-NotEnoughBalance">
+		<div class="popup_header">Success</div>
+		<div class="popup_content">
+			<div class="popup_sub">Yayy! You got the tokens</div>
+			<button class="btn btn-approve" (click)="cancel_btn()">Okay</button>
+		</div>
+	</div>
+</div>
+
+<div class="popup-box" [ngStyle]="{'display':displayFail}">
+	<div class="popup-NotEnoughBalance">
+		<div class="popup_header">Opps!</div>
+		<div class="popup_content">
+			<div class="popup_sub">Sorry! Unable to get tokens from faucet</div>
+			<button class="btn btn-approve" (click)="cancel_btn()">Okay</button>
+		</div>
+	</div>
+</div>
+
+
 <div class="main-content">
-  <div class="container-fluid">
-	<!-- {{tokenList[0].name}} -->
-	<div class="input_faucet">
-		<form [formGroup]='tokenForm' novalidate>
-			<div class="form-group form-group-input">
-				<input id="search" type="text" class="text_box-faucet" (click)="toggleDropDown()" formControlName='search' (click)=' openDropDown() ' placeholder="Search Faucet...">
-				<div clickOutside (clickOutside)="closeDropDown()">
-					<div *ngIf="showDropDown" class="search-dropdown">
-						<div>
-							<div class="token_list" *ngFor="let t of tokenListArray | searchFilter:getSearchValue()">
-								{{t}}
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-5">
+				<div class="card card_token">
+					<div class="header">
+						<h4 class="title">Select Token</h4>
+					</div>
+					<div class="content">
+						<form>
+							<div class="row">
+								<div class="col-md-10">
+									<div class="form-group">
+										<input type="text" class="form-control" name="search" placeholder="Seach Token" [(ngModel)]="search" (ngModelChange)="searchToken()">
+									</div>
+								</div>
+								<div class="col-md-2"></div>
+								<div class="col-md-12">
+									<div class="form-group">
+										<ul class="tokenList">
+											<li class="tokenList-items" *ngFor="let token of searchTokenList" (click)="setCurrentToken(token);">{{ token.name }}</li>
+										</ul>
+									</div>
+								</div>
 							</div>
-						</div>
+						</form>
 					</div>
 				</div>
 			</div>
-			<div class="form-group-btn">
-				<input type="submit" class="btn btn-approve text-center">
+			<div class="col-md-7">
+				<div class="card card-user card_token">
+					<div class="image">
+						<img src="https://ununsplash.imgix.net/photo-1431578500526-4d9613015464?fit=crop&fm=jpg&h=300&q=75&w=400" alt="..."/>
+					</div>
+					<div class="content">
+						<div class="author">
+							<a href="#">
+								<div class="avatar-img">
+									<img class="avatar" src="assets/img/{{selectedToken.name}}.png" alt="..." />
+								</div>
+								
+
+								<h4 class="title">
+									{{selectedToken.name}} ({{selectedToken.symbol}})
+									<br />
+									<small>Balance: {{tokenBalance}}</small>
+								</h4>
+							</a>
+						</div>
+						<form>
+							<div class="form-group faucetCard-right">
+								 <div class="faucetCard-right-heading">How many tokens do you want?</div>
+								<input type="number" class="text_box-faucet" placeholder="Token Count" [(ngModel)]="tokenToRequest" required name="noOfTokens">
+							</div>
+							<div class="form-group-btn">
+								<input type="button" class="btn-approve waves-effect waves-light btn submit-btn" value="Request" (click)="requestToken()">
+							</div>
+						</form>
+					</div>
+				</div>
 			</div>
-		</form>
-		
+		</div>
 	</div>
-  </div>
 </div>

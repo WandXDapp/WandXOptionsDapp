@@ -10,11 +10,14 @@ select.ng-invalid.ng-touched{
     border-radius: 0;
     margin: 0 5rem;
     padding: 2rem;
-    box-shadow: 0 1rem 2rem rgba(0,0,0,.10);
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+    0 3px 1px -2px rgba(0, 0, 0, 0.12),
+    0 1px 5px 0 rgba(0, 0, 0, 0.2);
 
 }
 
 .wizard {
+    height: 76vh;
     margin: 20px auto;
     padding-bottom: 3rem;
     background: #fff;
@@ -395,6 +398,12 @@ span.round-tab:hover {
     box-shadow: rgba(0, 0, 0, 0.5) 0 4px 8px;
 }
 
+.popover{
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+    0 3px 1px -2px rgba(0, 0, 0, 0.12),
+    0 1px 5px 0 rgba(0, 0, 0, 0.2);
+}
+
 .range-popover {
     display: block;
     position: relative;
@@ -455,7 +464,7 @@ span.round-tab:hover {
     z-index: 99999;
 }
 
-.popup-NotEnoughBalance{
+.popup-NotEnoughBalance, .popup-errorBox{
     margin: 0 auto;
     width: 30%;
     height: 25rem;
@@ -549,3 +558,54 @@ span.round-tab:hover {
     background-image: -webkit-gradient(linear, left top, left bottom, from(#382673), to(#682382));
     border-color: #682382;
 }
+
+.balAllowUI {
+    list-style: none;
+    float: right;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    color: #777;
+    font-size: 1.6rem;
+}
+
+.balAllowUI li {
+    float: left;
+    padding-top: 1.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-bottom: 0rem;
+}
+
+.btn{
+    background-image: -webkit-gradient(linear,left top,left bottom,from(#382673),to(#682382)); 
+    border-color:#682382;
+}
+
+.stepCount{
+    float: right;
+    font-size: 1.2rem;
+    padding: 1rem;
+    color: #525252;
+}
+
+.btn {
+    text-decoration: none;
+    color: #fff;  
+    background-color: #26a69a;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#382673), to(#682382));
+    text-align: center;
+    letter-spacing: .5px;
+    -webkit-transition: background-color .2s ease-out;
+    transition: background-color .2s ease-out;
+    cursor: pointer;
+    border: none;
+    border-radius: 2px;
+    display: inline-block;
+    height: 36px;
+    line-height: 36px;
+    padding: 0 16px;
+    text-transform: uppercase;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+}
+
