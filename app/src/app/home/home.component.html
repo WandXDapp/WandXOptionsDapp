@@ -102,14 +102,14 @@
                                                                             <div class="range-track progress">
                                                                                 <div class="range-track-bar progress-bar progress-bar-striped active progress-bar-primary" ms-css-width="value + &quot;%&quot;"></div>
                                                                             </div>
-                                                                            <input class="range-control" type="range" min="100" max="10000" ms-duplex="value" ms-on-change="setValue" ngModel name="strikePrice" />
+                                                                            <input class="range-control" type="range" min="100" max="10000"  ngModel name="strikePrice"  #ref (change)="changeZoom(ref.value)" />
                                                                         </div>
                                                                     </div>
                                                                     <div class="range_input_box">
                                                                         <div class="range-popover popover right">
                                                                             <div class="arrow"></div>
                                                                             <div class="popover-content">
-                                                                                <input class="form-control input-lg text-center" type="number" min="100" max="10000" ms-duplex-number="value"/>
+                                                                                <input class="form-control input-lg text-center" type="number" min="100" max="10000" value="{{value}}"/>
                                                                             </div>
                                                                         </div>
                                                                     </div>

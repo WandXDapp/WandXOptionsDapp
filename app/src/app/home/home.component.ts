@@ -67,6 +67,7 @@ export class HomeComponent implements OnInit {
 	errorBox: any;
 
 	faucetToken1: any;
+    public value=550;
 	
 	constructor( private apiCalls:ApicallsService, private contractsService: ContractsService ) {
 		
@@ -272,6 +273,10 @@ export class HomeComponent implements OnInit {
 	backButton() {
 		this.displayStepTwo = 'none';
 		this.displayStepOne = 'block';
+	}
+    changeZoom(value){
+		console.log("called",value);
+		this.value=value
 	}
 
 }
