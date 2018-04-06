@@ -274,7 +274,7 @@ export class HomeComponent implements OnInit {
 		this.displayStepTwo = 'none';
 		this.displayStepOne = 'block';
 	}
-    changeZoom(value){
+    changevalue(value){
 		console.log("called",value);
 		this.value=value
 	}
