@@ -575,26 +575,27 @@ class OptionWrapper {
 		let approve = await this.approveToken(this.quoteToken, this.optionAddress, assetValue);
 		if(!approve)
 			return Promise.resolve(null);
-		return await new Promise((resolve, reject) => {
+		let txHash = await new Promise((resolve, reject) => {
 			var optionObj = this.createContractObj(option.abi, this.optionAddress);
 			optionObj.methods.issueOption(
 				this.assetsOffered,
 				this.premium,
 				this.expiry
 			)
-			.send({}, (error, txHash) => {  })
+			.send({}, (error, txHash) => { resolve(txHash); })
 			.on('receipt', (receipt) => {
 				this.issueOptionTokenProxy = receipt.events.LogOptionsIssued.returnValues._tokenProxy;
-				resolve(this.issueOptionTokenProxy);
 			})
 			.catch((error) => { resolve(null); });
 		}) as string;
-		// if(txHash == null)
-		// 	return Promise.resolve(null);
-		// else {
-		// 	let isTransactionConfirmed = await this.isTransactionConfirmed(txHash);
-		// 	return Promise.resolve(this.issueOptionTokenProxy);
-		// }
+		if(txHash == null)
+			return Promise.resolve(null);
+		else {
+			let isTransactionConfirmed = await this.isTransactionConfirmed(txHash);
+			if(this.issueOptionTokenProxy != null)
+				return Promise.resolve(this.issueOptionTokenProxy);
+			else return Promise.resolve("confirmed");
+		}
 	}
 
 	// Trade Option
