@@ -209,21 +209,18 @@ export class ContractsService {
 	
 	// This is not IERC20 function, but will be used in faucet page
 	public async getTokens(tokenAddress, tokenCount): Promise<boolean> {
-		return await new Promise((resolve, reject) => {
+		let txHash = await new Promise((resolve, reject) => {
 			var tokenObj = this.createContractObj(wandxfaucet.abi, tokenAddress);
 			tokenObj.methods.getTokens(
 				tokenCount, 
 				this._web3.eth.defaultAccount
 			)
-			.send()
-			.on('receipt', function(receipt){ 
-				resolve(true);
-			})
-			.catch(function(error) {
-				console.log("error", error);
-				resolve(false);
-			});
-		}) as boolean;
+			.send({}, (error, txHash) => { resolve(txHash); })
+			.catch((error) => { resolve(null); });
+		}) as string;
+		if(txHash == null)
+			return Promise.resolve(false);
+		else return Promise.resolve(await this.isTransactionConfirmed(txHash));
 	}
 
 	/*
@@ -386,21 +383,6 @@ export class ContractsService {
 				else return resolve(false);
 			})
 		}) as boolean;
-	}
-
-	// For testing only, have to remove before final version
-	public async faucetGetTokens(tokenCount): Promise<boolean> {
-		var getTokens = await new Promise((resolve, reject) => {
-			this._faucetObj.methods.getTokens(tokenCount, this._web3.eth.defaultAccount).send({}, function(error, result){
-				if(error){
-					console.log("faucetGetTokens erorr", error);
-					resolve(false);
-				}
-				console.log("faucetGetTokens result", result);
-				resolve(true);
-			});
-		}) as boolean;
-		return Promise.resolve(getTokens);
 	}
 }
 
