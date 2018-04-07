@@ -59,31 +59,27 @@ export class HomeComponent implements OnInit {
 	
 	validate: any;
 	
-	displayNotEnoughBalance: any;
-	displayAllowanceApproval: any;
-	displayGif: any;
+	displayWaitingBox: string;
+	displayApprovalBox: string;
+	displayErrorBox: any;
+
+	waiting_msg: string = '';
+	error_msg: string = '';
 
 	displayStepOne: any;
 	displayStepTwo: any;
 	displayStepThree: any;
 	
-	errorBox: any;
-
-	faucetToken1: any;
-	
 	constructor( private apiCalls:ApicallsService, private contractsService: ContractsService ) {
 		
 		this.display = 'none';
-		this.displayNotEnoughBalance = 'none';
-		this.displayAllowanceApproval = 'none';
-		this.displayGif = 'none';
+		this.displayWaitingBox = 'none';
+		this.displayApprovalBox = 'none';
+		this.displayErrorBox = 'none';
 
 		this.displayStepOne = 'block';
 		this.displayStepTwo = 'none';
 		this.displayStepThree = 'none';
-
-		this.errorBox = 'none';
-
 
 		var day = new Date();
 		var nextDay = new Date();
@@ -149,7 +145,15 @@ export class HomeComponent implements OnInit {
 	}
 
 	onSubmit1(form: HTMLFormElement) {
-		this.displayGif = 'block';
+
+		if(this.web3Status != 'success'){
+			this.error_msg = 'Metamask is not connected yet. Please reload the page and try again.';
+			this.displayErrorBox = 'block';
+			return;
+		}
+
+		this.error_msg = '';
+		this.displayApprovalBox = 'block';
 
 		this.base_token = form.value.base_token;
 		this.base_tokenJSON = this.contractsService.getTokenObj(this.base_token);
@@ -168,8 +172,9 @@ export class HomeComponent implements OnInit {
 	}
 
 	onSubmit2(form2: HTMLFormElement) {
-		
-		this.displayGif = 'block';
+		this.error_msg = ''
+		this.waiting_msg = 'Issuing Option For You'
+		this.displayWaitingBox = 'block';
 		
 		this.assets_offered = form2.value.assets_offered;
 		this.premium = form2.value.premium;
@@ -183,29 +188,39 @@ export class HomeComponent implements OnInit {
 	}
 
 	onStepOne() {
+		let multiplyFactor = new BigNumber(10).pow(18).toNumber();
+
 		// check if user has allowance to create option
 		if (this.currentAllowance >= this.contractFee) {
+			this.displayApprovalBox = "none";
 			// create new option
 			this.createNewOption();
 		}else {
 			// check user has enough balance to create option
 			let allowanceNeeded = this.contractFee - this.currentAllowance;
 			if (this.userBalance < allowanceNeeded) {
-				console.log('Not enough balance');
-				this.displayGif = 'none';
-				this.displayNotEnoughBalance = 'block';
+				this.displayApprovalBox = 'none';
+				this.error_msg = 'Sorry! You don\'t have enough WAND. Please use the faucet to request some.';
+				this.displayErrorBox = 'block';
 				return;
 			}
 
 			// get allowance to create option
 			this.contractsService.approveWandx(allowanceNeeded).then((result) => {
+				this.displayApprovalBox = "none";
 				if (!result) {
-					console.log('Unable to get allowance approval');
-					this.displayGif = "none";
-					this.displayAllowanceApproval = 'block';
+					this.error_msg = 'Unable to get allowance approval';
+					this.displayErrorBox = 'block';
 					return;
 				}
-
+				this.contractsService.getBalance(this.wandxTokenAddress).then((balance: number) => {
+					this.userBalance = balance;
+					this.userBalanceFormatted = balance / multiplyFactor;
+				});
+				this.contractsService.getWandxAllowance().then((allowance) => {
+					this.currentAllowance = allowance;
+					this.currentAllowanceFormatted = allowance / multiplyFactor;
+				});
 				// create new option
 				this.createNewOption();
 			});
@@ -218,14 +233,14 @@ export class HomeComponent implements OnInit {
 			this.premium,
 			this.expiryBlock
 		).then((result) => {
-			this.displayGif = 'none';
-			console.log('issueOption', result);
-
-			this.displayStepThree = 'block';
+			
+			this.displayWaitingBox = 'none';
 			this.displayStepTwo = 'none';
+			this.displayStepThree = 'block';
 
 			if (result === undefined || result === null) {
-				this.errorBox = 'block';
+				this.error_msg = "Unable to issue option at the moment"
+				this.displayErrorBox = 'block';
 			}
 			else {
 				this.apiCalls.createNewOption(
@@ -238,14 +253,15 @@ export class HomeComponent implements OnInit {
 					this.expiryBlock,
 					this.assets_offered
 				).then((createResult) => {
-					console.log('createNewOption', createResult);
+					console.log('createNewOption api call', createResult);
 				});
 			}
-
 		});
 	}
 
 	createNewOption() {
+		this.waiting_msg = "Creating Option For You"
+		this.displayWaitingBox = 'block';		
 		this.contractsService.createNewOption(
 			this.baseTokenAddress,
 			this.qouteTokenAddress,
@@ -255,28 +271,22 @@ export class HomeComponent implements OnInit {
 			this.blockTimestamp
 		).then((optionAddress) => {
 			this.optionAddress = optionAddress;
-			console.log('createNewOption', optionAddress);
-			this.displayGif = 'none';
+			this.displayWaitingBox = 'none';
 			if (optionAddress === undefined || optionAddress === null) {
-				this.errorBox = 'block';
+				this.error_msg = 'Unable to create option at the moment.';
+				this.displayErrorBox = 'block';
 			}else{
-				this.displayStepTwo = 'block';
 				this.displayStepOne = 'none';
+				this.displayStepTwo = 'block';
 			}
 		});
 	}
 
-	minDate() {
-		this.newdate = Date();
-	}
-
-	optionCreate() { }
-	
 	cancel_btn() {
 		this.display = 'none';
-		this.displayNotEnoughBalance = 'none';
-		this.displayAllowanceApproval = 'none';
-		this.errorBox = 'none';
+		this.displayWaitingBox = 'none';
+		this.displayErrorBox = 'none';
+		this.displayApprovalBox = 'none';
 	}
 
 	backButton() {

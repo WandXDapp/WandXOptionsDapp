@@ -1,41 +1,37 @@
 
-<div class="popup-box" [ngStyle]="{'display':displayNotEnoughBalance}">
-	<div class="popup-NotEnoughBalance">
-		<div class="popup_header">Opps!</div>
+<div class="popup-box" [ngStyle]="{'display':displayApprovalBox}">
+	<div class="popup-gif">
+		<div class="popup_header">Waiting For Approval</div>
 		<div class="popup_content">
-			<div class="popup_sub">Sorry you don't have enough balance</div>
-			<button class="btn btn-approve" (click)="cancel_btn()">Okay</button>
+			<div class="popup_sub">
+				<img src="../../assets/img/loader.gif" alt="Gif loader" class="gif-img">
+			</div>
+			<div class="gif_footer">Please approve the WANDX allowance request in metamask</div>
 		</div>
 	</div>
 </div>
 
-<div class="popup-box" [ngStyle]="{'display':displayGif}">
+<div class="popup-box" [ngStyle]="{'display':displayWaitingBox}">
 	<div class="popup-gif">
 		<div class="popup_header">Please Wait!</div>
 		<div class="popup_content">
 			<div class="popup_sub">
 				<img src="../../assets/img/loader.gif" alt="Gif loader" class="gif-img">
 			</div>
-			<div class="gif_footer">Option is being created!</div>
+			<div class="gif_footer">
+				{{waiting_msg}}
+				<br>
+				<span style="font-size: 1.5rem;">Please confirm the request(s) in metamask.</span>
+			</div>
 		</div>
 	</div>
 </div>
 
-<div class="popup-box" [ngStyle]="{'display':displayAllowanceApproval}">
-	<div class="popup-NotEnoughBalance">
-		<div class="popup_header">Opps!</div>
-		<div class="popup_content">
-			<div class="popup_sub">Unable to get allowance approval</div>
-			<button class="btn btn-approve" (click)="cancel_btn()">Okay</button>
-		</div>
-	</div>
-</div>
-
-<div class="popup-box" [ngStyle]="{'display':errorBox}">
+<div class="popup-box" [ngStyle]="{'display':displayErrorBox}">
 	<div class="popup-errorBox">
 		<div class="popup_header">Opps!</div>
 		<div class="popup_content">
-			<div class="popup_sub">Unable to create option at the moment</div>
+			<div class="popup_sub">{{error_msg}}</div>
 			<button class="btn btn-approve" (click)="cancel_btn()">Okay</button>
 		</div>
 	</div>
