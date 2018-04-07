@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import * as Web3 from 'web3';
+const Web3 = require('web3');
 
 const BigNumber = require('bignumber.js');
 
@@ -26,8 +26,12 @@ const networkMap = {
 };
 
 declare namespace web3Functions{
-    export function initializeWeb3();
+	export function initializeWeb3();
 }
+
+declare namespace web3FunctionsInfura{
+	export function initializeWeb3WithInfura();
+}	
 
 @Injectable()
 export class ContractsService {
@@ -45,7 +49,7 @@ export class ContractsService {
 	
 	private _faucetObj: any;
 	private _derivativeFactoryObj: any;
-
+	
 	private _optionWrapper: OptionWrapper = null;
 	
 	constructor() { }
@@ -544,7 +548,7 @@ class OptionWrapper {
 	
 	public async createNewOption(): Promise<string> {
 		this.optionAddress = null;
-		return await new Promise((resolve, reject) => {
+		let txHash = await new Promise((resolve, reject) => {
 			this.derivativeFactoryObj.methods.createNewOption(
 				this.baseToken,
 				this.quoteToken,
@@ -553,19 +557,21 @@ class OptionWrapper {
 				this.strikePrice,
 				this.blockTimestamp
 			)
-			.send({}, (error, txHash) => {  })
-			.on('receipt', (receipt) => { 
-				this.optionAddress = receipt.events.LogOptionCreated.returnValues._optionAddress;
-				resolve(this.optionAddress);
-			})
+			.send({}, (error, txHash) => { resolve(txHash); })
 			.catch((error) => { console.log("Error in createNewOption",error); resolve(null); });
 		}) as string;
-		// if(txHash == null)
-		// 	return Promise.resolve(null);
-		// else {
-		// 	let isTransactionConfirmed = await this.isTransactionConfirmed(txHash);
-		// 	return Promise.resolve(this.optionAddress);
-		// }
+		if(txHash == null)
+			return Promise.resolve(null);
+		else {
+			let transactionReceipt = await this.getTransactionReceipt(txHash);
+			let eventResponse = await this.getEventResponse(
+				derivativeFactory.abi, 
+				this.derivativeFactoryObj._address,
+				transactionReceipt.blockNumber,
+				'LogOptionCreated'
+			);
+			return Promise.resolve(eventResponse._optionAddress);
+		}
 	}
 
 	public async issueOption(): Promise<string> {
@@ -661,6 +667,16 @@ class OptionWrapper {
 		return contractObj;
 	}
 
+	// Create an object of contract from abi and address
+	private createContractObjInfura(abi, address): any {
+		let web3Infura = new Web3(new Web3.providers.WebsocketProvider('wss://ropsten.infura.io/ws'));
+		var contractObj = new web3Infura.eth.Contract(abi, address);
+		contractObj.options.from = this.web3.eth.defaultAccount;
+		contractObj.options.gas = this.gas;
+		contractObj.options.gasPrice = this.gasPrice;
+		return contractObj;
+	}
+
 	// To approve use of token to a perticular contract
 	private async approveToken(tokenAddress, contractAddress, tokenCount): Promise<boolean> {
 		let balance = await this.getBalance(tokenAddress);
@@ -692,8 +708,8 @@ class OptionWrapper {
 		return await new Promise((resolve, reject) => {
 			this.web3.eth.getTransactionReceipt(txHash, async (err, transactionReceipt) => {
 				if(transactionReceipt == null)
-					return resolve(await this.getTransactionReceipt(txHash));
-				else return resolve(transactionReceipt);
+					resolve(await this.getTransactionReceipt(txHash));
+				else resolve(transactionReceipt);
 			})
 		}) as any;
 	}
@@ -703,13 +719,25 @@ class OptionWrapper {
 		return await new Promise((resolve, reject) => {
 			this.web3.eth.getTransactionReceipt(txHash, async (err, transactionReceipt) => {
 				if(transactionReceipt == null){
-					return resolve(await this.isTransactionConfirmed(txHash));
+					resolve(await this.isTransactionConfirmed(txHash));
 				}
 				else if(transactionReceipt.status == '0x1'){
-					return resolve(true);
+					resolve(true);
 				}
-				else return resolve(false);
+				else resolve(false);
 			})
 		}) as boolean;
+	}
+
+	private async getEventResponse(abi, address, blockNumber, eventName): Promise<any> {
+		return await new Promise((resolve, reject) => {
+			var contractObj = this.createContractObjInfura(abi, address);
+			contractObj.getPastEvents(eventName, {
+				fromBlock: blockNumber,
+				toBlock: 'latest'
+			}, (error, events) => {
+				resolve(events[0].returnValues);
+			});
+		}) as any;
 	}
 }
