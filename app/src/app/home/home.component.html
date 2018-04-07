@@ -44,15 +44,36 @@
 <div class="container" style="width:100%">
 	<div class="row">
 		<section>
-			<div class="wizard">
+			<div class="wizard" style="height: 5rem; padding-bottom: 2rem;">
 				<div class="row" style="width:100%">
-					<ul class="balAllowUI">
-						<li>Balance: {{userBalanceFormatted}}</li>
-						<li>Allowance: {{currentAllowanceFormatted}}</li>
-						<li>Contract Fee: {{contractFeeFormatted}}</li>
-					</ul>
+					<div class="col-md-2 barComponent" >
+						<div style="text-transform: capitalize;">
+							Web3 Connection<br>{{web3Status}}
+						</div>
+					</div>
+					<div class="col-md-5 barComponent" >
+						<div>
+							Default Address<br>{{userAddress}}
+						</div>
+					</div>
+					<div class="col-md-2 barComponent" >
+						<div>
+							Balance<br>{{userBalanceFormatted}}
+						</div>
+					</div>
+					<div class="col-md-2 barComponent" >
+						<div>
+							Allowance<br>{{currentAllowanceFormatted}}
+						</div>
+					</div>
+					<div class="col-md-1 barComponent" >
+						<div>
+							Fee<br>{{contractFeeFormatted}}
+						</div>
+					</div>
 				</div>
-
+			</div>
+			<div class="wizard">
 				<form>
 					<div class="tab-content">
 						<div class="tab-pane active" role="tabpanel" id="step1" [ngStyle]="{'display':displayStepOne}">

@@ -300,7 +300,7 @@ export class ContractsService {
 					response = "Please unlock MetaMask!";
 					console.log(response);
 					this._web3Status = response;
-					reject(response);
+					return resolve(response);
 				}
 
 				web3 = web3Functions.initializeWeb3();
@@ -313,20 +313,20 @@ export class ContractsService {
 						response = 'Please connect to the Ropsten network';
 						console.log(response);
 						this._web3Status = response;
-						reject(response);
+						return resolve(response);
 					}
 					else {
 						response = "success";
 						console.log("Connected to " + this._test_version_name);
 						this._web3Status = response;
-						resolve(response);
+						return resolve(response);
 					}
 				});
 			} else {
 				response = "No web3 instance injected";
 				console.log(response);
 				this._web3Status = response;
-				reject(response);
+				return resolve(response);
 			}
 		}) as string;
 

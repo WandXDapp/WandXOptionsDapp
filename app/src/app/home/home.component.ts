@@ -18,16 +18,18 @@ export class HomeComponent implements OnInit {
 	
 	display: any;
 
+	private web3Status: string  = '';
 	private wandxTokenAddress: string;
 	private tokenList: any;
 	
-	public contractFee: any;
-	public contractFeeFormatted: any;
-	public userBalance: any;
-	public userBalanceFormatted: any;
-	public currentAllowance: any;
-	public currentAllowanceFormatted: any;
-    public strikePriceSliderValue: number = 100;
+	private userAddress: string = '<NA>';
+	private contractFee: number = 0;
+	private contractFeeFormatted: number = 0;
+	private userBalance: number = 0;
+	private userBalanceFormatted: number = 0;
+	private currentAllowance: number = 0;
+	private currentAllowanceFormatted: number = 0;
+    private strikePriceSliderValue: number = 100;
 	
 	base_token: any = '';
 	base_tokenJSON: any;
@@ -117,7 +119,14 @@ export class HomeComponent implements OnInit {
 		this.contractsService.initWeb3().then((result) => {
 			
 			let multiplyFactor = new BigNumber(10).pow(18).toNumber();
+			this.web3Status = this.contractsService.getweb3Status();
 
+			if(!result){
+				return;
+			}
+
+			this.userAddress = this.contractsService.getUserAddress();			
+			
 			this.contractsService.getBalance(this.wandxTokenAddress).then((balance: number) => {
 				this.userBalance = balance;
 				this.userBalanceFormatted = balance / multiplyFactor;
