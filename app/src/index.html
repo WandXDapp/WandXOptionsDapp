@@ -1,76 +1,58 @@
 <!doctype html>
 <html>
 <head>
-    <base href="/">
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/png" href="assets/img/wandx.png">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
-    <meta name="viewport" content="width=device-width" />
-    <title>WandX</title>
+	<base href="/">
+	<meta charset="utf-8" />
+	<link rel="icon" type="image/png" href="assets/img/wandx.png">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+	<meta name="viewport" content="width=device-width" />
+	<title>WandX</title>
 
-    <!-- Bootstrap core CSS     -->
-    <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
-    <!-- WEB3     -->
-    <script src="assets/web3/web3.wrapper.js"></script>
-
-
-    <!-- Animation library for notifications   -->
-    <link href="assets/css/animate.min.css" rel="stylesheet"/>
-
-    <!--  Light Bootstrap Table core CSS    -->
-    <link href="assets/css/light-bootstrap-dashboard.css" rel="stylesheet"/>
-
-    <!--  CSS for Demo Purpose, don't include it in your project     -->
-    <link href="assets/css/demo.css" rel="stylesheet" />
-
-    <script id="jQueryScript" src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-<!--
-    <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" media="screen">
-    <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>-->
+	<!-- Bootstrap core CSS	 -->
+	<link href="assets/css/bootstrap.min.css" rel="stylesheet" />
+	<!-- WEB3	 -->
+	<script src="assets/web3/web3.wrapper.js"></script>
 
 
-    <!--     Fonts and icons     -->
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
-<!--    <link href='https://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>-->
-    <link href="assets/css/pe-icon-7-stroke.css" rel="stylesheet" />
-    <script type="text/javascript" src="assets/js/web3.min.js"></script>
-    <script type="text/javascript" id="testScript" src="//cdn.staticfile.org/avalon.js/1.3.4/avalon.modern.min.js"></script>
-     
+	<!-- Animation library for notifications   -->
+	<link href="assets/css/animate.min.css" rel="stylesheet"/>
+
+	<!--  Light Bootstrap Table core CSS	-->
+	<link href="assets/css/light-bootstrap-dashboard.css" rel="stylesheet"/>
+
+	<!--  CSS for Demo Purpose, don't include it in your project	 -->
+	<link href="assets/css/demo.css" rel="stylesheet" />
+
+	<script id="jQueryScript" src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+	<!--	 Fonts and icons	 -->
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
+	<link href="assets/css/pe-icon-7-stroke.css" rel="stylesheet" />
+	<script type="text/javascript" src="assets/js/web3.min.js"></script>
+	<script type="text/javascript" id="testScript" src="//cdn.staticfile.org/avalon.js/1.3.4/avalon.modern.min.js"></script>
+	 
 </head>
 <body>
-  <app-root>
-      <div id="loader"><img src="assets/img/loader-preview.svg" alt="loading"></div>
-  </app-root>
-<!-- <script type="text/javascript" id="testScript" src="//cdn.staticfile.org/avalon.js/1.3.4/avalon.modern.min.js"></script> -->
+	<app-root>
+		<div id="loader"><img src="assets/img/loader-preview.svg" alt="loading"></div>
+	</app-root>
 </body>
-<!-- OAuth Script tag -->
-<!--<script type="text/javascript" src="node_modules/auth0-js/build/auth0.js"></script>-->
-<!--  Google Maps Plugin    -->
-<!--<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&key=YOUR_KEY_HERE"></script>-->
-
-<!-- <script type="text/javascript" src="assets/json/DerivativeFactory.js"></script> -->
 
 <script>
-/******************************************************/
-(function () {
-        ["primary", "success", "danger", "warning", "info"].forEach(function (type) {
-            return avalon.define({
-                $id: `range-${type}`,
-                value: Math.round(Math.random() * 10000),
-                // value: 100),
-                setValue: function (e) {
-                    e.preventDefault();
-                    // Fix the range won't update the value in IE
-                    return (this.value = this.value);
-                }
-            });
-        });
-    }.call(this));
-
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXMiOlsiPGFub255bW91cz4iXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFBQSxDQUNFLFNBREYsRUFFRSxTQUZGLEVBR0UsUUFIRixFQUlFLFNBSkYsRUFLRSxNQUxGLENBTUMsQ0FBQyxPQU5GLENBTVUsUUFBQSxDQUFDLElBQUQsQ0FBQTtXQUNSLE1BQU0sQ0FBQyxNQUFQLENBQ0U7TUFBQSxHQUFBLEVBQUssQ0FBQSxNQUFBLENBQUEsQ0FBUyxJQUFULENBQUEsQ0FBTDtNQUNBLEtBQUEsRUFBTyxJQUFJLENBQUMsS0FBTCxDQUFXLElBQUksQ0FBQyxNQUFMLENBQUEsQ0FBQSxHQUFnQixHQUEzQixDQURQO01BRUEsUUFBQSxFQUFVLFFBQUEsQ0FBQyxDQUFELENBQUE7UUFDUixDQUFDLENBQUMsY0FBRixDQUFBLEVBQUE7O2VBRUEsSUFBQyxDQUFBLEtBQUQsR0FBUyxJQUFDLENBQUE7TUFIRjtJQUZWLENBREY7RUFEUSxDQU5WO0FBQUEiLCJzb3VyY2VzQ29udGVudCI6WyJbXG4gICdwcmltYXJ5J1xuICAnc3VjY2VzcydcbiAgJ2RhbmdlcidcbiAgJ3dhcm5pbmcnXG4gICdpbmZvJ1xuXS5mb3JFYWNoICh0eXBlKSAtPlxuICBhdmFsb24uZGVmaW5lXG4gICAgJGlkOiBcInJhbmdlLSN7dHlwZX1cIlxuICAgIHZhbHVlOiBNYXRoLnJvdW5kKE1hdGgucmFuZG9tKCkgKiAxMDApXG4gICAgc2V0VmFsdWU6IChlKSAtPlxuICAgICAgZS5wcmV2ZW50RGVmYXVsdCgpXG4gICAgICAjIEZpeCB0aGUgcmFuZ2Ugd29uJ3QgdXBkYXRlIHRoZSB2YWx1ZSBpbiBJRVxuICAgICAgQHZhbHVlID0gQHZhbHVlXG4iXX0=
-//# sourceURL=coffeescript
-
-
+	(function () {
+		["primary", "success", "danger", "warning", "info"].forEach(function (type) {
+			return avalon.define({
+				$id: `range-${type}`,
+				// value: Math.round(Math.random() * 10000),
+				value: 100,
+				setValue: function (e) {
+					e.preventDefault();
+					// Fix the range won't update the value in IE
+					return (this.value = this.value);
+				}
+			});
+		});
+	}.call(this));
 </script>
 </html>

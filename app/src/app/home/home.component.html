@@ -1,217 +1,217 @@
 
 <div class="popup-box" [ngStyle]="{'display':displayNotEnoughBalance}">
-    <div class="popup-NotEnoughBalance">
-        <div class="popup_header">Opps!</div>
-        <div class="popup_content">
-            <div class="popup_sub">Sorry you don't have enough balance</div>
-            <button class="btn btn-approve" (click)="cancel_btn()">Okay</button>
-        </div>
-    </div>
+	<div class="popup-NotEnoughBalance">
+		<div class="popup_header">Opps!</div>
+		<div class="popup_content">
+			<div class="popup_sub">Sorry you don't have enough balance</div>
+			<button class="btn btn-approve" (click)="cancel_btn()">Okay</button>
+		</div>
+	</div>
 </div>
 
 <div class="popup-box" [ngStyle]="{'display':displayGif}">
-    <div class="popup-gif">
-        <div class="popup_header">Please Wait!</div>
-        <div class="popup_content">
-            <div class="popup_sub">
-                <img src="../../assets/img/loader.gif" alt="Gif loader" class="gif-img">
-            </div>
-            <div class="gif_footer">Option is being created!</div>
-        </div>
-    </div>
+	<div class="popup-gif">
+		<div class="popup_header">Please Wait!</div>
+		<div class="popup_content">
+			<div class="popup_sub">
+				<img src="../../assets/img/loader.gif" alt="Gif loader" class="gif-img">
+			</div>
+			<div class="gif_footer">Option is being created!</div>
+		</div>
+	</div>
 </div>
 
 <div class="popup-box" [ngStyle]="{'display':displayAllowanceApproval}">
-    <div class="popup-NotEnoughBalance">
-        <div class="popup_header">Opps!</div>
-        <div class="popup_content">
-            <div class="popup_sub">Unable to get allowance approval</div>
-            <button class="btn btn-approve" (click)="cancel_btn()">Okay</button>
-        </div>
-    </div>
+	<div class="popup-NotEnoughBalance">
+		<div class="popup_header">Opps!</div>
+		<div class="popup_content">
+			<div class="popup_sub">Unable to get allowance approval</div>
+			<button class="btn btn-approve" (click)="cancel_btn()">Okay</button>
+		</div>
+	</div>
 </div>
 
 <div class="popup-box" [ngStyle]="{'display':errorBox}">
-    <div class="popup-errorBox">
-        <div class="popup_header">Opps!</div>
-        <div class="popup_content">
-            <div class="popup_sub">Unable to create option at the moment</div>
-            <button class="btn btn-approve" (click)="cancel_btn()">Okay</button>
-        </div>
-    </div>
+	<div class="popup-errorBox">
+		<div class="popup_header">Opps!</div>
+		<div class="popup_content">
+			<div class="popup_sub">Unable to create option at the moment</div>
+			<button class="btn btn-approve" (click)="cancel_btn()">Okay</button>
+		</div>
+	</div>
 </div>
 
 <div class="container" style="width:100%">
-    <div class="row">
-        <section>
-            <div class="wizard">
-                <div class="row" style="width:100%">
-                    <ul class="balAllowUI">
-                        <li>Balance: {{userBalanceFormatted}}</li>
-                        <li>Allowance: {{currentAllowanceFormatted}}</li>
-                        <li>Contract Fee: {{contractFeeFormatted}}</li>
-                    </ul>
-                </div>
+	<div class="row">
+		<section>
+			<div class="wizard">
+				<div class="row" style="width:100%">
+					<ul class="balAllowUI">
+						<li>Balance: {{userBalanceFormatted}}</li>
+						<li>Allowance: {{currentAllowanceFormatted}}</li>
+						<li>Contract Fee: {{contractFeeFormatted}}</li>
+					</ul>
+				</div>
 
-                <form>
-                    <div class="tab-content">
-                        <div class="tab-pane active" role="tabpanel" id="step1" [ngStyle]="{'display':displayStepOne}">
-                        <div class="container-fluid">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="card">
-                                        <div class="stepCount">1/3</div>
-                                        <div class="header">
-                                            <h4 class="title">Step 1</h4>
-                                        </div>
-                                        <div class="content">
-                                            <form (ngSubmit)="onSubmit1(step1)" #step1="ngForm">
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <label>Base Token</label>
-                                                            <select class="form-control" id="baseTokenName" ngModel name="base_token" required>
-                                                                <option *ngFor="let token of tokenList">{{ token.name }}</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <label>Quote Token</label>
-                                                            <select class="form-control" id="quoteTokenName" ngModel name="quote_token" required>
-                                                                <option *ngFor="let token of tokenList">{{ token.name }}</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                        
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <label>Expiry Date</label>
-                                                            <input type="date" id="expiryDate" class="form-control" value="{{validate}}" name="blockTimestamp" min="{{validate}}" required ngModel>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <div data-role="rangeslider">
-                                                                <label for="price-min">Allowance:</label>
-                                                                <div class="range row" ms-controller="range-primary">
-                                                                    <div class="col-xs-7 col-sm-8">
-                                                                        <div class="range-container">
-                                                                            <div class="range-track progress">
-                                                                                <div class="range-track-bar progress-bar progress-bar-striped active progress-bar-primary" ms-css-width="value + &quot;%&quot;"></div>
-                                                                            </div>
-                                                                            <input class="range-control" type="range" min="100" max="10000"  ngModel name="strikePrice"  #ref (change)="changevalue(ref.value)" />
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="range_input_box">
-                                                                        <div class="range-popover popover right">
-                                                                            <div class="arrow"></div>
-                                                                            <div class="popover-content">
-                                                                                <input class="form-control input-lg text-center" type="number" min="100" max="10000" value="{{value}}"/>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <button type="submit" class="btn btn-info btn-fill pull-right next-step" [disabled]="!step1.valid">Next</button>
-                                                <div class="clearfix"></div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        </div>
-                        <div class="tab-pane" role="tabpanel" id="step2" [ngStyle]="{'display':displayStepTwo}">
-                        <div class="container-fluid">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="card">
-																			<div class="stepCount">2/3</div>
-                                        <div class="header">
-                                            <h4 class="title">Step 2</h4>
-                                        </div>
-                                        <div class="content">
-                                            <form (ngSubmit)="onSubmit2(step2)" #step2="ngForm">
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <label>Assets Offered</label>
-                                                            <input type="number" class="form-control" placeholder="Assets Offered"  required (keypress)="take_special_char($event)"
-                                                                ngModel name="assets_offered">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <label>Premium</label>
-                                                            <input type="number" class="form-control" placeholder="Premium" required (keypress)="take_special_char($event)" ngModel name="premium">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <label>Expiry Block</label>
-                                                            <input type="number" class="form-control" [(ngModel)]="minBlockNumber" [min]="[minBlockNumber]" placeholder="Minimum Block Number + {{minBlockNumber}}" required 
-                                                                ngModel name="expiryBlock">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <button type="submit" id="submit_two" class="btn btn-info btn-fill pull-right next-step" [disabled]="!step2.valid">Submit</button>
-                                                <button class="btn" (click)="backButton()" >Back</button>
-                                                <div class="clearfix"></div>
-                                            </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="tab-pane" role="tabpanel" id="step3" [ngStyle]="{'display':displayStepThree}">
-                            <div class="last_step">
-                                <h3 class="text-center">Ohh yeah! you finished all steps</h3>
-                                <p class="text-center">Here is the list of your inputs. looking gooood!</p><br>
-                                <table class="table table-hover">
-                                        <tr>
-                                            <th>Base Token</th>
-                                            <td>{{ base_token }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Quote Token</th>
-                                            <td> {{ quote_token }} </td>
-                                        </tr>
-                                        <tr>
-                                            <th>Expiry Date</th>
-                                            <td> {{ blockTimestamp }} </td>
-                                        </tr>
-                                        <tr>
-                                            <th>Allowance</th>
-                                            <td> {{ strikePrice }} </td>
-                                        </tr>
-                                        <tr>
-                                            <th>ASSETS OFFERED</th>
-                                            <td> {{ assets_offered }} </td>
-                                        </tr>
-                                        <tr>
-                                            <th>PREMIUM</th>
-                                            <td>{{ premium }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>EXPIRY BLOCK</th>
-                                            <td> {{ expiryBlock }} </td>
-                                        </tr>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="clearfix"></div>
-                    </div>
-                </form>
-            </div>
-        </section>
-    </div>
+				<form>
+					<div class="tab-content">
+						<div class="tab-pane active" role="tabpanel" id="step1" [ngStyle]="{'display':displayStepOne}">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="card">
+										<div class="stepCount">1/3</div>
+										<div class="header">
+											<h4 class="title">Step 1</h4>
+										</div>
+										<div class="content">
+											<form (ngSubmit)="onSubmit1(step1)" #step1="ngForm">
+												<div class="row">
+													<div class="col-md-6">
+														<div class="form-group">
+															<label>Base Token</label>
+															<select class="form-control" id="baseTokenName" ngModel name="base_token" required>
+																<option *ngFor="let token of tokenList">{{ token.name }}</option>
+															</select>
+														</div>
+													</div>
+													<div class="col-md-6">
+														<div class="form-group">
+															<label>Quote Token</label>
+															<select class="form-control" id="quoteTokenName" ngModel name="quote_token" required>
+																<option *ngFor="let token of tokenList">{{ token.name }}</option>
+															</select>
+														</div>
+													</div>
+												</div>
+						
+												<div class="row">
+													<div class="col-md-6">
+														<div class="form-group">
+															<label>Expiry Date</label>
+															<input type="date" id="expiryDate" class="form-control" value="{{validate}}" name="blockTimestamp" min="{{validate}}" required ngModel>
+														</div>
+													</div>
+													<div class="col-md-6">
+														<div class="form-group">
+															<div data-role="rangeslider">
+																<label for="price-min">Allowance:</label>
+																<div class="range row" ms-controller="range-primary">
+																	<div class="col-xs-7 col-sm-8">
+																		<div class="range-container">
+																			<div class="range-track progress">
+																				<div class="range-track-bar progress-bar progress-bar-striped active progress-bar-primary" ms-css-width="value + &quot;%&quot;"></div>
+																			</div>
+																			<input class="range-control" type="range" min="100" max="10000"  ngModel name="strikePrice"  #ref (change)="changeStrikePriceSliderValue(ref.value)" />
+																		</div>
+																	</div>
+																	<div class="range_input_box">
+																		<div class="range-popover popover right">
+																			<div class="arrow"></div>
+																			<div class="popover-content">
+																				<input class="form-control input-lg text-center" type="number" min="100" max="10000" value="{{strikePriceSliderValue}}"/>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+												<button type="submit" class="btn btn-info btn-fill pull-right next-step" [disabled]="!step1.valid">Next</button>
+												<div class="clearfix"></div>
+											</form>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						</div>
+						<div class="tab-pane" role="tabpanel" id="step2" [ngStyle]="{'display':displayStepTwo}">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="card">
+										<div class="stepCount">2/3</div>
+										<div class="header">
+											<h4 class="title">Step 2</h4>
+										</div>
+										<div class="content">
+											<form (ngSubmit)="onSubmit2(step2)" #step2="ngForm">
+												<div class="row">
+													<div class="col-md-6">
+														<div class="form-group">
+															<label>Assets Offered</label>
+															<input type="number" class="form-control" placeholder="Assets Offered"  required (keypress)="take_special_char($event)"
+																ngModel name="assets_offered">
+														</div>
+													</div>
+													<div class="col-md-6">
+														<div class="form-group">
+															<label>Premium</label>
+															<input type="number" class="form-control" placeholder="Premium" required (keypress)="take_special_char($event)" ngModel name="premium">
+														</div>
+													</div>
+												</div>
+												<div class="row">
+													<div class="col-md-6">
+														<div class="form-group">
+															<label>Expiry Block</label>
+															<input type="number" class="form-control" [(ngModel)]="minBlockNumber" [min]="[minBlockNumber]" placeholder="Minimum Block Number + {{minBlockNumber}}" required 
+																ngModel name="expiryBlock">
+														</div>
+													</div>
+												</div>
+												<button type="submit" id="submit_two" class="btn btn-info btn-fill pull-right next-step" [disabled]="!step2.valid">Submit</button>
+												<button class="btn" (click)="backButton()" >Back</button>
+												<div class="clearfix"></div>
+											</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="tab-pane" role="tabpanel" id="step3" [ngStyle]="{'display':displayStepThree}">
+							<div class="last_step">
+								<h3 class="text-center">Ohh yeah! you finished all steps</h3>
+								<p class="text-center">Here is the list of your inputs. looking gooood!</p><br>
+								<table class="table table-hover">
+									<tr>
+										<th>Base Token</th>
+										<td>{{ base_token }}</td>
+									</tr>
+									<tr>
+										<th>Quote Token</th>
+										<td> {{ quote_token }} </td>
+									</tr>
+									<tr>
+										<th>Expiry Date</th>
+										<td> {{ blockTimestamp }} </td>
+									</tr>
+									<tr>
+										<th>Allowance</th>
+										<td> {{ strikePrice }} </td>
+									</tr>
+									<tr>
+										<th>ASSETS OFFERED</th>
+										<td> {{ assets_offered }} </td>
+									</tr>
+									<tr>
+										<th>PREMIUM</th>
+										<td>{{ premium }}</td>
+									</tr>
+									<tr>
+										<th>EXPIRY BLOCK</th>
+										<td> {{ expiryBlock }} </td>
+									</tr>
+								</table>
+							</div>
+						</div>
+						<div class="clearfix"></div>
+					</div>
+				</form>
+			</div>
+		</section>
+	</div>
 </div>

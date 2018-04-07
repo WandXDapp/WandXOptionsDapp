@@ -27,6 +27,7 @@ export class HomeComponent implements OnInit {
 	public userBalanceFormatted: any;
 	public currentAllowance: any;
 	public currentAllowanceFormatted: any;
+    public strikePriceSliderValue: number = 100;
 	
 	base_token: any = '';
 	base_tokenJSON: any;
@@ -67,7 +68,6 @@ export class HomeComponent implements OnInit {
 	errorBox: any;
 
 	faucetToken1: any;
-    public value=550;
 	
 	constructor( private apiCalls:ApicallsService, private contractsService: ContractsService ) {
 		
@@ -274,9 +274,9 @@ export class HomeComponent implements OnInit {
 		this.displayStepTwo = 'none';
 		this.displayStepOne = 'block';
 	}
-    changevalue(value){
-		console.log("called",value);
-		this.value=value
+	
+    changeStrikePriceSliderValue(strikePriceSliderValue){
+		this.strikePriceSliderValue = strikePriceSliderValue;
 	}
 
 }
