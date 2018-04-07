@@ -191,7 +191,7 @@ export class ContractsService {
 			tokenObj.methods.allowance(this._web3.eth.defaultAccount,  contractAddress).call().then((result) => {
 				resolve(result);
 			});
-		}) as any;
+		}) as number;
 	}
 
 	// To approve use of token to a perticular contract
@@ -557,8 +557,8 @@ class OptionWrapper {
 				this.strikePrice,
 				this.blockTimestamp
 			)
-			.send({}, (error, txHash) => { resolve(txHash); })
-			.catch((error) => { console.log("Error in createNewOption",error); resolve(null); });
+			.send({}, (error, txHash) => { return resolve(txHash); })
+			.catch((error) => { console.log("Error in createNewOption",error); return resolve(null); });
 		}) as string;
 		if(txHash == null)
 			return Promise.resolve(null);
@@ -570,7 +570,8 @@ class OptionWrapper {
 				transactionReceipt.blockNumber,
 				'LogOptionCreated'
 			);
-			return Promise.resolve(eventResponse._optionAddress);
+			this.optionAddress = eventResponse._optionAddress
+			return Promise.resolve(this.optionAddress);
 		}
 	}
 
@@ -679,9 +680,18 @@ class OptionWrapper {
 
 	// To approve use of token to a perticular contract
 	private async approveToken(tokenAddress, contractAddress, tokenCount): Promise<boolean> {
-		let balance = await this.getBalance(tokenAddress);
-		if(balance < tokenCount)
-			return Promise.reject(false);
+		
+		// If user does not have enough balance then reject
+		let balance = new BigNumber(await this.getBalance(tokenAddress));
+		if(balance.isLessThan(tokenCount))
+			return Promise.resolve(false);
+		
+		// If user already have allowance then return true
+		let allowance = new BigNumber(await this.getAllowance(tokenAddress, contractAddress));
+		if(tokenCount.isLessThan(allowance))
+			return Promise.resolve(true);
+		
+		// Send request for token approval
 		var txHash = await new Promise((resolve, reject) => {
 			var tokenObj = this.createContractObj(ierc20.abi, tokenAddress);
 			tokenObj.methods.approve( contractAddress, tokenCount )
@@ -697,7 +707,17 @@ class OptionWrapper {
 	private async getBalance(tokenAddress): Promise<number> {
 		return await new Promise((resolve, reject) => {
 			let tokenObj = this.createContractObj(ierc20.abi, tokenAddress);
-			tokenObj.methods.balanceOf(this.web3.eth.defaultAccount).call().then(function(result){
+			tokenObj.methods.balanceOf(this.web3.eth.defaultAccount).call().then((result) => {
+				resolve(result);
+			});
+		}) as number;
+	}
+
+	// To check if any contract has allowance of the token
+	private async getAllowance(tokenAddress, contractAddress): Promise<number> {		
+		return await new Promise((resolve, reject) => {
+			var tokenObj = this.createContractObj(ierc20.abi, tokenAddress);
+			tokenObj.methods.allowance(this.web3.eth.defaultAccount,  contractAddress).call().then((result) => {
 				resolve(result);
 			});
 		}) as number;

@@ -119,7 +119,7 @@
 																			<div class="range-track progress">
 																				<div class="range-track-bar progress-bar progress-bar-striped active progress-bar-primary" ms-css-width="value + &quot;%&quot;"></div>
 																			</div>
-																			<input class="range-control" type="range" min="100" max="10000"  ngModel name="strikePrice"  #ref (change)="changeStrikePriceSliderValue(ref.value)" />
+																			<input class="range-control" type="range" min="100" max="10000"  ngModel name="strikePrice"  #ref (change)="changeStrikePriceSliderValue(ref.value)" ms-duplex="value"/>
 																		</div>
 																	</div>
 																	<div class="range_input_box">
@@ -191,8 +191,8 @@
 						</div>
 						<div class="tab-pane" role="tabpanel" id="step3" [ngStyle]="{'display':displayStepThree}">
 							<div class="last_step">
-								<h3 class="text-center">Ohh yeah! you finished all steps</h3>
-								<p class="text-center">Here is the list of your inputs. looking gooood!</p><br>
+								<h3 class="text-center">Ohh yeah! You finished all steps</h3>
+								<p class="text-center">Here is the list of your inputs. Looking gooood!</p><br>
 								<table class="table table-hover">
 									<tr>
 										<th>Base Token</th>

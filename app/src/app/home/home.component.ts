@@ -233,16 +233,14 @@ export class HomeComponent implements OnInit {
 			this.premium,
 			this.expiryBlock
 		).then((result) => {
-			
 			this.displayWaitingBox = 'none';
-			this.displayStepTwo = 'none';
-			this.displayStepThree = 'block';
-
 			if (result === undefined || result === null) {
 				this.error_msg = "Unable to issue option at the moment"
 				this.displayErrorBox = 'block';
 			}
 			else {
+				this.displayStepTwo = 'none';
+				this.displayStepThree = 'block';
 				this.apiCalls.createNewOption(
 					this.contractsService.getUserAddress(),
 					this.optionAddress,
