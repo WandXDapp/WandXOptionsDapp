@@ -45,7 +45,6 @@ export class OptionDetailsComponent implements OnInit {
 	tradeOption() {
 		this.displayGif = 'block';
 		this.contractsService.tradeOption(this.assetToTrade).then((response) => {
-			console.log('tradeOption', response);
 			this.displayGif = 'none';
 			if(response === undefined || response === null) {
 				this.displayFail = 'block';
@@ -59,7 +58,7 @@ export class OptionDetailsComponent implements OnInit {
 	excerciseOption() {
 		this.displayGif = 'block';
 		this.contractsService.exerciseOption(this.assetToExcercise).then((result) => {
-			console.log('exerciseOption', result);
+			this.displayGif = 'none';
 			if (result === undefined || result === null) {
 				this.displayFail = 'block';
 			}else{
@@ -70,6 +69,7 @@ export class OptionDetailsComponent implements OnInit {
 	}
 
 	cancel_btn() {
+		this.displayGif = 'none';
 		this.displaySuccess = 'none';
 		this.displayFail = 'none';
 	}
