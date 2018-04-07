@@ -2,7 +2,7 @@
     <div class="popup-NotEnoughBalance">
         <div class="popup_header">Success</div>
         <div class="popup_content">
-            <div class="popup_sub">Yayy! Cration was successfull</div>
+            <div class="popup_sub">Yayy! Operation was successfull</div>
             <button class="btn btn-approve" (click)="cancel_btn()">Okay</button>
         </div>
     </div>
@@ -20,12 +20,12 @@
 
 <div class="popup-box" [ngStyle]="{'display':displayGif}">
     <div class="popup-gif">
-        <div class="popup_header">Please Wait!</div>
+        <div class="popup_header">Under Process!</div>
         <div class="popup_content">
             <div class="popup_sub">
                 <img src="../../assets/img/loader.gif" alt="Gif loader" class="gif-img">
             </div>
-            <div class="gif_footer">Under Process!</div>
+            <div class="gif_footer">Please confirm the request(s) in metamask</div>
         </div>
     </div>
 </div>

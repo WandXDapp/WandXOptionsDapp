@@ -560,6 +560,7 @@ class OptionWrapper {
 			.send({}, (error, txHash) => { return resolve(txHash); })
 			.catch((error) => { console.log("Error in createNewOption",error); return resolve(null); });
 		}) as string;
+
 		if(txHash == null)
 			return Promise.resolve(null);
 		else {
@@ -582,6 +583,8 @@ class OptionWrapper {
 		let approve = await this.approveToken(this.quoteToken, this.optionAddress, assetValue);
 		if(!approve)
 			return Promise.resolve(null);
+		
+			this.issueOptionTokenProxy = null;
 		let txHash = await new Promise((resolve, reject) => {
 			var optionObj = this.createContractObj(option.abi, this.optionAddress);
 			optionObj.methods.issueOption(
@@ -595,6 +598,7 @@ class OptionWrapper {
 			})
 			.catch((error) => { resolve(null); });
 		}) as string;
+
 		if(txHash == null)
 			return Promise.resolve(null);
 		else {
@@ -608,55 +612,73 @@ class OptionWrapper {
 	// Trade Option
 	public async tradeOption(): Promise<any> {
 		let multiplyFactor = new BigNumber(10).pow(parseInt(this.quoteTokenDecimal.toString())).toNumber();
-		let assetValue = this.tradeOptionAmount * this.premium * multiplyFactor;
+		let assetValue = new BigNumber(this.tradeOptionAmount * this.premium * multiplyFactor);
 		let approve = await this.approveToken(this.quoteToken, this.optionAddress, assetValue);
 		if(!approve)
 			return Promise.resolve(null);
-		var response = await new Promise((resolve, reject) => {			
+		
+			this.tradeOptionTimestamp = null;
+		let txHash = await new Promise((resolve, reject) => {			
 			var optionObj = this.createContractObj(option.abi, this.optionAddress);
 			optionObj.methods.tradeOption(
 				this.web3.eth.defaultAccount, 
 				this.tradeOptionAmount
 			)
-			.send()
-			.on('receipt', function(receipt){
-				this.trandOptionTimestamp = receipt.events.LogOptionsTrade.returnValues._timestamp;
-				resolve(this.trandOptionTimestamp);
+			.send({}, (error, txHash) => { resolve(txHash); })
+			.on('receipt', (receipt) => {
+				this.tradeOptionTimestamp = receipt.events.LogOptionsTrade.returnValues._timestamp;
 			})
-			.catch(function(error) {
-				console.error('Error in issuetradeOptionOption', error);
-				resolve(null);
-			});
-		}) as any;
-		return Promise.resolve(response);
+			.catch((error) => { console.error('Error in tradeOption', error); resolve(null); });
+		}) as string;
+
+		if(txHash == null)
+			return Promise.resolve(null);
+		else {
+			let isTransactionConfirmed = await this.isTransactionConfirmed(txHash);
+			if(this.tradeOptionTimestamp != null)
+				return Promise.resolve(this.tradeOptionTimestamp);
+			else return Promise.resolve("confirmed");
+		}
 	}
 
 	// Excersise Option
 	public async exerciseOption(): Promise<any> {
-		let approveAssets = await this.approveToken(this.optionAddress, this.optionAddress, this.exerciseOptionAmount);
+		
+		// Approve option assets to option contract
+		let assetValue = new BigNumber(this.exerciseOptionAmount);
+		let approveAssets = await this.approveToken(this.optionAddress, this.optionAddress, assetValue);
 		if(!approveAssets)
 			return Promise.resolve(null);
+		
+		// Approve base token assets to option proxy
 		let multiplyFactor = new BigNumber(10).pow(parseInt(this.baseTokenDecimal.toString())).toNumber();
-		let assetValue = this.exerciseOptionAmount * this.premium * multiplyFactor;
+		assetValue = new BigNumber(this.exerciseOptionAmount * this.premium * multiplyFactor);
 		let approveBaseToken = await this.approveToken(this.baseToken, this.issueOptionTokenProxy, assetValue);
 		if(!approveBaseToken)
 			return Promise.resolve(null);
-		var response = await new Promise((resolve, reject) => {
+		
+		// Send transaction to excercise option
+		this.exerciseOptionTimestamp = null;
+		let txHash = await new Promise((resolve, reject) => {
 			var optionObj = this.createContractObj(option.abi, this.optionAddress);
 			optionObj.methods.exerciseOption(
 				this.exerciseOptionAmount
 			)
-			.send()
-			.on('receipt', function(receipt){
+			.send({}, (error, txHash) => { resolve(txHash); })
+			.on('receipt', (receipt) => {
 				this.exerciseOptionTimestamp = receipt.events.LogOptionsExcercised.returnValues._timestamp;
-				resolve(this.exerciseOptionTimestamp);
 			})
-			.catch(function(error) {
-				console.error('Catch in exerciseOption', error);
-				resolve(null);
-			});
-		}) as boolean;
-		return Promise.resolve(response);
+			.catch((error) => { console.error('Error in exerciseOption', error); resolve(null); });
+		}) as string;
+
+		if(txHash == null)
+			return Promise.resolve(null);
+		else {
+			let isTransactionConfirmed = await this.isTransactionConfirmed(txHash);
+			if(this.exerciseOptionTimestamp != null)
+				return Promise.resolve(this.exerciseOptionTimestamp);
+			else return Promise.resolve("confirmed");
+		}
 	}
 
 	// Create an object of contract from abi and address
