@@ -66,3 +66,20 @@ new file data -> {"address":"0xf322BE32FEb8ac0Bd75216BcB8d07214251C4376"}
 Repeat the same for dummyTokenQuoteInfo.json file
 * cd ../..   (this should take you back into app folder, if not, adjust path accordingly so that you end up in app folder)
 * ng serve
+	
+# User Perspective
+## WandxOptions-Dapp Use
+To use this app you need to connect and login to metamask first. 
+There are 4 categories here.
+1st: Create Options
+	This section would create Options but to create option you would need faucets first that would be available in Facet 	     Lists(Section 4th).
+	## To create options you need to follow 3 steps 
+	# Step 1/3, you would need base token, qoute token, expiry date (min date is tomorrow) of that option and Allowance 	      (Min limit is 100).
+	# Step 2/3, You need to tell the Assets offered, Premium of it and block Number(it will be 100 more than your block 	      number) that option.
+	# Step 3/3 confirmation and detail of your inputs
+2nd: User profile
+	Just update your profile and basic information (Like Name, Email ETC).
+3rd: Active Options
+	Here you can see the list of your Active/Yours/expired options you can buy or sell some if you want.
+4th: Faucet Lists
+	as mentioned before you can buy faucets for any token here that would be needed in making Options.
