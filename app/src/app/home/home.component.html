@@ -111,29 +111,36 @@
 													</div>
 													<div class="col-md-6">
 														<div class="form-group">
+															<label>Strike Price</label>
+															<input type="number" class="form-control" placeholder="Strike Price"  required (keypress)="take_special_char($event)"
+																ngModel name="strikePrice">
+														</div>
+													</div>
+													<!-- <div class="col-md-6">
+														<div class="form-group">
 															<div data-role="rangeslider">
-																<label for="price-min">Allowance:</label>
+																<label for="price-min">Strike Price:</label>
 																<div class="range row" ms-controller="range-primary">
 																	<div class="col-xs-7 col-sm-8">
 																		<div class="range-container">
 																			<div class="range-track progress">
 																				<div class="range-track-bar progress-bar progress-bar-striped active progress-bar-primary" ms-css-width="value + &quot;%&quot;"></div>
 																			</div>
-																			<input class="range-control" type="range" min="100" max="10000"  ngModel name="strikePrice"  #ref (change)="changeStrikePriceSliderValue(ref.value)" ms-duplex="value"/>
+																			<input class="range-control" type="range" min="0" max="10000"  ngModel name="strikePrice"  #ref (change)="changeStrikePriceSliderValue(ref.value)" ms-duplex="value"/>
 																		</div>
 																	</div>
 																	<div class="range_input_box">
 																		<div class="range-popover popover right">
 																			<div class="arrow"></div>
 																			<div class="popover-content">
-																				<input class="form-control input-lg text-center" type="number" min="100" max="10000" value="{{strikePriceSliderValue}}"/>
+																				<input class="form-control input-lg text-center" type="number" min="0" max="10000" value="{{strikePriceSliderValue}}"/>
 																			</div>
 																		</div>
 																	</div>
 																</div>
 															</div>
 														</div>
-													</div>
+													</div> -->
 												</div>
 												<button type="submit" class="btn btn-info btn-fill pull-right next-step" [disabled]="!step1.valid">Next</button>
 												<div class="clearfix"></div>

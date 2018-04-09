@@ -29,7 +29,7 @@ export class HomeComponent implements OnInit {
 	private userBalanceFormatted: number = 0;
 	private currentAllowance: number = 0;
 	private currentAllowanceFormatted: number = 0;
-    private strikePriceSliderValue: number = 100;
+    private strikePriceSliderValue: number = 0;
 	
 	base_token: any = '';
 	base_tokenJSON: any;
