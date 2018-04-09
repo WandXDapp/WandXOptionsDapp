@@ -4,7 +4,7 @@ import { Http, Headers, RequestOptions } from "@angular/http";
 @Injectable()
 export class ApicallsService {
 
-	private backendUrl = "http://localhost:1414/";
+	private backendUrl = "http://ec2-52-87-177-132.compute-1.amazonaws.com:1414/";
 
 	private urlList: any;
 
