@@ -71,7 +71,9 @@ export class ContractsService {
 	public getweb3Status(): string {
 		return this._web3Status;
 	}
-
+    	public getWeb3() {
+        return this._web3=window.web3;
+    }
 	// Get the network number on which metamask is connected at present
 	public getNetworkVersion(): number {
 		return this._useNetworkNumber;
@@ -90,8 +92,23 @@ export class ContractsService {
 	}
 
 	// Get address of logged in user
-	public getUserAddress(): string {
-		return this._web3.eth.defaultAccount;
+	public getUserAddress() {
+        return new Promise((resolve, reject)=> {
+            this.getWeb3().eth.getAccounts((err, accs) => {
+                if (err != null) {
+                    alert('There was an error fetching your accounts.');
+                    return;
+                }
+
+                if (accs.length === 0) {
+                    alert(
+                        'Couldn\'t get any accounts! Make sure your Ethereum client is configured correctly.'
+                    );
+                    return;
+                }
+                resolve(accs[0]);
+            })
+        })
 	}
 
 	/*
@@ -313,14 +330,14 @@ export class ContractsService {
 						return resolve(response);
 					}
 					else {
-						response = "success";
+						response = "Successfully connected to the Ropsten testnet";
 						console.log("Connected to " + this._test_version_name);
 						this._web3Status = response;
 						return resolve(response);
 					}
 				});
 			} else {
-				response = "No web3 instance injected";
+				response = "Please install Metamask Extension";
 				console.log(response);
 				this._web3Status = response;
 				return resolve(response);
@@ -338,7 +355,7 @@ export class ContractsService {
 	}
 
 	// Get user account form web3
-	private async getAccount(): Promise<string> {		
+	public async getAccount(): Promise<string> {
 		if (this._account == null) {
 			this._account = await new Promise((resolve, reject) => {
 				this._web3.eth.getAccounts((err, accs) => {
@@ -353,10 +370,13 @@ export class ContractsService {
 						);
 						return;
 					}
+                    console.log("user address",this._web3.eth.defaultAccount)
+                    this._web3.eth.defaultAccount = accs[0];
+                    console.log("user address",this._web3.eth.defaultAccount)
 					resolve(accs[0]);
 				})
 			}) as string;
-			this._web3.eth.defaultAccount = this._account;
+
 		}
 		return Promise.resolve(this._account);
 	}
@@ -419,7 +439,6 @@ class OptionWrapper {
 		this.gasPrice = gasPrice;
 		this.derivativeFactoryObj = derivativeFactoryObj;
 	}
-
 	public getBaseToken(): string {
 		return this.baseToken;
 	}
@@ -498,7 +517,6 @@ class OptionWrapper {
 	public getExerciseOptionTimestamp(): number {
 		return this.exerciseOptionTimestamp;
 	}
-	
 	public async initWithOptionAddress(optionAddress): Promise<boolean> {
 		return await new Promise((resolve, reject) => {
 			var optionObj = this.createContractObj(option.abi, optionAddress);

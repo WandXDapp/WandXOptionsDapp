@@ -42,8 +42,11 @@ export class UserComponent implements OnInit {
 	}
 	
 	ngOnInit() {
+		let _thiss=this
 		this.contractsService.initWeb3().then((result) => {
-			this.userAddress = this.contractsService.getUserAddress();
+            this.contractsService.getUserAddress().then(function(result){
+                _thiss.userAddress =result.toString();
+            });
 			this.apiCalls.isAddressPresent(this.userAddress).then((result) => {
 				if(result){
 					this.apiCalls.getUserProfile(this.userAddress).then((userProfile) => {

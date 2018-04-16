@@ -40,31 +40,31 @@
 <div class="container" style="width:100%">
 	<div class="row">
 		<section>
-			<div class="wizard" style="height: 5rem; padding-bottom: 2rem;">
+			<div class="wizard" style="min-height: 7rem;padding: 10px;">
 				<div class="row" style="width:100%">
-					<div class="col-md-2 barComponent" >
+					<div class="col-md-4 barComponent" >
 						<div style="text-transform: capitalize;">
 							Web3 Connection<br>{{web3Status}}
 						</div>
 					</div>
-					<div class="col-md-5 barComponent" >
+					<div class="col-md-2 barComponent" >
 						<div>
-							Default Address<br>{{userAddress}}
+							Metamask address<p style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">{{userAddress}}</p>
 						</div>
 					</div>
 					<div class="col-md-2 barComponent" >
 						<div>
-							Balance<br>{{userBalanceFormatted}}
+							WAND Balance<br>{{userBalanceFormatted}}
 						</div>
 					</div>
 					<div class="col-md-2 barComponent" >
 						<div>
-							Allowance<br>{{currentAllowanceFormatted}}
+							WAND Allowance<br>{{currentAllowanceFormatted}}
 						</div>
 					</div>
-					<div class="col-md-1 barComponent" >
+					<div class="col-md-2 barComponent" >
 						<div>
-							Fee<br>{{contractFeeFormatted}}
+							Trx Fee in WAND<br>{{contractFeeFormatted}}
 						</div>
 					</div>
 				</div>
@@ -87,7 +87,7 @@
 													<div class="col-md-6">
 														<div class="form-group">
 															<label>Base Token</label>
-															<select class="form-control" id="baseTokenName" ngModel name="base_token" required>
+															<select class="form-control" id="baseTokenName" ngModel name="base_token" required  #ref (change)="changeBaseToken(ref.value)">
 																<option *ngFor="let token of tokenList">{{ token.name }}</option>
 															</select>
 														</div>
@@ -95,13 +95,12 @@
 													<div class="col-md-6">
 														<div class="form-group">
 															<label>Quote Token</label>
-															<select class="form-control" id="quoteTokenName" ngModel name="quote_token" required>
+															<select class="form-control" id="quoteTokenName" ngModel name="quote_token" required #refs (change)="changeQuoteToken(refs.value)">
 																<option *ngFor="let token of tokenList">{{ token.name }}</option>
 															</select>
 														</div>
 													</div>
 												</div>
-						
 												<div class="row">
 													<div class="col-md-6">
 														<div class="form-group">
@@ -144,6 +143,26 @@
 												</div>
 												<button type="submit" class="btn btn-info btn-fill pull-right next-step" [disabled]="!step1.valid">Next</button>
 												<div class="clearfix"></div>
+												<div class="row" >
+													<div class="col-md-3" *ngIf="usdBaseValue">
+                                                        <b>Base Token</b>
+														<p>Price in USD <b>{{usdBaseValue}} USD</b></p>
+														<p>Price in ETH <b>{{ethBaseValue}} ETH</b></p>
+													</div>
+                                                    <div class="col-md-3"  *ngIf="usdQuoteValue" >
+                                                        <b>Quote Token</b>
+														<p>Price in USD <b>{{usdQuoteValue}} USD</b></p>
+														<p>Price in ETH <b>{{ethQuoteValue}} ETH</b></p>
+													</div>
+												</div>
+                                                <div class="row">
+                                                    <div class="col-ms-12">
+                                                        <div *ngIf="usdQuoteValue">
+                                                            <charts ></charts>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
 											</form>
 										</div>
 									</div>
@@ -198,8 +217,8 @@
 						</div>
 						<div class="tab-pane" role="tabpanel" id="step3" [ngStyle]="{'display':displayStepThree}">
 							<div class="last_step">
-								<h3 class="text-center">Ohh yeah! You finished all steps</h3>
-								<p class="text-center">Here is the list of your inputs. Looking gooood!</p><br>
+								<h3 class="text-center">Your Put Option is successfully created</h3>
+								<p class="text-center">Find below the details</p><br>
 								<table class="table table-hover">
 									<tr>
 										<th>Base Token</th>
@@ -211,22 +230,22 @@
 									</tr>
 									<tr>
 										<th>Expiry Date</th>
-										<td> {{ blockTimestamp }} </td>
+										<td> {{ blockTimestamp | date:'yyyy-MM-dd' }} </td>
 									</tr>
 									<tr>
-										<th>Allowance</th>
+										<th>{{ base_token }} Allowance</th>
 										<td> {{ strikePrice }} </td>
 									</tr>
 									<tr>
-										<th>ASSETS OFFERED</th>
+										<th>Assets Offered</th>
 										<td> {{ assets_offered }} </td>
 									</tr>
 									<tr>
-										<th>PREMIUM</th>
+										<th>Premium</th>
 										<td>{{ premium }}</td>
 									</tr>
 									<tr>
-										<th>EXPIRY BLOCK</th>
+										<th>Expiry Block</th>
 										<td> {{ expiryBlock }} </td>
 									</tr>
 								</table>

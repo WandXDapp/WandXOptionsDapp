@@ -17,7 +17,7 @@ select.ng-invalid.ng-touched{
 }
 
 .wizard {
-    height: 76vh;
+    min-height: 76vh;
     margin: 20px auto;
     padding-bottom: 3rem;
     background: #fff;

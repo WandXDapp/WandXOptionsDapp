@@ -1,9 +1,11 @@
 import { ApicallsService } from '../services/apicalls.service';
 import { ContractsService } from '../services/contracts.service';
+import { ChartService } from '../services/chart.service';
 import { Component, OnInit } from '@angular/core';
 import { LocationStrategy, PlatformLocation, Location } from '@angular/common';
 import { LegendItem, ChartType } from '../lbd/lbd-chart/lbd-chart.component';
 import { NgForm } from '@angular/forms';
+import {CryptocompareService} from "../services/cryptocompare.service";
 
 var BigNumber = require('bignumber.js');
 
@@ -69,8 +71,13 @@ export class HomeComponent implements OnInit {
 	displayStepOne: any;
 	displayStepTwo: any;
 	displayStepThree: any;
-	
-	constructor( private apiCalls:ApicallsService, private contractsService: ContractsService ) {
+
+	usdBaseValue:any;
+	ethBaseValue:any;
+    usdQuoteValue:any;
+	ethQuoteValue:any;
+
+	constructor(private chartService:ChartService, private apiCalls:ApicallsService, private contractsService: ContractsService,private cryptocompareService: CryptocompareService ) {
 		
 		this.display = 'none';
 		this.displayWaitingBox = 'none';
@@ -112,32 +119,36 @@ export class HomeComponent implements OnInit {
 	}
 
 	ngOnInit() {
+		let _thiss=this;
 		this.contractsService.initWeb3().then((result) => {
-			
+            console.log("track web3")
 			let multiplyFactor = new BigNumber(10).pow(18).toNumber();
 			this.web3Status = this.contractsService.getweb3Status();
-
+             this.contractsService.getUserAddress().then(function(result){
+                 _thiss.userAddress =result.toString();
+			});
 			if(!result){
 				return;
 			}
+			console.log("track web3")
 
-			this.userAddress = this.contractsService.getUserAddress();			
-			
+
 			this.contractsService.getBalance(this.wandxTokenAddress).then((balance: number) => {
+                console.log("track web3")
 				this.userBalance = balance;
 				this.userBalanceFormatted = balance / multiplyFactor;
 			});
-	
+
 			this.contractsService.getWandxAllowance().then((allowance) => {
 				this.currentAllowance = allowance;
 				this.currentAllowanceFormatted = allowance / multiplyFactor;
 			});
-	
+
 			this.contractsService.getContractFee().then((contractFee: number) => {
 				this.contractFee = contractFee;
 				this.contractFeeFormatted = contractFee / multiplyFactor;
 			});
-	
+
 			this.contractsService.getBlockNumber().then((blockNumber: number) => {
 				this.minBlockNumber = blockNumber + 50;
 			});
@@ -294,6 +305,26 @@ export class HomeComponent implements OnInit {
 	
     changeStrikePriceSliderValue(strikePriceSliderValue){
 		this.strikePriceSliderValue = strikePriceSliderValue;
+	}
+    changeBaseToken(token){
+		this.chartService.getData(token,"base");
+        console.log(token);
+		this.cryptocompareService.getPriceDetail(token).then((result)=>{
+            console.log(result);
+            this.usdBaseValue=result['USD'];
+            this.ethBaseValue=result['ETH'];
+		})
+
+	}
+    changeQuoteToken(token){
+        console.log(token);
+        this.chartService.getData(token,"quote");
+		this.cryptocompareService.getPriceDetail(token).then((result)=>{
+            console.log(result);
+            this.usdQuoteValue=result['USD'];
+            this.ethQuoteValue=result['ETH'];
+		})
+
 	}
 
 }
