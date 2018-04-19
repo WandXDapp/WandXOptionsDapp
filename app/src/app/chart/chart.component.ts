@@ -1,4 +1,4 @@
-import {Component, OnInit, AfterViewInit} from '@angular/core';
+import {Component, OnInit, AfterViewInit,OnDestroy} from '@angular/core';
 import {AmChartsService, AmChart} from '@amcharts/amcharts3-angular';
 import {ChartService} from '../services/chart.service';
 import {Subscription} from 'rxjs/Subscription';
@@ -8,7 +8,7 @@ import {textDef} from '@angular/core/src/view';
     selector: 'charts',
     templateUrl: './chart.component.html'
 })
-export class ChartComponent implements OnInit {
+export class ChartComponent implements OnInit,OnDestroy {
     public chart: AmChart;
     chartData1 = [];
     baseToken: Subscription;
@@ -18,8 +18,8 @@ export class ChartComponent implements OnInit {
     public tokenBaseName: any;
     public tokenQuoteName: any;
     theme: any;
-    basedata: any;
-    Quotedata: any;
+    basedata=[];
+    Quotedata=[];
     chartData2 = [];
     chartData3 = [];
     chartData4 = [];
@@ -64,7 +64,7 @@ export class ChartComponent implements OnInit {
     }
 
     generateChartData() {
-        if (this.basedata) {
+        if (this.basedata.length>0) {
             this.dataSets = [];
             let temp = this.basedata;
             this.chartData1 = [];
@@ -90,7 +90,7 @@ export class ChartComponent implements OnInit {
                     "dataProvider": this.chartData1,
                     "categoryField": "date",
                 })
-                if (this.Quotedata) {
+                if (this.Quotedata.length>0) {
                     console.log("called Quotedata 1")
                     let temp = this.Quotedata;
                     this.chartData2 = [];
@@ -166,6 +166,16 @@ export class ChartComponent implements OnInit {
 
 
     }
+    ngOnDestroy(): void {
+        console.log("destroying login component");
+        this.baseToken.unsubscribe();
+        this.quoteToken.unsubscribe();
+        this.tokenname.unsubscribe();
+        this.tokenQuotename.unsubscribe();
+        this.basedata=[];
+        this.Quotedata=[];
+    }
+
 
 
 }

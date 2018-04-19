@@ -45,12 +45,14 @@ export class UserComponent implements OnInit {
 		let _thiss=this
 		this.contractsService.initWeb3().then((result) => {
             this.contractsService.getUserAddress().then(function(result){
+            	console.log("result",result)
                 _thiss.userAddress =result.toString();
             });
 			this.apiCalls.isAddressPresent(this.userAddress).then((result) => {
 				if(result){
 					this.apiCalls.getUserProfile(this.userAddress).then((userProfile) => {
 						this.userProfile = userProfile;
+                        console.log(this.userProfile)
 					});
 				}
 				else {
@@ -58,6 +60,7 @@ export class UserComponent implements OnInit {
 						if(result){
 							this.apiCalls.getUserProfile(this.userAddress).then((userProfile) => {
 								this.userProfile = userProfile;
+								console.log(this.userProfile)
 							});
 						}
 					});

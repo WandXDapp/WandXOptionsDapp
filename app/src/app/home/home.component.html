@@ -86,7 +86,10 @@
 												<div class="row">
 													<div class="col-md-6">
 														<div class="form-group">
-															<label>Base Token</label>
+															<label tooltip="What is Base token ?"
+																   [tooltipDisabled]="false"
+																   [tooltipAnimation]="true"
+																   tooltipPlacement="top">Base Token</label>
 															<select class="form-control" id="baseTokenName" ngModel name="base_token" required  #ref (change)="changeBaseToken(ref.value)">
 																<option *ngFor="let token of tokenList">{{ token.name }}</option>
 															</select>
@@ -94,7 +97,10 @@
 													</div>
 													<div class="col-md-6">
 														<div class="form-group">
-															<label>Quote Token</label>
+															<label tooltip="What is Quote token ?"
+																   [tooltipDisabled]="false"
+																   [tooltipAnimation]="true"
+																   tooltipPlacement="top">Quote Token</label>
 															<select class="form-control" id="quoteTokenName" ngModel name="quote_token" required #refs (change)="changeQuoteToken(refs.value)">
 																<option *ngFor="let token of tokenList">{{ token.name }}</option>
 															</select>
@@ -142,8 +148,9 @@
 													</div> -->
 												</div>
 												<button type="submit" class="btn btn-info btn-fill pull-right next-step" [disabled]="!step1.valid">Next</button>
+											</form>
 												<div class="clearfix"></div>
-												<div class="row" >
+												<div class="row"  style="margin-top: 20px;">
 													<div class="col-md-3" *ngIf="usdBaseValue">
                                                         <b>Base Token</b>
 														<p>Price in USD <b>{{usdBaseValue}} USD</b></p>
@@ -154,16 +161,21 @@
 														<p>Price in USD <b>{{usdQuoteValue}} USD</b></p>
 														<p>Price in ETH <b>{{ethQuoteValue}} ETH</b></p>
 													</div>
+													<div class="col-md-6" *ngIf="usdQuoteValue"  >
+                                                        <div class="pull-right">
+															<button class="btn btn-approve" (click)="getMin()">1m</button>
+															<button class="btn btn-approve" (click)="getHrs()">1h</button>
+															<button class="btn btn-approve" (click)="getDays()">1d</button>
+														</div>
+													</div>
 												</div>
                                                 <div class="row">
                                                     <div class="col-ms-12">
-                                                        <div *ngIf="usdQuoteValue">
+                                                        <div >
                                                             <charts ></charts>
                                                         </div>
                                                     </div>
                                                 </div>
-
-											</form>
 										</div>
 									</div>
 								</div>

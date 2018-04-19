@@ -26,15 +26,15 @@ export class ChartService {
         this.tokenData = [];
     }
 
-    getData(token: any, type:string) {
+    getData(token: any, type: string) {
         var reqURL = 'https://min-api.cryptocompare.com/data/histohour?aggregate=6&e=CCCAGG&extraParams=CryptoCompare&fsym=' + token + '&limit=120&tryConversion=false&tsym=ETH';
         return this.http.get(reqURL)
             .subscribe(
                 data => {
-                    if(type=='base'){
+                    if (type == 'base') {
                         this._tokenBaseName.next(token);
                         this._chartBaseData.next(data.json());
-                    }else{
+                    } else {
                         this._tokenQuoteName.next(token);
                         this._chartQuoteData.next(data.json());
                     }
@@ -42,4 +42,35 @@ export class ChartService {
                 });
     }
 
+    getMinData(token: any, type: string) {
+        var reqURL = 'https://min-api.cryptocompare.com/data/histominute?aggregate=1&e=CCCAGG&extraParams=CryptoCompare&fsym=' + token + '&limit=120&tryConversion=false&tsym=ETH';
+        return this.http.get(reqURL)
+            .subscribe(
+                data => {
+                    if (type == 'base') {
+                        this._tokenBaseName.next(token);
+                        this._chartBaseData.next(data.json());
+                    } else {
+                        this._tokenQuoteName.next(token);
+                        this._chartQuoteData.next(data.json());
+                    }
+
+                });
+    }
+
+    gethoursData(token: any, type: string) {
+        var reqURL = 'https://min-api.cryptocompare.com/data/histominute?aggregate=6&e=CCCAGG&extraParams=CryptoCompare&fsym=' + token + '&limit=120&tryConversion=false&tsym=ETH';
+        return this.http.get(reqURL)
+            .subscribe(
+                data => {
+                    if (type == 'base') {
+                        this._tokenBaseName.next(token);
+                        this._chartBaseData.next(data.json());
+                    } else {
+                        this._tokenQuoteName.next(token);
+                        this._chartQuoteData.next(data.json());
+                    }
+
+                });
+    }
 }

@@ -76,6 +76,9 @@ export class HomeComponent implements OnInit {
 	ethBaseValue:any;
     usdQuoteValue:any;
 	ethQuoteValue:any;
+	trackChart=false;
+	baseTokenName:any;
+	quoteTokenName:any;
 
 	constructor(private chartService:ChartService, private apiCalls:ApicallsService, private contractsService: ContractsService,private cryptocompareService: CryptocompareService ) {
 		
@@ -309,6 +312,7 @@ export class HomeComponent implements OnInit {
     changeBaseToken(token){
 		this.chartService.getData(token,"base");
         console.log(token);
+        this.baseTokenName=token;
 		this.cryptocompareService.getPriceDetail(token).then((result)=>{
             console.log(result);
             this.usdBaseValue=result['USD'];
@@ -318,13 +322,27 @@ export class HomeComponent implements OnInit {
 	}
     changeQuoteToken(token){
         console.log(token);
-        this.chartService.getData(token,"quote");
+        this.quoteTokenName=token
+        this.trackChart=true;
 		this.cryptocompareService.getPriceDetail(token).then((result)=>{
             console.log(result);
+            this.chartService.getData(token,"quote");
             this.usdQuoteValue=result['USD'];
             this.ethQuoteValue=result['ETH'];
 		})
 
+	}
+    getMin(){
+        this.chartService.getMinData(this.baseTokenName,"base");
+        this.chartService.getMinData(this.quoteTokenName,"quote");
+	}
+    getHrs(){
+        this.chartService.gethoursData(this.baseTokenName,"base");
+        this.chartService.gethoursData(this.quoteTokenName,"quote");
+	}
+    getDays(){
+        this.chartService.getData(this.baseTokenName,"base");
+        this.chartService.getData(this.quoteTokenName,"quote");
 	}
 
 }

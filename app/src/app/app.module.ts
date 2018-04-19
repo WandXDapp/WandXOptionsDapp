@@ -7,7 +7,7 @@ import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpModule} from '@angular/http';
 import {RouterModule} from '@angular/router';
-
+import {TooltipModule} from "ngx-tooltip";
 import {AppRoutingModule} from './app.routing';
 import {NavbarModule} from './shared/navbar/navbar.module';
 import {FooterModule} from './shared/footer/footer.module';
@@ -55,7 +55,8 @@ import { AmChartsModule } from "@amcharts/amcharts3-angular";
         RouterModule,
         AppRoutingModule,
         FlashMessagesModule.forRoot(),
-        AmChartsModule
+        AmChartsModule,
+        TooltipModule
     ],
     providers: [ValidateService, AuthService, AuthGuard, CryptocompareService,ChartService],
     bootstrap: [AppComponent]

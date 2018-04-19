@@ -27,6 +27,7 @@ const networkMap = {
 
 declare namespace web3Functions{
 	export function initializeWeb3();
+	export function initializeWeb3WithConstrucor();
 }
 
 declare namespace web3FunctionsInfura{
@@ -303,45 +304,60 @@ export class ContractsService {
 		this._web3Status = null;
 		
 		let initStatus = await new Promise((resolve, reject) => {
+            web3Functions.initializeWeb3();
 			let web3 = window.web3;
+            web3.eth.getAccounts((err, accounts) => {
+                if (err != null) {
+                    console.log('There was an error fetching your accounts.');
+                    reject('There was an error fetching your accounts.');
+                }
+                else if (accounts.length === 0) {
+                    console.log('Couldn\'t get any accounts! Make sure your Ethereum client is configured correctly.');
+                    reject('Couldn\'t get any accounts! Make sure your Ethereum client is configured correctly.');
+                }
+                else{
+                	console.log(accounts)
+                    web3.eth.defaultAccount = accounts[0];
+                    if (typeof web3 !== 'undefined' && web3.currentProvider && web3.currentProvider.isMetaMask) {
+                        console.log("Mist/MetaMask's detected!");
+                        console.log("defaultAccount",web3.eth.defaultAccount);
+                        if (!web3.eth.defaultAccount) {
+                            response = "Please unlock MetaMask!";
+                            console.log(response);
+                            this._web3Status = response;
+                            return resolve(response);
+                        }
+
+                        web3 = web3Functions.initializeWeb3WithConstrucor();
+                        this._web3 = web3;
+
+                        web3.eth.net.getId((err, version) => {
+                            this._test_version = version;
+                            this._test_version_name = networkMap[this._test_version];
+                            if (this._test_version !== this._useNetworkNumber) {
+                                response = 'Please connect to the Ropsten network';
+                                console.log(response);
+                                this._web3Status = response;
+                                return resolve(response);
+                            }
+                            else {
+                                response = "Successfully connected to the Ropsten testnet";
+                                console.log("Connected to " + this._test_version_name);
+                                this._web3Status = response;
+                                return resolve(response);
+                            }
+                        });
+                    } else {
+                        response = "Please install Metamask Extension";
+                        console.log(response);
+                        this._web3Status = response;
+                        return resolve(response);
+                    }
+                }
+            });
 			let response = null;
 
 			// Checking if Web3 has been injected by the browser (Mist/MetaMask)
-			if (typeof web3 !== 'undefined' && web3.currentProvider && web3.currentProvider.isMetaMask) {
-				console.log("Mist/MetaMask's detected!");
-
-				if (!web3.eth.defaultAccount) {
-					response = "Please unlock MetaMask!";
-					console.log(response);
-					this._web3Status = response;
-					return resolve(response);
-				}
-
-				web3 = web3Functions.initializeWeb3();
-				this._web3 = web3;
-				
-				web3.eth.net.getId((err, version) => {
-					this._test_version = version;
-					this._test_version_name = networkMap[this._test_version];
-					if (this._test_version !== this._useNetworkNumber) {
-						response = 'Please connect to the Ropsten network';
-						console.log(response);
-						this._web3Status = response;
-						return resolve(response);
-					}
-					else {
-						response = "Successfully connected to the Ropsten testnet";
-						console.log("Connected to " + this._test_version_name);
-						this._web3Status = response;
-						return resolve(response);
-					}
-				});
-			} else {
-				response = "Please install Metamask Extension";
-				console.log(response);
-				this._web3Status = response;
-				return resolve(response);
-			}
 		}) as string;
 
 		if(initStatus == 'success'){

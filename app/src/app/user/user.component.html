@@ -53,18 +53,6 @@
                     <div class="content">
                         <form (ngSubmit)="updateUserProfile(profile)" #profile="ngForm">
                             <div class="row">
-                                <div class="col-md-5">
-                                    <div class="form-group">
-                                        <label>Company *</label>
-                                        <input type="text" class="form-control" name="company" placeholder="Company" required [(ngModel)]="userProfile.company">
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label>Username *</label>
-                                        <input type="text" class="form-control" name="username" placeholder="Username" [(ngModel)]="userProfile.username" required>
-                                    </div>
-                                </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Email address *</label>
@@ -92,40 +80,12 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label>Metamask Address</label>
-                                        <input type="text" class="form-control" name="address" placeholder="Home Address" [(ngModel)]="userProfile.address">
+                                        <input type="text" class="form-control" name="address"  placeholder="Home Address" [(ngModel)]="userProfile.address">
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label>City</label>
-                                        <input type="text" class="form-control" name="city" placeholder="City" [(ngModel)]="userProfile.city">
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label>Country</label>
-                                        <input type="text" class="form-control" name="country" placeholder="Country" [(ngModel)]="userProfile.country">
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label>Postal Code</label>
-                                        <input type="number" class="form-control" name="pincode" placeholder="ZIP Code" [(ngModel)]="userProfile.pincode">
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label>About Me</label>
-                                        <textarea rows="5" class="form-control" name="aboutMe" placeholder="Here can be your description" [(ngModel)]="userProfile.aboutMe"></textarea>
-                                    </div>
-                                </div>
-                            </div>
                             <button type="submit" class="btn btn-info btn-fill pull-right" style="background-image: -webkit-gradient(linear,left top,left bottom,from(#382673),to(#682382)); border-color:#682382;">Update Profile</button>
                             <div class="clearfix"></div>
                         </form>
