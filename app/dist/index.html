@@ -1,0 +1,14 @@
+<!doctype html><html><head><base href="/"><meta charset="utf-8"/><link rel="icon" type="image/png" href="assets/img/WANDX.png"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/><meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" name="viewport"/><meta name="viewport" content="width=device-width"/><title>WandX</title><!-- Bootstrap core CSS	 --><link href="assets/css/bootstrap.min.css" rel="stylesheet"/><!-- WEB3	 --><script src="assets/web3/web3.wrapper.js"></script><script src="https://www.amcharts.com/lib/3/amcharts.js"></script><script src="https://www.amcharts.com/lib/3/serial.js"></script><script src="https://www.amcharts.com/lib/3/amstock.js"></script><link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all"/><script src="https://www.amcharts.com/lib/3/themes/light.js"></script><!-- Animation library for notifications   --><link href="assets/css/animate.min.css" rel="stylesheet"/><!--  Light Bootstrap Table core CSS	--><link href="assets/css/light-bootstrap-dashboard.css" rel="stylesheet"/><!--  CSS for Demo Purpose, don't include it in your project	 --><link href="assets/css/demo.css" rel="stylesheet"/><script id="jQueryScript" src="//code.jquery.com/jquery-1.11.1.min.js"></script><!--	 Fonts and icons	 --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet"><link href="assets/css/pe-icon-7-stroke.css" rel="stylesheet"/><script type="text/javascript" src="assets/js/web3.min.js"></script><script type="text/javascript" id="testScript" src="//cdn.staticfile.org/avalon.js/1.3.4/avalon.modern.min.js"></script><link href="styles.6856c41726c340f671b0.bundle.css" rel="stylesheet"/></head><body><app-root><div id="loader"><img src="assets/img/loader-preview.svg" alt="loading"></div></app-root><script type="text/javascript" src="inline.31e1fb380eb7cf3d75b1.bundle.js"></script><script type="text/javascript" src="polyfills.5066f4825bd8a1321d3b.bundle.js"></script><script type="text/javascript" src="scripts.522ea3a0192cdddabad6.bundle.js"></script><script type="text/javascript" src="vendor.7a37f109f180feae2805.bundle.js"></script><script type="text/javascript" src="main.fc0c9f8cbc06c10e9968.bundle.js"></script></body><script>(function () {
+		["primary", "success", "danger", "warning", "info"].forEach(function (type) {
+			return avalon.define({
+				$id: `range-${type}`,
+				// value: Math.round(Math.random() * 10000),
+				value: 0,
+				setValue: function (e) {
+					e.preventDefault();
+					// Fix the range won't update the value in IE
+					return (this.value = this.value);
+				}
+			});
+		});
+	}.call(this));</script></html>
