@@ -23,7 +23,7 @@ module.exports = {
 			"accessLogFile": "app_access.log",
 			"errorLogFile": "app_error.log",
 			"logDirectory": "./logs_dev",
-			"mongodb": "mongodb://localhost/node-2fa"
+			"mongodb": "mongodb+srv://sangramsam:B1NHROWhyhaVMKJ3@wandxoption-rbiqu.mongodb.net/test?retryWrites=true"
 		},
 		"production": {
 			"sessionName": "wandx_prod",
@@ -39,7 +39,7 @@ module.exports = {
 			"errorLogFile": "app_error.log",
 			"BUCKET_NAME": "kyc-papers",
 			"logDirectory": "./logs_prod",
-			"mongodb": "mongodb://localhost/node-2fa"
+            "mongodb": "mongodb+srv://sangramsam:B1NHROWhyhaVMKJ3@wandxoption-rbiqu.mongodb.net/test?retryWrites=true"
 		}
 	}
 }

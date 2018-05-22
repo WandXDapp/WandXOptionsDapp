@@ -127,6 +127,7 @@ export class HomeComponent implements OnInit {
             console.log("track web3")
 			let multiplyFactor = new BigNumber(10).pow(18).toNumber();
 			this.web3Status = this.contractsService.getweb3Status();
+			console.log("this.web3Status",this.contractsService.getweb3Status());
              this.contractsService.getUserAddress().then(function(result){
                  _thiss.userAddress =result.toString();
 			});
@@ -159,13 +160,6 @@ export class HomeComponent implements OnInit {
 	}
 
 	onSubmit1(form: HTMLFormElement) {
-
-		if(this.web3Status != 'success'){
-			this.error_msg = 'Metamask is not connected yet. Please reload the page and try again.';
-			this.displayErrorBox = 'block';
-			return;
-		}
-
 		this.error_msg = '';
 		this.displayApprovalBox = 'block';
 
@@ -212,6 +206,8 @@ export class HomeComponent implements OnInit {
 		}else {
 			// check user has enough balance to create option
 			let allowanceNeeded = this.contractFee - this.currentAllowance;
+			console.log("allowanceNeeded",allowanceNeeded);
+			console.log("this.userBalance",this.userBalance);
 			if (this.userBalance < allowanceNeeded) {
 				this.displayApprovalBox = 'none';
 				this.error_msg = 'Sorry! You don\'t have enough WAND. Please use the faucet to request some.';
